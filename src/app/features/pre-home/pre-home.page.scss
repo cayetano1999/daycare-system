@@ -1,69 +1,91 @@
 ion-content {
-  background: rgb(231, 224, 249);
-  --background: linear-gradient(
-    335deg,
-    rgba(231, 224, 249, 1) 0%,
-    rgba(0, 212, 255, 0.9584427521008403) 100%
-  );
+  background: rgb(48, 154, 65);
+  // --background: linear-gradient(
+  //   0deg,
+  //   rgba(48, 154, 66, 0.722) 0%,
+  //   rgba(255, 255, 255, 1) 64%
+  // );
 }
 
-.project-details {
-  --background: #cee9fd !important;
-  border-radius: 30px;
-  box-shadow: none;
+// ion-footer {
+//   position: absolute !important;
+//   top: 91%;
+// }
+
+.dynamic-toolbar {
+  min-height: auto !important;
+  height: auto !important;
+  display: flex;
+  align-items: center;
+  padding: 10px; /* Ajusta según el contenido */
+  flex-wrap: wrap; /* Permite que el contenido se expanda si es necesario */
 }
 
-.functions-details {
-  --background: #e1f6df !important;
-  border-radius: 30px;
-  box-shadow: none;
+
+
+.fixed-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 
-.author-details {
-    --background: #E5E1F9 !important;
-    border-radius: 30px;
-    box-shadow: none;
-  }
 
-ion-item {
-  --background: transparent;
-  p {
-    color: black;
-  }
+.shape {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 50%;
+  background: #c8e6c9; /* Color verde suave */
+  clip-path: ellipse(80% 60% at 100% 0%);
 }
 
-.project-structure ul {
-  list-style-type: none;
-  padding-left: 20px;
-}
-.project-structure li {
-  margin: 5px 0;
-}
-.project-structure li:before {
-  content: "📂";
-  margin-right: 5px;
-}
-.project-structure li ul li:before {
-  content: "📄";
-  margin-right: 5px;
+
+.cloud-shape {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%; /* Ajusta el tamaño de la nube */
+  height: 30%;
+  background: #A4D4A5;
+  clip-path: path("M0,100 C30,90 40,60 60,80 C80,100 90,50 100,40 L100,100 Z");
 }
 
- 
-  .author-details h2, .author-details h3 {
-    color: #000000;
-  }
-  .author-details p {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-  .author-details ul {
-    list-style-type: disc;
-    margin-left: 20px;
-  }
-  .author-details a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  .author-details a:hover {
-    text-decoration: underline;
-  }
+
+.cloud {
+  background-color: #32CD32; /* Lime green color */
+  border-radius: 50%;
+  position: relative;
+  width: 200px;
+  height: 100px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  background-color: #32CD32; /* Lime green color */
+  border-radius: 50%;
+  position: absolute;
+}
+
+.cloud::before {
+  width: 100px;
+  height: 100px;
+  left: -50px;
+  top: 10px;
+}
+
+.cloud::after {
+  width: 100px;
+  height: 100px;
+  right: -50px;
+  top: 10px;
+}
+
+
+ion-button {
+  --box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  --transition: all 0.3s ease-in-out;
+}

@@ -2,9 +2,9 @@ import type { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-  appId: 'com.infordapp',
-  appName: 'Info RD',
-  webDir: 'www',
+  appId: 'com.kuidomobileapp',
+  appName: 'Kuido',
+  webDir: 'www/browser',
   android: {
     allowMixedContent: true,
     webContentsDebuggingEnabled: false,
