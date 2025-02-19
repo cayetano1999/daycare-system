@@ -7,6 +7,9 @@ import { PreHomePage } from './pre-home.page';
 import { SharedComponents } from 'src/app/shared/components/components.module';
     import { KnobModule } from 'primeng/knob';
     import { ButtonModule } from 'primeng/button';
+    import { CheckboxModule } from 'primeng/checkbox';
+    import { CardModule } from 'primeng/card';
+    import { PasswordModule } from 'primeng/password';
 @NgModule({
   imports: [
     CommonModule,
@@ -15,7 +18,10 @@ import { SharedComponents } from 'src/app/shared/components/components.module';
     SharedComponents,
     PreHomePageRoutingModule,
     ButtonModule,
-    KnobModule
+    KnobModule,
+    CheckboxModule,
+    CardModule,
+    PasswordModule
   ],
   declarations: [PreHomePage],
   exports:[]
