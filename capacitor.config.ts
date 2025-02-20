@@ -14,7 +14,17 @@ const config: CapacitorConfig = {
     Keyboard: {
       resize: KeyboardResize.None 
     
-    }
+    },
+    SplashScreen: {
+      launchShowDuration: 3000,
+      launchAutoHide: true,
+      backgroundColor: '#ffffff',
+      androidSplashResourceName: 'splash',
+      showSpinner: true,
+      androidSpinnerStyle: 'large',
+      iosSpinnerStyle: 'small',
+      spinnerColor: '#999999',
+    },
   },
 
   server: {

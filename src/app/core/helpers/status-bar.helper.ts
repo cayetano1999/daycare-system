@@ -1,6 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Platform } from "@ionic/angular";
+import { COLORS } from "../constants/constants";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class StatusBarHelper {
   constructor() { }
 
   async setStatusBarStyle(color: string) {
-    const darkColors = ['#000000'];
+    const darkColors = ['#000000', COLORS.primary];
 
     if (!this.platfom.is('mobileweb') && !this.platfom.is('ios')) {
       try {
