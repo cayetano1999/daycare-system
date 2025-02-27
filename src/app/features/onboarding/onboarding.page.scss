@@ -1,0 +1,80 @@
+.header-logo {
+    width: 60px;
+  }
+  
+  ion-toolbar {
+    --background: #ffff !important;
+  }
+  
+  .brand-image {
+    width: 35px;
+    position: absolute;
+    left: -5px;
+    margin-top: 40px;
+  }
+  
+  .onboarding-title {
+    font-size: 30px;
+    color: black;
+    font-weight: 900;
+    font-family: "aharoni" sans-serif;
+    text-transform: none;
+  }
+  
+  .onboarding-description {
+    color: black;
+    font-size: 14px;
+    font-family: "aptops" sans-serif;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  
+  .btn-skip-text,
+  .btn-next-text {
+    font-size: 18px;
+    font-family: "aharoni" sans-serif;
+  }
+  
+  .img-onb {
+    width: 300px;
+  }
+  
+  .steep-circles {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+  }
+  
+  .circle {
+    width: 15px;
+    height: 15px;
+    background: #d3d3d3;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .circle.active {
+    background: var(--ion-color-danger);
+  }
+  
+  .btn-back {
+    font-family: "aharoni" sans-serif;
+    font-size: 25px;
+    --color: black;
+  }
+  
+  .b-link{
+    text-decoration: underline;
+  }
+
+  .btn-start{
+    --border-radius: 2rem !important;
+  --padding-top: 30px !important;
+  --padding-bottom: 30px !important;
+  --bakground: var(--ion-color-dark) !important;
+  margin-bottom: 15px;
+  }

@@ -15,4 +15,6 @@ export enum RoutesApp{
     NO_INTERNET = '/no-internet',
     APP_MAINTENANCE = '/maintenance',
     HOME = '/home',
+    PRE_HOME = '/pre-home',
+    AUTH = '/auth',
 }

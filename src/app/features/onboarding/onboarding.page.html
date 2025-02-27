@@ -1,0 +1,87 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="pt-3">
+    @if(index > 0){
+    <ion-buttons slot="start">
+      <ion-button (click)="backslide()" class="btn-back">
+        <ion-icon slot="start" name="chevron-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    }
+    <ion-img src="assets/img/logo-name.jpg" class="header-logo mx-3" slot="end"></ion-img>
+  </ion-toolbar>
+  <ion-toolbar class="ion-no-border px-3">
+    <p-progressbar [showValue]="false" [value]="fillProgressBar()" />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-no-padding" [fullscreen]="true">
+
+  <ion-row [class]="animationClass" style="margin-top: 5em;">
+
+
+    @if(index != 2){
+    <ion-col size="12" class="center-content" style="margin-top: 2em;">
+      <ion-card-subtitle class="onboarding-title text-center mb-4">{{currentSlide.title}}</ion-card-subtitle>
+    </ion-col>
+    <ion-col size="12" class="center-content">
+      <img [src]="'assets/img/onboarding/'+currentSlide.image" class="px-3 img-onb" alt="">
+    </ion-col>
+
+
+    <ion-col size="12" class="center-content">
+      <p class="onboarding-description text-center px-2">{{currentSlide.description}}</p>
+    </ion-col>
+    }
+    @else if(index == 2) {
+
+    <ion-col size="12" class="center-content" style="margin-top: 2em;">
+      <ion-card-subtitle class="onboarding-title text-center mb-4">{{currentSlide.title}}</ion-card-subtitle>
+    </ion-col>
+    <ion-col size="12" class="center-content">
+      <img [src]="'assets/img/onboarding/'+currentSlide.image" class="px-3 img-onb" alt="">
+    </ion-col>
+
+
+    <ion-col size="12" class="center-content mt-4">
+      <p class="onboarding-description text-center px-2">{{currentSlide.description}} </p>
+    </ion-col>
+    }
+
+  </ion-row>
+
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  @if(index == onboardingScreenText.slides.length - 1){
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="12" class="text-start">
+        <ion-button class="btn-start" (click)="goToHome(false)" expand="block" color="dark" shape="round">
+          <b style="font-size: 16px;"> {{onboardingScreenText.textBtnStart}}</b>
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="12" class="text-center mb-4 ">
+        <ion-label class="px-3">{{onboardingScreenText.termsConditionLabel}} <b (click)="redirectTermsAndConditions()"
+            class="text-primary b-link">Términos y Condiciones</b> </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  }
+  @else{
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="6" class="text-start">
+        <ion-button (click)="goToHome(true)" fill="clear" class="btn-skip">
+          <ion-label class="btn-skip-text" color="primary"><b>{{onboardingScreenText.textBtnSkip}}</b></ion-label>
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" class="text-end">
+        <ion-button (click)="nextSlide()" fill="clear" class="btn-next">
+          <ion-label class="btn-next-text" color="dark"><b>{{onboardingScreenText.textBtnNext}}</b></ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  }
+</ion-footer>

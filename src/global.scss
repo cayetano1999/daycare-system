@@ -80,7 +80,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: white;
+  // background: white;
   padding: 20px;
   border-radius: 10px;
   width: 80%;
@@ -158,7 +158,7 @@
 // }
 
 ion-avatar{
-  --border-radius: 0%!important
+  // --border-radius: 0%!important
 }
 
 
@@ -206,3 +206,4 @@ ion-searchbar::part(icon) {
 // p, h1, h2, h3, h4, h5, h6, ion-label, ion-button, ion-card-title, ion-card-subtitle, ion-card-header, ion-card-content, ion-item, ion-input, ion-textarea, ion-select, ion-select-option, ion-chip {
 //   font-family: 'aptops' sans-serif;
 // }
+

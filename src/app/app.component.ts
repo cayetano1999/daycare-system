@@ -1,91 +1,88 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, inject, OnInit, effect } from '@angular/core';
+import { IonicModule, Platform } from '@ionic/angular';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
+import { Network } from '@capacitor/network';
+import { Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 import { environment } from 'src/environments/environment';
 import { CommunicationService } from './core/services/comunication/communication.service';
-import { NavigationEnd, Router } from '@angular/router';
-import { register } from 'swiper/element/bundle';
 import { FirebaseAnalyticsService } from './core/services/firebase/firebase-analytics.service';
 import { RoutesApp } from './core/enums/routes.enum';
 import { BackButtonService } from './core/services/back-button/back-button.service';
-import { Network } from '@capacitor/network';
-
-register();
+import { PipesModule } from './shared/pipes/pipes.module';
 
 @Component({
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [IonicModule, CommonModule, PipesModule]
 })
 export class AppComponent implements OnInit {
+    // Properties
+    public version = environment.APP_VERSION;
+    public menuOptions = remoteConfig.OPTIONS_ITEMS.options as any;
+    public availableMenu = false;
+    public loadingAds = false;
+    public navegationHistory: string[] = [];
 
-  //Properties
-  public version = environment.APP_VERSION
-  public menuOptions = remoteConfig.OPTIONS_ITEMS.options as any;
-  public availableMenu: boolean = false;
-  public loadingAds: boolean = false;
-  public navegationHistory: string[] = [];
-  //Services
-  private readonly platform = inject(Platform)
-  private readonly communicationService = inject(CommunicationService)
-  private readonly router = inject(Router)
-  private readonly analitycsService = inject(FirebaseAnalyticsService);
-  private readonly backBtnService = inject(BackButtonService);
+    // Services
+    private readonly platform = inject(Platform);
+    private readonly communicationService = inject(CommunicationService);
+    private readonly router = inject(Router);
+    private readonly analyticsService = inject(FirebaseAnalyticsService);
+    private readonly backBtnService = inject(BackButtonService);
 
-  constructor() {
-    this.router.events.subscribe(async event => {
-      if (event instanceof NavigationEnd) {
-        const screen = event.url.split('/').pop() || '';
-        ['home', 'pre-home', 'onboarding'].includes(screen) ? null : this.analitycsService.setCurrentScreen(screen);
+    constructor() {
+        this.setupRouterEvents();
+        this.setupBackButton();
+    }
 
-
-        const excludesUrl = ['pre-home', 'onboarding', ''].includes(screen);
-        if (!excludesUrl) {
-
-          if (this.navegationHistory.length > 0) {
-            const lastUrl = this.navegationHistory[this.navegationHistory.length - 1];
-            if (lastUrl === event.url) {
-              return;
-            }
-          }
-          this.navegationHistory.push(event.url);
+    async ngOnInit() {
+        const isConnected = await Network.getStatus();
+        if (!isConnected.connected) {
+            this.router.navigateByUrl(RoutesApp.NO_INTERNET);
+            return;
         }
-      }
-    });
 
-    this.platform.backButton.subscribeWithPriority(10, async () => {
+        if (!this.platform.is('mobileweb')) {
+            await ScreenOrientation.lock({ orientation: 'portrait' });
+        }
 
-      await this.backBtnService.backBtnManager(this.navegationHistory);
-    });
-
-  }
-  async ngOnInit() {
-
-    const isConnected = await Network.getStatus();
-    if (!isConnected.connected) {
-       this.router.parseUrl(RoutesApp.NO_INTERNET);
-       return;
+        this.communicationService.message$.subscribe(() => this.availableMenu = true);
+        this.router.navigate([RoutesApp.PRE_HOME]);
     }
 
-    if (!this.platform.is('mobileweb')) {
-      await ScreenOrientation.lock({ orientation: 'portrait' });
+    private setupRouterEvents(): void {
+        effect(() => {
+            this.router.events.subscribe(event => {
+                if (event instanceof NavigationEnd) {
+                    const screen = event.url.split('/').pop() || '';
+                    if (!['home', 'pre-home', 'onboarding'].includes(screen)) {
+                        this.analyticsService.setCurrentScreen(screen);
+                        this.updateNavigationHistory(event.url);
+                    }
+                }
+            });
+        });
     }
-    this.communicationService.message$.subscribe(() => {
-      this.availableMenu = true;
-    });
-    await this.initializeApp();
 
-  }
+    private updateNavigationHistory(url: string): void {
+        if (!['pre-home', 'onboarding', ''].includes(url.split('/').pop() || '')) {
+            if (!this.navegationHistory.includes(url)) {
+                this.navegationHistory.push(url);
+            }
+        }
+    }
 
-  async initializeApp() {
-    this.communicationService.message$.subscribe(() => {
-      this.availableMenu = true;
-    });
-  }
+    private setupBackButton(): void {
+        this.platform.backButton.subscribeWithPriority(10, async () => {
+            await this.backBtnService.backBtnManager(this.navegationHistory);
+        });
+    }
 
-  handleItemSelected(item: any) {
-    console.log('Item selected:', item);
-  }
+    handleItemSelected(item: any): void {
+        console.log('Item selected:', item);
+    }
 }

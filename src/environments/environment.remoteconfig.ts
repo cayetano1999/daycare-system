@@ -23,7 +23,16 @@ export const remoteConfig = {
             title: "",
             message: "",
             btnText: ""
-        }
+        },
+        ONBOARDING: {
+            textBtnSkip: "",
+            textBtnNext: "",
+            textBtnStart: "",
+            slides: [
+
+            ],
+            termsConditionLabel: ""
+        },
 
     },
     OPTIONS_ITEMS: {

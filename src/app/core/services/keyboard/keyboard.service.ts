@@ -15,9 +15,10 @@ export class KeyboardService {
   ngZone = inject(NgZone);
 
   constructor() {
-    if (this.platform.is('android') || this.platform.is('ios')) {
-      this.listenToKeyboardEvents();
+    if (this.platform.is('mobileweb') ) {
+      return;
     }
+    this.listenToKeyboardEvents();
   }
 
   private listenToKeyboardEvents() {

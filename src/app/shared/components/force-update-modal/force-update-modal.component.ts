@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
@@ -6,7 +7,9 @@ import { remoteConfig } from 'src/environments/environment.remoteconfig';
     selector: 'app-force-update-modal',
     templateUrl: './force-update-modal.component.html',
     styleUrls: ['./force-update-modal.component.scss'],
-    standalone: false
+    standalone: true,
+    imports:[IonicModule]
+    
 })
 export class ForceUpdateModalComponent {
 

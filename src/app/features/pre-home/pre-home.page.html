@@ -1,104 +1,11 @@
-<ion-header class="ion-no-padding">
-  <ion-toolbar class="ion-no-border ion-no-padding" style="height: 80px;">
-    <div class="h-36 header-gradient overflow-hidden">
-      <svg class=" bottom-0 left-0 w-full" viewBox="0 0 1440 320" style="position: relative; height: 150px; width: 49em"
-        preserveAspectRatio="none">
-        <path fill="#ffffff" fill-opacity="1"
-          d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
-      </svg>
-
-    </div>
-
-
-
-  </ion-toolbar>
-
-  <ion-toolbar class="ion-no-border ion-no-padding" style="--background: white; --border-width:0px">
-    <div class="center-content animate__animated animate__pulse">
-      <img src="assets/img/logo-name.jpg" alt="Kuido Logo" style="width: 200px;" />
-    </div>
-    <h5 class=" text-gray-800 mb-6 text-center mt-4 animate__animated animate__pulse" style="font-size: 16px;">
-      Paga, recarga y más, ¡al instante!
-    </h5>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content >
-
-  @if(animationReady){
-  <ng-container>
-  
-  <ion-row class="px-3 animate__animated animate__fadeInUp">
-    <ion-col size="12">
-      <ion-item lines="none" class="input-item">
-        <i class="pi pi-envelope input-icon"></i>
-        <ion-input type="email" placeholder="Correo electrónico"></ion-input>
-      </ion-item>
-
-      <ion-item lines="none" class="input-item">
-        <i class="pi pi-lock input-icon"></i>
-        <ion-input type="password" placeholder="Contraseña"></ion-input>
-      </ion-item>
-    </ion-col>
-
-    <ion-col size="12">
-      <div class="center-content">
-
-        <a class="text-sm text-primary hover-primary-dark mb-3">
-          ¿Olvidaste tu contraseña?
-        </a>
-      </div>
-    </ion-col>
-
-    <ion-col size="12">
-      <ion-button color="dark" expand="block" class="login-button text-dark mb-4">
-        <i class="pi pi-sign-in" style="padding-right: 8px;"></i> <b> Iniciar Sesión</b>
-      </ion-button>
-      
-    </ion-col>
-
-    <ion-col size="12">
-      <ion-button expand="block" class="google-button" >
-        <img src="assets/img/google-logo.webp" alt="google" class="mr-2 " style="width: 1.8rem; " />
-        <b>Continuar con Google</b>
-      </ion-button>
-
-      
-    </ion-col>
-
-    <ion-col size="12">
-      <div class="text-center text-sm text-gray-600 mt-6">
-        <b> ¿No tienes una cuenta?</b>
-        <a class="text-primary hover-primary-dark font-medium">
-          Regístrate
-        </a>
-      </div>
-    </ion-col>
-  </ion-row>
-
-
-  <!-- Footer -->
-  <footer class="fixed bottom-0 left-0 w-full bg-black text-white overflow-hidden">
-    <!-- Ondas decorativas -->
-    <svg class="absolute top-0 left-0 w-full rotate-180" viewBox="0 0 1440 320" preserveAspectRatio="none" height="20">
-      <path fill="#ffffff" fill-opacity="0.1"
-        d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
-    </svg>
-
-    <div class="container mx-auto px-4 py-3">
-      <div class="flex justify-center space-x-4">
-        <a href="https://instagram.com/kuido" target="_blank" rel="noopener noreferrer" class="social-icon">
-          <ion-icon name="logo-instagram"></ion-icon>
-        </a>
-        <a href="https://facebook.com/kuido" target="_blank" rel="noopener noreferrer" class="social-icon">
-          <ion-icon name="logo-facebook"></ion-icon>
-        </a>
-        <a href="https://twitter.com/kuido" target="_blank" rel="noopener noreferrer" class="social-icon">
-          <ion-icon name="logo-twitter"></ion-icon>
-        </a>
-      </div>
-    </div>
-  </footer>
-</ng-container>
-}
+  <ion-grid fixed >
+    <ion-row class="center-contents mb-5">
+      <ion-col size="12" class="animate__animated animate__fadeIn">
+        <img style="width: 50%;" src="assets/img/logo-name.jpg" alt="">
+        <br>
+        <l-mirage size="80" speed="2.5" color="green"></l-mirage>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

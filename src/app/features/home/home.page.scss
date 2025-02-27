@@ -1,0 +1,148 @@
+/* SCSS para replicar slot="end" */
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    
+  
+    .pi {
+      margin-left: auto; /* Empuja el icono hacia la derecha */
+      font-size: 1.5rem; /* Tamaño del icono */
+      color: #000; /* Color opcional */
+      background-color: #eeeeee66;
+      padding: 10px;
+      border-radius:100%
+    }
+  }
+
+  ion-card-title {
+    font-size: 1.5rem;
+  }
+
+  ion-content {
+    --background: #FAFAFA;
+  }
+
+.card-body {
+    background-color: #2a8839;
+    border-radius: 20px;
+    color: #fff;
+    padding: 10px;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;  /* Alinea verticalmente */
+    gap: 8px;             /* Espacio entre el icono y el texto */
+    
+    .pi {
+      font-size: 1.5rem;  /* Tamaño del icono */
+      color: #555;        /* Color opcional */
+    }
+  }
+
+  ion-label {
+    white-space: normal!important; /* Permite que el texto se divida en varias líneas */
+    overflow: visible;   /* Evita que se oculte el texto sobrante */
+    text-overflow: clip; /* Evita los puntos suspensivos */
+    word-wrap: break-word; /* Rompe la palabra si es muy larga */
+  }
+
+  /* Estilos para alinear el contenido a la izquierda */
+ion-item {
+    --padding-start: 0; /* Elimina el padding izquierdo */
+    --inner-padding-start: 0; /* Elimina el padding interno del label */
+    // display: flex;
+    // align-items: center;
+    // gap: 8px; /* Espacio entre el icono y el texto */
+  }
+  
+  .icon-container-success {
+    background-color: #20692c;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 10px;
+    
+  }
+
+    
+  .icon-container-warning{
+    background-color: #9A9A30;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 10px;
+    
+  }
+
+  .icon-container-recharge{
+    background-color: #20692c4a;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 10px;
+    
+  }
+
+
+  .icon-container-electricity{
+    background-color: #a4a44552;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 10px;
+    
+  }
+
+  .icon-container-water{
+    background-color: #4584a452;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 10px;
+    
+  }
+
+  .icon-container-tax{
+    background-color: #a44f4552;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 10px;
+    
+  }
+
+  .option-item {
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --border-radius: 20px;
+    --padding-start: 15px;
+   
+    border-radius: 20px;
+  }
+
+  .avatar-image {
+    padding: 5px;
+    background-color: #20692c8f;
+    
+  }

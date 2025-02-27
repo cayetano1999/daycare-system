@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 
@@ -8,7 +8,9 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
     selector: 'app-no-internet',
     templateUrl: './no-internet.page.html',
     styleUrls: ['./no-internet.page.scss'],
-    standalone: false
+    standalone: true,
+        imports: [IonicModule]
+    
 })
 export class NoInternetPage {
 
