@@ -1,0 +1,63 @@
+<app-kuido-header title="OTP Authentication"></app-kuido-header>
+
+
+<ion-content>
+  <div class="otp-container">
+    
+    <ion-row>
+      <ion-col size="12">
+        <div class="otp-description">
+      <p>An authentication code has been sent to</p>
+      <p class="phone-number">(+84) 999 999 999</p>
+    </div>
+      </ion-col>
+    </ion-row>
+    
+
+    <div class="otp-input-container">
+      <input
+        #otp1
+        type="number"
+        maxlength="1"
+        (keyup)="onKeyUp($event, otp1, null, otp2)"
+        (keydown)="onKeyDown($event, otp1, null, otp2)"
+      >
+      <input
+        #otp2
+        type="number"
+        maxlength="1"
+        (keyup)="onKeyUp($event, otp2, otp1, otp3)"
+        (keydown)="onKeyDown($event, otp2, otp1, otp3)"
+      >
+      <input
+        #otp3
+        type="number"
+        maxlength="1"
+        (keyup)="onKeyUp($event, otp3, otp2, otp4)"
+        (keydown)="onKeyDown($event, otp3, otp2, otp4)"
+      >
+      <input
+        #otp4
+        type="number"
+        maxlength="1"
+        (keyup)="onKeyUp($event, otp4, otp3, null)"
+        (keydown)="onKeyDown($event, otp4, otp3, null)"
+      >
+    </div>
+
+    <div class="resend-code">
+      <span>Haven't receive code?</span>
+      <a fill="clear" (click)="resendCode()">
+        Resend code
+      </a>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-button expand="block" (click)="verifyOTP()" [disabled]="!isOTPComplete()">
+      Continue
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

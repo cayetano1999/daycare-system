@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal, Signal } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
 import { COLORS } from 'src/app/core/constants/constants';
@@ -19,7 +19,7 @@ mirage.register()
 })
 export class PreHomePage {
   private readonly statusBar = inject(StatusBarHelper);
-  private readonly router = inject(Router);
+  private readonly navCtrl = inject(NavController);
 
   //properties
   loading = signal(true);
@@ -30,7 +30,7 @@ export class PreHomePage {
     setTimeout(() => {
       this.loading.update(() => false);
       setTimeout(() => {
-        this.router.navigate([RoutesApp.SPLASH]);
+        this.navCtrl.navigateRoot([RoutesApp.SPLASH]);
       }, 300);
     }, 2000);
   }

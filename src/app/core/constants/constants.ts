@@ -2,7 +2,8 @@ export const COLORS = {
     primary: '#309A41',
     green: '#77AD40',
     white: '#FFFFFF',
-    primaryGreen: "#3cb53f"
+    primaryGreen: "#3cb53f",
+    headerGreen: '#F3FAF2'
 }
 
 export const IMAGES = {

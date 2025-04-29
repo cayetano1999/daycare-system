@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 @Component({
@@ -10,8 +10,18 @@ import { IonicModule } from '@ionic/angular';
 })
 export class LoginSelectorComponent  implements OnInit {
 
+  @Output() loginWithEmail = new EventEmitter<void>();
+  @Output() loginWithPhone = new EventEmitter<void>();
   constructor() { }
 
   ngOnInit() {}
+
+  onLoginEmail() {
+    this.loginWithEmail.emit();
+  }
+
+  onLoginPhone() {
+    this.loginWithPhone.emit();
+  }
 
 }

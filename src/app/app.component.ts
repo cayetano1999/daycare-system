@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, effect } from '@angular/core';
-import { IonicModule, Platform } from '@ionic/angular';
+import { IonicModule, NavController, Platform } from '@ionic/angular';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { Network } from '@capacitor/network';
 import { Router, NavigationEnd } from '@angular/router';
@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
     // Services
     private readonly platform = inject(Platform);
     private readonly communicationService = inject(CommunicationService);
+    private readonly navCtrl = inject(NavController);
     private readonly router = inject(Router);
     private readonly analyticsService = inject(FirebaseAnalyticsService);
     private readonly backBtnService = inject(BackButtonService);
@@ -42,7 +43,7 @@ export class AppComponent implements OnInit {
     async ngOnInit() {
         const isConnected = await Network.getStatus();
         if (!isConnected.connected) {
-            this.router.navigateByUrl(RoutesApp.NO_INTERNET);
+            this.navCtrl.navigateRoot(RoutesApp.NO_INTERNET);
             return;
         }
 
@@ -51,7 +52,7 @@ export class AppComponent implements OnInit {
         }
 
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
-        this.router.navigate([RoutesApp.LOGIN_PREVIEW]);
+        this.navCtrl.navigateRoot([RoutesApp.PRE_HOME]);
     }
 
     private setupRouterEvents(): void {

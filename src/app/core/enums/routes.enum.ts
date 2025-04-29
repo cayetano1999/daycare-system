@@ -19,4 +19,9 @@ export enum RoutesApp{
     AUTH = '/auth',
     SPLASH = '/splash-screen',
     LOGIN_PREVIEW = 'auth/login-preview',
+    LOGIN_EMAIL = 'auth/login-email',
+    LOGIN_PHONE = 'auth/login-phone',
+    AUTH_REGISTER = 'auth/register',
+    AUTH_FORGOT_PASSWORD = 'auth/forgot-password',
+    AUTH_OTP = 'auth/otp',
 }

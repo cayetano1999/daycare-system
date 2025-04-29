@@ -3,7 +3,10 @@
 <ion-content>
   <div class="bg-white flex flex-row justify-center w-full">
     <div class="bg-white w-full h-full relative">
-      <app-login-selector></app-login-selector>
+      <app-login-selector
+      (loginWithEmail)="goToEmailLogin()"
+      (loginWithPhone)="goToPhoneLogin()">
+    </app-login-selector>
       <app-kuido-social-login></app-kuido-social-login>
     </div>
   </div>

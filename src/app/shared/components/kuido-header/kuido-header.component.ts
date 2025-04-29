@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { IonicModule, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-kuido-header',
@@ -10,11 +10,17 @@ import { IonicModule } from '@ionic/angular';
 })
 export class KuidoHeaderComponent  implements OnInit {
 
+  //Services
+  private readonly navCtrl = inject(NavController);
   //Inputs
   @Input() title: string = '';
 
   constructor() { }
 
   ngOnInit() {}
+
+  back(){
+    this.navCtrl.back();
+  }
 
 }
