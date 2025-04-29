@@ -5,3 +5,12 @@
     height: 100vh;             // <-- Altura completa de la pantalla
     text-align: center;
   }
+
+  ion-content {
+    --background: #ffffff !important;
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100vh !important;
+    width: 100vw !important;
+  }

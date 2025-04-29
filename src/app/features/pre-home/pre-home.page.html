@@ -1,11 +1,13 @@
 <ion-content >
+  @if(loading()){
   <ion-grid fixed >
-    <ion-row class="center-contents mb-5">
-      <ion-col size="12" class="animate__animated animate__fadeIn">
+    <ion-row class="center-contents mb-5" id="loading-kuido">
+      <ion-col size="12" class="">
         <img style="width: 50%;" src="assets/img/logo-name.jpg" alt="">
         <br>
         <l-mirage size="80" speed="2.5" color="green"></l-mirage>
       </ion-col>
     </ion-row>
   </ion-grid>
+}
 </ion-content>

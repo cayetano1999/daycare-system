@@ -1,28 +1,29 @@
 import { Component, inject, signal } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, NavController } from '@ionic/angular';
 import { COLORS } from 'src/app/core/constants/constants';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
 import { LoginHeaderComponent } from './components/login-header/login-header.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { LoginFooterComponent } from './components/login-footer/login-footer.component';
 import { KeyboardService } from 'src/app/core/services/keyboard/keyboard.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.page.html',
     styleUrls: ['./auth.page.scss'],
     standalone: true,
-    imports: [IonicModule, LoginHeaderComponent, LoginFormComponent, LoginFooterComponent]
+    imports: [IonicModule, LoginHeaderComponent, LoginFormComponent, LoginFooterComponent, CommonModule, RouterOutlet]
 })
 export class AuthPage {
 
   //Services
   private readonly statusBar = inject(StatusBarHelper);
   private readonly keyboardService = inject(KeyboardService);
-  private readonly router = inject(Router);
+  private readonly navCtrl = inject(NavController);
   private readonly alertService = inject(AlertControllerService);
   private readonly modalCtrl = inject(ModalController);
 
@@ -41,7 +42,7 @@ export class AuthPage {
     this.alertService.openModalAlert('Login', 'Login success', 'Ok');
     setTimeout( async () => {
       await this.modalCtrl.dismiss();
-      this.router.navigate([RoutesApp.ONBOARDING]);
+      this.navCtrl.navigateRoot([RoutesApp.ONBOARDING]);
     }, 3000); 
    }
 

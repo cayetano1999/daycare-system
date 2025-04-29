@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal, Signal } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
@@ -18,17 +18,21 @@ mirage.register()
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PreHomePage {
-
   private readonly statusBar = inject(StatusBarHelper);
   private readonly router = inject(Router);
 
+  //properties
+  loading = signal(true);
 
   //Lifecycle
-  async ionViewWillEnter() { 
-   await this.statusBar.setStatusBarStyle(COLORS.white);
-   setTimeout(() => {
-    this.router.navigate([RoutesApp.AUTH]);
-   }, 2000);
+  async ionViewWillEnter() {
+    await this.statusBar.setStatusBarStyle(COLORS.white);
+    setTimeout(() => {
+      this.loading.update(() => false);
+      setTimeout(() => {
+        this.router.navigate([RoutesApp.SPLASH]);
+      }, 300);
+    }, 2000);
   }
 
 }

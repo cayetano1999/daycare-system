@@ -1,0 +1,48 @@
+  
+  .social-login {
+    margin-top: 32px;
+    width: 100%;
+  
+    .separator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+  
+      .line {
+        flex: 1;
+        height: 1px;
+        background: var(--ion-color-medium);
+      }
+  
+      .text {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #536758;
+        padding: 0 11px;
+      }
+    }
+  
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+  
+      .google-icon, .facebook-icon {
+        width: 45px;
+        height: 45px;
+        background-size: cover;
+      }
+  
+      .google-icon {
+        background-image: url('../../../../assets/img/shared/google.svg');
+      }
+  
+      .facebook-icon {
+        background-image: url('../../../../assets/img/shared/facebook.svg');
+      }
+    }
+
+  
+  }

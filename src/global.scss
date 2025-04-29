@@ -27,6 +27,7 @@
 @import url("./assets/css/bootstrap.min.css");
 @import url("./assets/css/animations.css");
 @import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css?family=Montserrat:500,700');
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -38,16 +39,16 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
-@font-face {
-  font-family: "aharoni";
-  src: url("./assets/fonts/Aharoni2/AharoniBold/AharoniBold.ttf")
-    format("truetype");
-}
+// @font-face {
+//   font-family: "aharoni";
+//   src: url("./assets/fonts/Aharoni2/AharoniBold/AharoniBold.ttf")
+//     format("truetype");
+// }
 
-@font-face {
-  font-family: "aptops";
-  src: url("./assets/fonts/Aptops/Aptos-Bold.ttf") format("truetype");
-}
+// @font-face {
+//   font-family: "aptops";
+//   src: url("./assets/fonts/Aptops/Aptos-Bold.ttf") format("truetype");
+// }
 
 // @font-face {
 //   font-family: "samsung";

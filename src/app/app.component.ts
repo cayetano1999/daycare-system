@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
         }
 
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
-        this.router.navigate([RoutesApp.PRE_HOME]);
+        this.router.navigate([RoutesApp.LOGIN_PREVIEW]);
     }
 
     private setupRouterEvents(): void {

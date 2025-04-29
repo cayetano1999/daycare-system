@@ -17,4 +17,6 @@ export enum RoutesApp{
     HOME = '/home',
     PRE_HOME = '/pre-home',
     AUTH = '/auth',
+    SPLASH = '/splash-screen',
+    LOGIN_PREVIEW = 'auth/login-preview',
 }

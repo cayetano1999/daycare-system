@@ -8,19 +8,20 @@ import { MaintenancePage } from './features/maintenance/maintenance.page';
 import { PreHomePage } from './features/pre-home/pre-home.page';
 import { OnboardingPage } from './features/onboarding/onboarding.page';
 import { HomePage } from './features/home/home.page';
+import { SplashScreenComponent } from './features/splash-screen/splash-screen.component';
+import { LoginPreviewComponent } from './features/auth/pages/login-preview/login-preview.component';
+import { authenticationRoutes } from './features/auth/authentication.routes';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'pre-home',
+    redirectTo: '/auth/login-preview',
     pathMatch: 'full'
   },
- 
-  {
-    path: 'auth',
-    component: AuthPage,
-    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
-  },
+
+  //Authentication routes
+  ...authenticationRoutes,
+
   {
     path: 'no-internet',
     component: NoInternetPage
@@ -34,13 +35,18 @@ export const routes: Routes = [
     component: PreHomePage,
   },
   {
-    path:'onboarding',
+    path: 'onboarding',
     component: OnboardingPage
   },
   {
-    path:'home',
+    path: 'home',
     component: HomePage
+  },
+  {
+    path: 'splash-screen',
+    component: SplashScreenComponent
   }
+
 ];
 
 
