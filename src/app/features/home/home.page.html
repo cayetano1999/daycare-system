@@ -1,114 +1,16 @@
-<!-- <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-img src="assets/img/shared/header-2.svg" class="header-bg"></ion-img>
-    <ion-title class="logo-title">kuidopay</ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-img src="assets/img/shared/notification.svg" class="notification-icon"></ion-img>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  
-</ion-header> -->
-<app-kuido-header title="kuidopay"></app-kuido-header>
-
-
+<app-kuido-header title="kuidopay" [bells]="true"></app-kuido-header>
 <ion-content>
   <!-- Header Section -->
-
-  <ion-row>
-    <ion-col size="12" class="center-content ctop" style="margin-top: 40px;">
-      <ion-avatar class="profile-avatar">
-        <img src="assets/img/shared/profile.svg" alt="Profile" />
-      </ion-avatar>
-    </ion-col>
-  </ion-row>
-  <!-- User Greeting Section -->
-  <div class="greeting-section">
-    <h2>Hi</h2>
-    <p>Jhon Smith</p>
-  </div>
-
+  <app-profile-section></app-profile-section>
   <!-- Services Section -->
-  <ion-row class="services-section">
-    <ion-col size="12">
-      <h3>Services</h3>
-    </ion-col>
-
-    <ion-col size="3" *ngFor="let service of services">
-      <ion-card class="service-card">
-        <ion-card-content>
-          <ion-img [src]="service.icon" [alt]="service.alt"></ion-img>
-          <div class="service-title">{{ service.title }}</div>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-  </ion-row>
-
+  <app-section-services [services]="services"></app-section-services>
   <!-- Latest Transactions -->
-  <ion-row class="transactions-section">
-    <ion-col size="12">
-      <div class="section-header">
-        <h3>Latest transactions</h3>
-        <a>See more</a>
-      </div>
-    </ion-col>
-
-    <ion-col size="12">
-      <ion-list>
-        <ion-item lines="none" *ngFor="let transaction of transactions">
-          <ion-avatar slot="start">
-            <img [src]="transaction.image" [alt]="transaction.name" />
-          </ion-avatar>
-          <ion-label>
-            <h2>{{ transaction.name }}</h2>
-            <p>{{ transaction.date }}</p>
-          </ion-label>
-          <ion-note slot="end">
-            <span [class.negative]="transaction.isNegative">{{ transaction.amount }}</span>
-            <p class="transaction-type">{{ transaction.description }}</p>
-          </ion-note>
-        </ion-item>
-      </ion-list>
-    </ion-col>
-  </ion-row>
+  <app-section-transactions [transactions]="transactions"></app-section-transactions>
 </ion-content>
 
 <!-- Footer Navigation -->
 <ion-footer class="ion-no-border">
   <ion-toolbar class="ion-no-border" style="--background: white;">
-    <ion-tabs class="ion-no-border">
-      <ion-tab-bar class="ion-no-border mb-3" slot="bottom,top">
-        <ion-tab-button tab="tab1">
-          <!-- <ion-icon name="flash"></ion-icon> -->
-           <ion-img src="../../../assets/img/shared/home_5.svg"></ion-img>
-          <ion-label>Home</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="tab2">
-          <!-- <ion-icon name="apps"></ion-icon> -->
-          <ion-img src="../../../assets/img/shared/bills.svg"></ion-img>
-          <ion-label>Bills</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="tab3">
-          <!-- <ion-icon name="apps"></ion-icon> -->
-          <ion-img src="../../../assets/img/shared/kuidocircle.svg"></ion-img>
-        </ion-tab-button>
-          <ion-tab-button tab="tab4">
-            <!-- <ion-icon name="flash"></ion-icon> -->
-             <ion-img src="../../../assets/img/shared/bagfooter.svg"></ion-img>
-            <ion-label>Gif Cards</ion-label>
-          </ion-tab-button>
-          <ion-tab-button tab="tab5">
-            <!-- <ion-icon name="apps"></ion-icon> -->
-            <ion-img src="../../../assets/img/shared/user_3.svg"></ion-img>
-            <ion-label>Profile</ion-label>
-          </ion-tab-button>
-
-        
-      </ion-tab-bar>
-
-      
-    </ion-tabs>
-
+    <app-kuido-tab></app-kuido-tab>
   </ion-toolbar>
 </ion-footer>

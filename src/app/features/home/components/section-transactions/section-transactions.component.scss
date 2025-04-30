@@ -1,0 +1,73 @@
+.transactions-section {
+    padding: 0 16px;
+  
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+  
+      h3 {
+        font-family: 'Montserrat', Helvetica;
+        font-weight: 700;
+        color: #536758;
+        font-size: 17px;
+        margin: 0;
+      }
+  
+      a {
+        font-family: 'Montserrat', Helvetica;
+        font-weight: 500;
+        color: var(--ion-color-primary);
+        font-size: 14px;
+        text-decoration: none;
+      }
+    }
+  
+    ion-item {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      --padding-top: 12px;
+      // --padding-bottom: 12px;
+      --background: url('/assets/rectangle-95.svg');
+      border-radius: 8px;
+      margin-bottom: 16px;
+  
+      ion-label {
+        h2 {
+          font-family: 'Montserrat', Helvetica;
+          font-weight: 600;
+          color: #536758;
+          font-size: 14px;
+        }
+  
+        p {
+          font-family: 'Montserrat', Helvetica;
+          color: #9ca3af;
+          font-size: 12px;
+        }
+      }
+  
+      ion-note {
+        text-align: right;
+  
+        span {
+          font-family: 'Montserrat', Helvetica;
+          font-weight: 500;
+          font-size: 15px;
+          color: #536758;
+  
+          &.negative {
+            color: #ff3838;
+          }
+        }
+  
+        .transaction-type {
+          font-family: 'Montserrat', Helvetica;
+          color: #3cb53f;
+          font-size: 13px;
+          margin: 0;
+        }
+      }
+    }
+  }

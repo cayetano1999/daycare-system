@@ -1,16 +1,11 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="ion-no-border pb-2">
-     <!-- Header with background image -->
-     <div class="header-bg ">
+  <ion-toolbar class="ion-no-border pb-2 header-bg px-3 pt-2">
+    <!-- Header with background image -->
+    <ion-icon slot="start" name="chevron-back"></ion-icon>
+    <ion-title class="title">{{title}}</ion-title>
+    @if(bells) {
+    <ion-icon slot="end" name="notifications-outline"></ion-icon>
+  }
 
-      <!-- Navigation header -->
-      <div class="nav-header">
-        <ion-button (click)="back()" fill="clear" class="back-button" style="margin-left: 10px;">
-          <ion-icon name="arrow-back-outline"></ion-icon>
-        </ion-button>
-        <div class="title">{{title}}</div>
-        <div class="placeholder"></div>
-      </div>
-    </div>
   </ion-toolbar>
 </ion-header>

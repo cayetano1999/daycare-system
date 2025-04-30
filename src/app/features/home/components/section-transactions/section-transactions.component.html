@@ -1,0 +1,29 @@
+<ion-row class="transactions-section">
+  <ion-col size="12">
+    <div class="section-header">
+      <h3>Latest transactions</h3>
+      <a>See more</a>
+    </div>
+  </ion-col>
+
+  <ion-col size="12">
+    <ion-list>
+      @for(transaction of transactions; track transaction) {
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img [src]="transaction.image" [alt]="transaction.name" />
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ transaction.name }}</h2>
+          <p>{{ transaction.date }}</p>
+        </ion-label>
+        <ion-note slot="end">
+          <span [class.negative]="transaction.isNegative">{{ transaction.amount }}</span>
+          <p class="transaction-type">{{ transaction.description }}</p>
+        </ion-note>
+      </ion-item>
+    }
+
+    </ion-list>
+  </ion-col>
+</ion-row>

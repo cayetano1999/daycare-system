@@ -14,6 +14,7 @@ export class KuidoHeaderComponent  implements OnInit {
   private readonly navCtrl = inject(NavController);
   //Inputs
   @Input() title: string = '';
+  @Input() bells: boolean = false;
 
   constructor() { }
 

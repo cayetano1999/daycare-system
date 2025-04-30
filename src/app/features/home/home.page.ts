@@ -9,15 +9,19 @@ import { COLORS } from 'src/app/core/constants/constants';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
+import { KuidoTabComponent } from 'src/app/shared/components/kuido-tab/kuido-tab.component';
+import { ProfileSectionComponent } from './components/profile-section/profile-section.component';
+import { SectionServicesComponent } from './components/section-services/section-services.component';
+import { SectionTransactionsComponent } from './components/section-transactions/section-transactions.component';
 
-interface Service {
+export interface Service {
   id: number;
   title: string;
   icon: string;
   alt: string;
 }
 
-interface Transaction {
+export interface Transaction {
   name: string;
   image: string;
   date: string;
@@ -39,7 +43,7 @@ interface NavItem {
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonicModule, AvatarModule, CardModule, TagModule, RouterModule, CommonModule, KuidoHeaderComponent]
+  imports: [IonicModule, AvatarModule, CardModule, TagModule, RouterModule, CommonModule, KuidoHeaderComponent, KuidoTabComponent, ProfileSectionComponent, SectionServicesComponent, SectionTransactionsComponent],
 })
 export class HomePage  implements OnInit {
 
