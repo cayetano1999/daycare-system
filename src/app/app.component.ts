@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
         }
 
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
-        this.navCtrl.navigateRoot([RoutesApp.PRE_HOME]);
+        this.navCtrl.navigateRoot([RoutesApp.HOME]);
     }
 
     private setupRouterEvents(): void {

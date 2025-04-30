@@ -1,175 +1,114 @@
-<ion-header class="ion-no-border px-2  animate__animated animate__backInLeft " style="--background:#FAFAFA">
-  <ion-toolbar style="--background:#FAFAFA" class=" py-3">
-
-    <ion-avatar slot="start" class="avatar-image">
-      <img src="assets/img/profile.jpg" />
-    </ion-avatar>
-    <ion-title></ion-title>
-    <div class="icon-container">
-      <span class="pi pi-bell" slot="end"></span> <!-- Icono de notificación -->
-    </div>
-
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-img src="assets/img/shared/header-2.svg" class="header-bg"></ion-img>
+    <ion-title class="logo-title">kuidopay</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-img src="assets/img/shared/notification.svg" class="notification-icon"></ion-img>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
+  
+</ion-header> -->
+<app-kuido-header title="kuidopay"></app-kuido-header>
 
-  <ion-toolbar class="ion-no-border" style="--background:#FAFAFA">
-    <ion-row>
-      <ion-col size="12">
-        <ion-card-title>Hola, Josue Alexander 👋</ion-card-title>
-      </ion-col>
-    </ion-row>
-  </ion-toolbar>
-
-
-</ion-header>
 
 <ion-content>
+  <!-- Header Section -->
 
-  <ion-grid fixed class="px-2 mt-2">
+  <ion-row>
+    <ion-col size="12" class="center-content ctop" style="margin-top: 40px;">
+      <ion-avatar class="profile-avatar">
+        <img src="assets/img/shared/profile.svg" alt="Profile" />
+      </ion-avatar>
+    </ion-col>
+  </ion-row>
+  <!-- User Greeting Section -->
+  <div class="greeting-section">
+    <h2>Hi</h2>
+    <p>Jhon Smith</p>
+  </div>
 
-    <ion-row>
-      <ion-col size="12" class="ion-no-padding">
-        <div class="card-body  animate__animated animate__backInLeft">
+  <!-- Services Section -->
+  <ion-row class="services-section">
+    <ion-col size="12">
+      <h3>Services</h3>
+    </ion-col>
 
-          <ion-row style="background: rgba(32, 106, 43, 0.789) ; border-radius: 20px;">
-            <ion-col size="6" class="px-3">
-              <p style="margin-top: 10px; font-size: 14px;"><b>Saldo Disponible</b></p>
-            </ion-col>
+    <ion-col size="3" *ngFor="let service of services">
+      <ion-card class="service-card">
+        <ion-card-content>
+          <ion-img [src]="service.icon" [alt]="service.alt"></ion-img>
+          <div class="service-title">{{ service.title }}</div>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 
-            <ion-col size="6" style="background:rgb(40 49 41) ; border-radius: 20px; text-align: center;"
-              class="center-content">
-              <p style="margin-top: 10px; font-size: 14px;"><b> <i class="pi pi-money-bill"></i> RD$16,000.00</b></p>
-            </ion-col>
-          </ion-row>
+  <!-- Latest Transactions -->
+  <ion-row class="transactions-section">
+    <ion-col size="12">
+      <div class="section-header">
+        <h3>Latest transactions</h3>
+        <a>See more</a>
+      </div>
+    </ion-col>
 
-          <ion-row>
-            <ion-col size="6">
-              <ion-item lines="none" style="--background: #2a8839; --padding-start: 0;  --padding-end: 0;">
-                <div class="icon-container-success">
-                  <ion-icon name="git-compare-outline"></ion-icon>
-                </div>
-                <ion-label style="color: white; margin-left: 5px; font-size: 14px;">
-                  <b>Último Pago</b>
-
-                  <div class="card-body p-0">
-                    <p><b>Recarga</b></p>
-                    <p>809-371-6874</p>
-                  </div>
-                </ion-label>
-
-              </ion-item>
-
-            </ion-col>
-
-            <ion-col size="6">
-              <ion-item lines="none" style="--background: #2a8839; --padding-start: 0;">
-                <div class="icon-container-warning">
-                  <ion-icon name="stopwatch-sharp"></ion-icon>
-                </div>
-                <ion-label style="color: white; margin-left: 5px;">
-                  <b style="font-size: 14px;">Pendiente</b>
-
-                  <div class="card-body p-0">
-                    <p style="font-size: 14px;"><b>Energia Elec.</b></p>
-                    <p>449094</p>
-                  </div>
-                </ion-label>
-              </ion-item>
-            </ion-col>
-
-          </ion-row>
-        </div>
-      </ion-col>
-
-
-      <ion-col size="12" class="mt-2 animate__animated animate__backInUp">
-        <p-tag severity="secondary" value="Servicios" />
-      </ion-col>
-
-      <ion-col size="12" class="animate__animated animate__backInUp">
-
-        <ion-item lines="none" class="option-item" style=" border: 1px solid #C2D4C3;">
-          <div class="icon-container-recharge">
-            <ion-icon color="primary" name="git-compare-outline"></ion-icon>
-          </div>
-          <ion-label style="margin-left: 15px;">
-            <b>Recargas</b>
-            <p>Recarga tu balance al instante</p>
+    <ion-col size="12">
+      <ion-list>
+        <ion-item lines="none" *ngFor="let transaction of transactions">
+          <ion-avatar slot="start">
+            <img [src]="transaction.image" [alt]="transaction.name" />
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ transaction.name }}</h2>
+            <p>{{ transaction.date }}</p>
           </ion-label>
-
+          <ion-note slot="end">
+            <span [class.negative]="transaction.isNegative">{{ transaction.amount }}</span>
+            <p class="transaction-type">{{ transaction.description }}</p>
+          </ion-note>
         </ion-item>
-
-        <ion-item lines="none" class="option-item mt-2" style=" border: 1px solid #E2E2C5;">
-          <div class="icon-container-electricity">
-            <!-- <ion-icon color="primary" name="git-compare-outline"></ion-icon> -->
-            <i style="font-size: 24px; color: var(--ion-color-warning);" class="pi pi-lightbulb"></i>
-          </div>
-          <ion-label style="margin-left: 15px;">
-            <b>Electricidad</b>
-            <p>Realiza el pago del servicio de electricidad</p>
-          </ion-label>
-
-        </ion-item>
-
-        <ion-item lines="none" class="option-item mt-2" style=" border: 1px solid #C4D8E2;">
-          <div class="icon-container-water">
-            <ion-icon style="color: #0000ff4d;" name="water-sharp"></ion-icon>
-          </div>
-          <ion-label style="margin-left: 15px;">
-            <b>Agua</b>
-            <p>Realiza el pago del servicio</p>
-          </ion-label>
-
-        </ion-item>
-
-        <ion-item lines="none" class="option-item mt-2" style=" border: 1px solid #E3C7C3;">
-          <div class="icon-container-tax">
-            <ion-icon name="document-text-outline" color="danger"></ion-icon>
-          </div>
-          <ion-label style="margin-left: 15px;">
-            <b>Impuestos</b>
-            <p>Realiza el pago de tus impuestos</p>
-          </ion-label>
-
-        </ion-item>
-
-
-      </ion-col>
-
-    </ion-row>
-
-
-
-  </ion-grid>
-
+      </ion-list>
+    </ion-col>
+  </ion-row>
 </ion-content>
 
-<ion-footer class="ion-no-border px-3 pb-2">
-  <ion-toolbar class="ion-no-border py-2 px-2 animate__animated animate__fadeIn" style="--background: #0f0f0f;
-    border-radius: 20px;">
-
-    <ion-tabs>
-
-      <ion-tab-bar class="ion-no-border px-2" style=" --border:0; --background: #0f0f0f;
-    border-radius: 20px;" slot="bottom">
-       
-
-        <ion-tab-button tab="profile" routerLink="/profile">
-          <ion-icon style="font-size: 20px;" color="light" name="person"></ion-icon>
-          <ion-label color="light">Profile</ion-label>
+<!-- Footer Navigation -->
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-no-border" style="--background: white;">
+    <ion-tabs class="ion-no-border">
+      <ion-tab-bar class="ion-no-border mb-3" slot="bottom,top">
+        <ion-tab-button tab="tab1">
+          <!-- <ion-icon name="flash"></ion-icon> -->
+           <ion-img src="../../../assets/img/shared/home_5.svg"></ion-img>
+          <ion-label>Home</ion-label>
         </ion-tab-button>
-
-        <ion-tab-button tab="home" routerLink="/home">
-          <ion-icon style="font-size: 20px;" color="light" name="home"></ion-icon>
-          <ion-label color="light">Home</ion-label>
+        <ion-tab-button tab="tab2">
+          <!-- <ion-icon name="apps"></ion-icon> -->
+          <ion-img src="../../../assets/img/shared/bills.svg"></ion-img>
+          <ion-label>Bills</ion-label>
         </ion-tab-button>
-
-        <ion-tab-button tab="settings" routerLink="/settings">
-          <ion-icon style="font-size: 20px;" color="light" name="settings"></ion-icon>
-          <ion-label color="light">Settings</ion-label>
+        <ion-tab-button tab="tab3">
+          <!-- <ion-icon name="apps"></ion-icon> -->
+          <ion-img src="../../../assets/img/shared/kuidocircle.svg"></ion-img>
         </ion-tab-button>
+          <ion-tab-button tab="tab4">
+            <!-- <ion-icon name="flash"></ion-icon> -->
+             <ion-img src="../../../assets/img/shared/bagfooter.svg"></ion-img>
+            <ion-label>Gif Cards</ion-label>
+          </ion-tab-button>
+          <ion-tab-button tab="tab5">
+            <!-- <ion-icon name="apps"></ion-icon> -->
+            <ion-img src="../../../assets/img/shared/user_3.svg"></ion-img>
+            <ion-label>Profile</ion-label>
+          </ion-tab-button>
+
+        
       </ion-tab-bar>
-    </ion-tabs>
 
+      
+    </ion-tabs>
 
   </ion-toolbar>
 </ion-footer>
