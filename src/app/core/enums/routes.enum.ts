@@ -24,4 +24,8 @@ export enum RoutesApp{
     AUTH_REGISTER = 'auth/register',
     AUTH_FORGOT_PASSWORD = 'auth/forgot-password',
     AUTH_OTP = 'auth/otp',
+
+    //Top Up
+    TOP_UP = '/top-up',
+    TOP_UP_VALIDATE_PHONE = '/top-up/validate-phone',
 }

@@ -146,7 +146,7 @@ export class HomePage  implements OnInit {
 
   //Lifecycle
   async ionViewWillEnter() { 
-    await this.statusBar.setStatusBarStyle(COLORS.white)
+    await this.statusBar.setStatusBarStyle(COLORS.headerGreen)
 
   }
 

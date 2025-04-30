@@ -11,6 +11,7 @@ import { HomePage } from './features/home/home.page';
 import { SplashScreenComponent } from './features/splash-screen/splash-screen.component';
 import { LoginPreviewComponent } from './features/auth/pages/login-preview/login-preview.component';
 import { authenticationRoutes } from './features/auth/authentication.routes';
+import { topUpRoutes } from './features/top-up/top-up.routes';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,7 @@ export const routes: Routes = [
 
   //Authentication routes
   ...authenticationRoutes,
+  ...topUpRoutes,
 
   {
     path: 'no-internet',

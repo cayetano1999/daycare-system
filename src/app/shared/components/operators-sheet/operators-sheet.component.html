@@ -1,0 +1,23 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-title>Select Operator</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12">
+      <ion-list>
+        @for(operator of operators; track operator) {
+        <ion-item  (click)="selectOperator(operator)">
+          <ion-avatar slot="start">
+            <img [src]="operator.icon" alt="{{ operator.name }}">
+          </ion-avatar>
+          <ion-label><b>{{ operator.name }}</b></ion-label>
+        </ion-item>
+      }
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-content>

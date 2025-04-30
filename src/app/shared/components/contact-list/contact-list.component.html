@@ -1,0 +1,33 @@
+<ion-content>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Seleccionar Contacto</ion-label>
+      <ion-button class="mb-3" (click)="closeModal()">Cerrar</ion-button>
+    </ion-list-header>
+
+    <!-- Campo de búsqueda -->
+    <ion-item>
+      <ion-input
+        placeholder="Buscar por nombre o número"
+        [(ngModel)]="searchTerm"
+        (ionInput)="filterContacts()"
+      ></ion-input>
+    </ion-item>
+
+    <!-- Lista filtrada de contactos -->
+    <ion-item  *ngFor="let item of filteredContacts.slice(0, 100)" (click)="selectContact(item)">
+      <ion-icon *ngIf="!item?.image?.base64String" name="person-circle-sharp" slot="start"></ion-icon>
+      <ion-avatar *ngIf="item?.image?.base64String">
+        <img [src]="item?.image?.base64String" />
+      </ion-avatar>
+      <ion-label>
+        <ion-card-subtitle style="font-size: 18px; color: black;">
+          {{ item?.name?.display || item?.phones?.[0]?.number }}
+        </ion-card-subtitle>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

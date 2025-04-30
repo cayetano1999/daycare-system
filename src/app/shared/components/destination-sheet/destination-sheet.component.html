@@ -1,0 +1,23 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-title>Select Destination</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12">
+      <ion-list>
+        @for(destination of destinations; track destination) {
+        <ion-item  (click)="selectDestination(destination)">
+          <ion-avatar slot="start">
+            <img [src]="destination.flag" alt="{{ destination.name }}">
+          </ion-avatar>
+          <ion-label><b>{{ destination.name }}</b></ion-label>
+        </ion-item>
+      }
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-content>
