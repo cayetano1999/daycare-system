@@ -28,4 +28,5 @@ export enum RoutesApp{
     //Top Up
     TOP_UP = '/top-up',
     TOP_UP_VALIDATE_PHONE = '/top-up/validate-phone',
+    TOP_UP_SEND_TOP_UPS = '/top-up/send-top-ups',
 }

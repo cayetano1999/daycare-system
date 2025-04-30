@@ -1,0 +1,68 @@
+<app-kuido-header [title]="'Send Top Ups'"></app-kuido-header>
+
+<ion-content>
+  <ion-grid>
+    <!-- Recipient Card -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="recipient-card">
+          <ion-card-content>
+            <div class="recipient-content">
+              <img src="../../../../../assets/img/shared/person.svg" alt="Recipient avatar" class="avatar" />
+              <div class="recipient-info">
+                <p class="recipient-text">Send to <span class="bold">Kathya Yu</span></p>
+                <p class="phone-number">+1 984 943 432</p>
+              </div>
+              <img src="../../../../../assets/img/shared/claro.svg" alt="Flag" class="flag" />
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Amount Input -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="amount-input-container">
+          <label>Enter the top up to send</label>
+          <div class="input-wrapper">
+            <ion-input type="number" placeholder="$0" [(ngModel)]="amount" class="amount-input">
+            </ion-input>
+            <ion-button (click)="confirmTopUp()" class="send-button">
+              Send
+            </ion-button>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <!-- Top Up Options -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="top-up-label">Select the top up</div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-card *ngFor="let option of topUpOptions" class="top-up-card" [class.selected]="option.isSelected"
+          (click)="selectTopUp(option)">
+          <ion-card-content>
+            <div class="top-up-content">
+              <img [src]="option.icon" alt="Top up icon" class="top-up-icon" />
+              <div class="top-up-info">
+                <p class="top-up-text">Send this top up worth<br />USD${{option.usdAmount}} / DOP${{option.dopAmount}}
+                </p>
+                <ion-button *ngIf="option.isSelected" class="select-button">
+                  USD${{option.usdAmount}} / DOP${{option.dopAmount}}
+                </ion-button>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<app-kuido-tab></app-kuido-tab>

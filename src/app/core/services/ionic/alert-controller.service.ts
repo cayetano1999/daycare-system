@@ -3,6 +3,8 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { CustomLoadingComponent } from 'src/app/shared/components/custom-loading/custom-loading.component';
 import { ForceUpdateModalComponent } from 'src/app/shared/components/force-update-modal/force-update-modal.component';
 import { ToastControllerService } from './toast-controller.service';
+import { TopUpConfirmationComponent } from 'src/app/features/top-up/components/top-up-confirmation/top-up-confirmation.component';
+import { TopUpSuccessComponent } from 'src/app/shared/components/top-up-success/top-up-success.component';
 @Injectable({
     providedIn: 'root'
 })
@@ -163,6 +165,44 @@ export class AlertControllerService {
           });
           await modalLives.present();
           const result = await modalLives.onDidDismiss();
+    }
+
+    async openModalConfirmTopUp() {
+        const modalConfirm = await this.modalCtrl.create({
+            component: TopUpConfirmationComponent,
+            id: 'modal-topup',
+            cssClass: 'backdrop-modal',
+            backdropDismiss: false,
+            componentProps: {
+            }
+          });
+          setTimeout(async () => {
+            const element = document.getElementById('modal-topup');
+            if (element) {
+                this.toastCtrl.showToastError('Error al cargar la información');
+                await this.modalCtrl.dismiss();
+            }
+          }, 60000);
+          await modalConfirm.present();
+          const result = await modalConfirm.onDidDismiss();
+          return result.data;
+          
+    }
+
+    async openModalTopUpSuccess() {
+    
+        const modal = await this.modalCtrl.create({
+            component: TopUpSuccessComponent,
+            cssClass: 'backdrop-modal',
+            componentProps: {
+              recipientName: 'Kathya Yu',
+              recipientPhone: '+1 984 943 432',
+              recipientImage: 'assets/img/shared/person.svg'
+            },
+          });
+          await modal.present();
+          const result = await modal.onDidDismiss();
+          return result.data;
     }
 
   

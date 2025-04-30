@@ -9,6 +9,7 @@ import { LoginPhoneComponent } from "../auth/pages/login-phone/login-phone.compo
 import { LoginPreviewComponent } from "../auth/pages/login-preview/login-preview.component";
 import { OtpComponent } from "../auth/pages/otp/otp.component";
 import { RegisterComponent } from "../auth/pages/register/register.component";
+import { SendTopUpsComponent } from './pages/send-top-ups/send-top-ups.component';
 
 export const topUpRoutes: Routes = [
 
@@ -16,6 +17,12 @@ export const topUpRoutes: Routes = [
   {
     path: 'top-up/validate-phone',
     component: ValidatePhoneComponent,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+
+  {
+    path: 'top-up/send-top-ups',
+    component: SendTopUpsComponent,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   },
 

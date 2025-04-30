@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './auth.page.html',
     styleUrls: ['./auth.page.scss'],
     standalone: true,
-    imports: [IonicModule, LoginHeaderComponent, LoginFormComponent, LoginFooterComponent, CommonModule, RouterOutlet]
+    imports: [IonicModule, LoginHeaderComponent, LoginFooterComponent, CommonModule, RouterOutlet]
 })
 export class AuthPage {
 
