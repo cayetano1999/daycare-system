@@ -12,6 +12,8 @@ import { SplashScreenComponent } from './features/splash-screen/splash-screen.co
 import { LoginPreviewComponent } from './features/auth/pages/login-preview/login-preview.component';
 import { authenticationRoutes } from './features/auth/authentication.routes';
 import { topUpRoutes } from './features/top-up/top-up.routes';
+import { billPaymentRoutes } from './features/bill-payment/bill-payment.routes';
+import { favoriteNumbers } from './features/favorite-numbers/favorite-numbers.routes';
 
 export const routes: Routes = [
   {
@@ -23,6 +25,8 @@ export const routes: Routes = [
   //Authentication routes
   ...authenticationRoutes,
   ...topUpRoutes,
+  ...billPaymentRoutes,
+  ...favoriteNumbers,
 
   {
     path: 'no-internet',

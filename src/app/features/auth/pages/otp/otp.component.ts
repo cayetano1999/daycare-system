@@ -3,6 +3,7 @@ import { IonicModule, NavController } from '@ionic/angular';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { KuidoSocialLoginComponent } from 'src/app/shared/components/kuido-social-login/kuido-social-login.component';
 import { LoginSelectorComponent } from '../../components/login-selector/login-selector.component';
+import { RoutesApp } from 'src/app/core/enums/routes.enum';
 
 @Component({
   selector: 'app-otp',
@@ -55,6 +56,8 @@ export class OtpComponent  implements OnInit {
   async verifyOTP() {
     const otp = this.getOTPValue();
     // Add your OTP verification logic here
+    this.navCtrl.navigateRoot(RoutesApp.HOME);
+    
     console.log('Verifying OTP:', otp);
   }
 

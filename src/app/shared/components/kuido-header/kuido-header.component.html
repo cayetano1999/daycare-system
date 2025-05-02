@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-no-border pb-2 header-bg px-3 pt-2">
     <!-- Header with background image -->
-    <ion-icon slot="start" name="chevron-back"></ion-icon>
+    <ion-icon (click)="back()" slot="start" name="chevron-back"></ion-icon>
     <ion-title class="title">{{title}}</ion-title>
     @if(bells) {
     <ion-icon slot="end" name="notifications-outline"></ion-icon>

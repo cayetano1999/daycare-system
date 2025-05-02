@@ -35,6 +35,8 @@ export class LoginPhoneComponent  implements OnInit {
     if (this.loginForm.valid) {
       console.log('Form submitted', this.loginForm.value);
       // Aquí iría tu lógica de login
+      this.navCtrl.navigateRoot(RoutesApp.AUTH_OTP);
+
     }
   }
 

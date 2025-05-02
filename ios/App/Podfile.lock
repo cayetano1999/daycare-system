@@ -5,6 +5,8 @@ PODS:
     - Capacitor
   - CapacitorBrowser (6.0.5):
     - Capacitor
+  - CapacitorCommunityContacts (6.1.1):
+    - Capacitor
   - CapacitorCommunityHttp (1.4.1):
     - Capacitor
   - CapacitorCordova (6.2.0)
@@ -27,6 +29,7 @@ DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCommunityContacts (from `../../node_modules/@capacitor-community/contacts`)"
   - "CapacitorCommunityHttp (from `../../node_modules/@capacitor-community/http`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
@@ -44,6 +47,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/app"
   CapacitorBrowser:
     :path: "../../node_modules/@capacitor/browser"
+  CapacitorCommunityContacts:
+    :path: "../../node_modules/@capacitor-community/contacts"
   CapacitorCommunityHttp:
     :path: "../../node_modules/@capacitor-community/http"
   CapacitorCordova:
@@ -67,6 +72,7 @@ SPEC CHECKSUMS:
   Capacitor: 05d35014f4425b0740fc8776481f6a369ad071bf
   CapacitorApp: e1e6b7d05e444d593ca16fd6d76f2b7c48b5aea7
   CapacitorBrowser: b468ac2db928e594b4d319727f3874743f9bcf96
+  CapacitorCommunityContacts: 9cde99c2cd212f6594677aae542436e2174c4ef2
   CapacitorCommunityHttp: 7eba71da94e070e37a26a60483350285a33e3903
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
   CapacitorHaptics: 4fc15afe22b123d093e6ace24d95e8e3b1f261b9
@@ -77,6 +83,6 @@ SPEC CHECKSUMS:
   CapacitorScreenOrientation: fa1032f30ed22ec9083973b8f584ea94f4fe45c6
   CapacitorStatusBar: b16799a26320ffa52f6c8b01737d5a95bbb8f3eb
 
-PODFILE CHECKSUM: fe1b2dc9bc4d82f675d94784ce53d32bcfcfc338
+PODFILE CHECKSUM: 8197ec257b058155cc31cce8b7a6ac2402ac4862
 
 COCOAPODS: 1.16.2

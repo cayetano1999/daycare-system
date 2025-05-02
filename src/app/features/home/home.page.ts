@@ -19,6 +19,7 @@ export interface Service {
   title: string;
   icon: string;
   alt: string;
+  url: string;
 }
 
 export interface Transaction {
@@ -59,25 +60,29 @@ export class HomePage  implements OnInit {
       id: 1,
       title: 'Top\nUps',
       icon: 'assets/img/shared/topups.svg',
-      alt: 'Icon'
+      alt: 'Icon',
+      url: 'top-up/validate-phone'
     },
     {
       id: 2,
       title: 'Bill Payment',
       icon: 'assets/img/shared/payments.svg',
-      alt: 'Ticket alt duotone'
+      alt: 'Ticket alt duotone',
+      url: 'bill-payment'
     },
     {
       id: 3,
       title: 'Gift\nCards',
       icon: 'assets/img/shared/cards.svg',
-      alt: 'Icon'
+      alt: 'Icon',
+      url: 'gift-cards'
     },
     {
       id: 4,
       title: 'Favorites\nNumbers',
       icon: 'assets/img/shared/favoritesnumbers.svg',
-      alt: 'Estrella de la lista'
+      alt: 'Estrella de la lista',
+      url: 'favorite-numbers'
     }
   ];
 

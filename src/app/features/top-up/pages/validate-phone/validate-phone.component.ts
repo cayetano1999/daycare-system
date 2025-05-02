@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, LoadingController, ModalController } from '@ionic/angular';
+import { IonicModule, LoadingController, ModalController, NavController } from '@ionic/angular';
 import { DestinationSheetComponent } from 'src/app/shared/components/destination-sheet/destination-sheet.component';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { OperatorsSheetComponent } from 'src/app/shared/components/operators-sheet/operators-sheet.component';
@@ -10,6 +10,7 @@ import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { ContactListComponent } from 'src/app/shared/components/contact-list/contact-list.component';
 import { Capacitor } from '@capacitor/core';
+import { RoutesApp } from 'src/app/core/enums/routes.enum';
 
 interface Operator {
   id: string;
@@ -35,6 +36,7 @@ export class ValidatePhoneComponent implements OnInit {
   private readonly loadingCtrl = inject(LoadingController);
   private readonly storage = inject(StorageHelper);
   private readonly modalCtrl = inject(ModalController);
+  private readonly navCtrl = inject(NavController)
 
   selectedOperator: Operator | null = null;
   selectedDestination: Destination | null = null;
@@ -153,6 +155,10 @@ export class ValidatePhoneComponent implements OnInit {
     if (data) {
       this.phoneNumber = data.phones?.[0]?.number || '';
     }
+  }
+
+  goToSend(){
+    this.navCtrl.navigateRoot(RoutesApp.TOP_UP_SEND_TOP_UPS)
   }
 
 

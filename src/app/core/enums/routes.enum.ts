@@ -29,4 +29,10 @@ export enum RoutesApp{
     TOP_UP = '/top-up',
     TOP_UP_VALIDATE_PHONE = '/top-up/validate-phone',
     TOP_UP_SEND_TOP_UPS = '/top-up/send-top-ups',
+
+    //Bill Payment
+    BILL_PAYMENT = '/bill-payment',
+
+    //Favorite numbers
+    FAVORITE_NUMBERS = '/favorite-numbers',
 }
