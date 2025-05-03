@@ -4,6 +4,7 @@ import { IonicModule, NavController } from '@ionic/angular';
 import { COLORS } from 'src/app/core/constants/constants';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { KuidoSocialLoginComponent } from 'src/app/shared/components/kuido-social-login/kuido-social-login.component';
 
@@ -14,15 +15,16 @@ import { KuidoSocialLoginComponent } from 'src/app/shared/components/kuido-socia
   standalone: true,
   imports: [IonicModule, FormsModule, ReactiveFormsModule, KuidoHeaderComponent, KuidoSocialLoginComponent]
 })
-export class LoginEmailComponent  implements OnInit {
+export class LoginEmailComponent {
+
   private formBuilder = inject(FormBuilder);
   private readonly statusBar = inject(StatusBarHelper);
   private readonly navCtrl = inject(NavController);
-  
+  private readonly supabase = inject(SupabaseService);
+  loading: boolean = false;
 
   constructor() { }
 
-  ngOnInit() {}
 
 
   loginForm = this.formBuilder.group({
@@ -36,11 +38,29 @@ export class LoginEmailComponent  implements OnInit {
     this.showPassword.update(value => !value);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Form submitted', this.loginForm.value);
+
+      try {
+        this.loading = true
+
+        const {email, password} = this.loginForm.value
+        const { error } = await this.supabase.signIn(email as string, password as string)
+
+        if (error) 
+          throw error
+        
+        this.navCtrl.navigateRoot(RoutesApp.HOME);
+
+      } catch (error) {
+        if (error instanceof Error) {
+          alert(error.message)
+        }
+      } finally {
+        this.loginForm.reset()
+        this.loading = false
+      }
       // Aquí iría tu lógica de login
-      this.navCtrl.navigateRoot(RoutesApp.HOME);
     }
   }
 

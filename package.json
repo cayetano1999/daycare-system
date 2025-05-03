@@ -39,6 +39,7 @@
     "@capacitor/status-bar": "^6.0.2",
     "@ionic/angular": "^6.7.5",
     "@primeng/themes": "^19.0.6",
+    "@supabase/supabase-js": "^2.49.4",
     "@types/crypto-js": "^4.2.2",
     "@types/firebase": "^3.2.3",
     "animation.css": "^0.1.0",

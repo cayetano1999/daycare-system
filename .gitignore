@@ -289,8 +289,6 @@ web_modules/
 .env.production.local
 .env.local
 
-# Ignore all environment configuration files
-src/environments/*.ts
 
 
 # parcel-bundler cache (https://parceljs.org/)
