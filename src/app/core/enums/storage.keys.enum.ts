@@ -3,5 +3,6 @@ export enum StorageKeys  {
     PENDING_UPDATE = 'pending_update',
     TOKEN = 'token',
     CONTACTS = 'contacts',
+    SESSION_DATA = 'SESSION_DATA',
 
 }

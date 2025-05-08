@@ -13,6 +13,7 @@ import { KuidoTabComponent } from 'src/app/shared/components/kuido-tab/kuido-tab
 import { ProfileSectionComponent } from './components/profile-section/profile-section.component';
 import { SectionServicesComponent } from './components/section-services/section-services.component';
 import { SectionTransactionsComponent } from './components/section-transactions/section-transactions.component';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 
 export interface Service {
   id: number;
@@ -51,9 +52,16 @@ export class HomePage  implements OnInit {
   //Services
   private readonly statusBar = inject(StatusBarHelper);
   private readonly router = inject(Router);
+
+  supabase = inject(SupabaseService);
+
   constructor() { }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    const session = await this.supabase.getSession();
+    const profile = await this.supabase.profile(session?.user.id as string);
+    console.log(session,profile)
+  }
 
   services: Service[] = [
     {

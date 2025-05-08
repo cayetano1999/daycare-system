@@ -22,14 +22,14 @@ export class LoginEmailComponent {
   private readonly navCtrl = inject(NavController);
   private readonly supabase = inject(SupabaseService);
   loading: boolean = false;
-
+  error = '';
   constructor() { }
 
 
 
   loginForm = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    email: ['alejandroa.mercedes@gmail.com', [Validators.required, Validators.email]],
+    password: ['Klkpapa123', [Validators.required, Validators.minLength(6)]]
   });
 
   showPassword = signal(false);
@@ -41,16 +41,17 @@ export class LoginEmailComponent {
   async onSubmit() {
     if (this.loginForm.valid) {
 
+      const { email, password } = this.loginForm.value;
       try {
         this.loading = true
 
-        const {email, password} = this.loginForm.value
-        const { error } = await this.supabase.signIn(email as string, password as string)
-
-        if (error) 
-          throw error
+        const { error } = await this.supabase.signIn(email as string, password as string);
+        if (error) {
+          this.error = error.message;
+        } else {
+          this.navCtrl.navigateRoot(RoutesApp.HOME);
+        }
         
-        this.navCtrl.navigateRoot(RoutesApp.HOME);
 
       } catch (error) {
         if (error instanceof Error) {

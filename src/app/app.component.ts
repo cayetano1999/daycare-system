@@ -11,6 +11,7 @@ import { FirebaseAnalyticsService } from './core/services/firebase/firebase-anal
 import { RoutesApp } from './core/enums/routes.enum';
 import { BackButtonService } from './core/services/back-button/back-button.service';
 import { PipesModule } from './shared/pipes/pipes.module';
+import { SupabaseService } from './core/services/supabase.service';
 
 @Component({
     selector: 'app-root',
@@ -34,10 +35,12 @@ export class AppComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly analyticsService = inject(FirebaseAnalyticsService);
     private readonly backBtnService = inject(BackButtonService);
+    private readonly supabase = inject(SupabaseService);
 
     constructor() {
         this.setupRouterEvents();
         this.setupBackButton();
+        this.checkSession();
     }
 
     async ngOnInit() {
@@ -52,7 +55,16 @@ export class AppComponent implements OnInit {
         }
 
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
-        this.navCtrl.navigateRoot([RoutesApp.PRE_HOME]);
+    }
+
+    async checkSession() {
+        const { data } = await this.supabase.getSupabase().auth.getSession();
+
+        if (data.session) {
+            this.router.navigate([RoutesApp.HOME]);
+        } else {
+            this.router.navigate([RoutesApp.LOGIN]);
+        }
     }
 
     private setupRouterEvents(): void {

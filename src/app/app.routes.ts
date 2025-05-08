@@ -14,6 +14,7 @@ import { authenticationRoutes } from './features/auth/authentication.routes';
 import { topUpRoutes } from './features/top-up/top-up.routes';
 import { billPaymentRoutes } from './features/bill-payment/bill-payment.routes';
 import { favoriteNumbers } from './features/favorite-numbers/favorite-numbers.routes';
+import { SessiongGuard as SessionGuard } from './core/guards/session.guard';
 
 export const routes: Routes = [
   {
@@ -38,7 +39,7 @@ export const routes: Routes = [
   },
   {
     path: 'pre-home',
-    component: PreHomePage,
+    component: PreHomePage
   },
   {
     path: 'onboarding',
@@ -46,7 +47,8 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomePage
+    component: HomePage,
+    canActivate: [SessionGuard]
   },
   {
     path: 'splash-screen',
