@@ -9,7 +9,7 @@
   <ion-row>
     <ion-col size="12">
       <ion-list>
-        @for(destination of destinations; track destination) {
+        @for(destination of destinations | async; track destination) {
         <ion-item  (click)="selectDestination(destination)">
           <ion-avatar slot="start">
             <img [src]="destination.flag" alt="{{ destination.name }}">

@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule, NavController } from '@ionic/angular';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { KuidoSocialLoginComponent } from 'src/app/shared/components/kuido-social-login/kuido-social-login.component';
 
@@ -17,6 +18,7 @@ export class ForgotPasswordComponent  implements OnInit {
 
   //Services
   private readonly navCtrl = inject(NavController);
+  private readonly supabaseService = inject(SupabaseService);
 
   constructor() { }
 
@@ -28,11 +30,14 @@ export class ForgotPasswordComponent  implements OnInit {
       phone: ['', [Validators.required, Validators.required]],
     });
   
-    onSubmit() {
+    async onSubmit() {
       if (this.loginForm.valid) {
         console.log('Form submitted', this.loginForm.value);
         // Aquí iría tu lógica de login
-        this.navCtrl.navigateRoot(RoutesApp.AUTH_OTP)
+        const {data, error} = await this.supabaseService.forgotPassword(this.loginForm.value.phone as string);
+        console.log('data', data);
+        console.log('error', error); 
+        // this.navCtrl.navigateRoot(RoutesApp.AUTH_OTP)
       }
     }
 

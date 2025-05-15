@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import {AvatarModule} from 'primeng/avatar';
-import {OverlayBadgeModule} from 'primeng/overlaybadge';
+import { AvatarModule } from 'primeng/avatar';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
@@ -14,6 +14,8 @@ import { ProfileSectionComponent } from './components/profile-section/profile-se
 import { SectionServicesComponent } from './components/section-services/section-services.component';
 import { SectionTransactionsComponent } from './components/section-transactions/section-transactions.component';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { ApiService } from 'src/app/core/services/api/api.service';
+import { HttpClient } from '@angular/common/http';
 
 export interface Service {
   id: number;
@@ -47,7 +49,7 @@ interface NavItem {
   standalone: true,
   imports: [IonicModule, AvatarModule, CardModule, TagModule, RouterModule, CommonModule, KuidoHeaderComponent, KuidoTabComponent, ProfileSectionComponent, SectionServicesComponent, SectionTransactionsComponent],
 })
-export class HomePage  implements OnInit {
+export class HomePage implements OnInit {
 
   //Services
   private readonly statusBar = inject(StatusBarHelper);
@@ -58,9 +60,7 @@ export class HomePage  implements OnInit {
   constructor() { }
 
   async ngOnInit() {
-    const session = await this.supabase.getSession();
-    const profile = await this.supabase.profile(session?.user.id as string);
-    console.log(session,profile)
+
   }
 
   services: Service[] = [
@@ -158,7 +158,7 @@ export class HomePage  implements OnInit {
   }
 
   //Lifecycle
-  async ionViewWillEnter() { 
+  async ionViewWillEnter() {
     await this.statusBar.setStatusBarStyle(COLORS.headerGreen)
 
   }

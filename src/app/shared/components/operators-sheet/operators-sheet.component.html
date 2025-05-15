@@ -9,10 +9,10 @@
   <ion-row>
     <ion-col size="12">
       <ion-list>
-        @for(operator of operators; track operator) {
+        @for(operator of operators | async; track operator) {
         <ion-item  (click)="selectOperator(operator)">
           <ion-avatar slot="start">
-            <img [src]="operator.icon" alt="{{ operator.name }}">
+            <img [src]="operator.logo" alt="{{ operator.name }}">
           </ion-avatar>
           <ion-label><b>{{ operator.name }}</b></ion-label>
         </ion-item>

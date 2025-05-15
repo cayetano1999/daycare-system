@@ -41,8 +41,20 @@ export class SupabaseService {
       this.session = session;
     });
   }
+
   signIn(email: string, password: string) {
     return this.supabase.auth.signInWithPassword({ email, password });
+  }
+
+  forgotPassword(email: string) {
+    return this.supabase.auth.resetPasswordForEmail(email);
+  }
+
+  resetPassword(newPassword: string, nonce: string) {
+    return this.supabase.auth.updateUser({
+      password: newPassword,
+      nonce: nonce,
+    });
   }
 
   profile(id: string) {

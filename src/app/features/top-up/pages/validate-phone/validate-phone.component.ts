@@ -11,17 +11,27 @@ import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { ContactListComponent } from 'src/app/shared/components/contact-list/contact-list.component';
 import { Capacitor } from '@capacitor/core';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
+import { ApiService } from 'src/app/core/services/api/api.service';
+import { CountryService } from 'src/app/core/services/country.service';
+import { OperatorService } from 'src/app/core/services/operator.service';
+import { BehaviorSubject } from 'rxjs';
 
-interface Operator {
-  id: string;
+export type Operator = {
+  country: Country;
+  logo: string;
   name: string;
-  icon: string;
+  id: number;
+  service: {
+    id: number;
+    name: string;
+  }
 }
 
-interface Destination {
-  id: string;
+export type Country = {
+  iso_code: string;
   name: string;
   flag: string;
+  prefix: string;
 }
 
 @Component({
@@ -37,30 +47,22 @@ export class ValidatePhoneComponent implements OnInit {
   private readonly storage = inject(StorageHelper);
   private readonly modalCtrl = inject(ModalController);
   private readonly navCtrl = inject(NavController)
+  private readonly apiService = inject(ApiService);
+  private readonly countryService = inject(CountryService);
+  private readonly operatorService = inject(OperatorService);
 
   selectedOperator: Operator | null = null;
-  selectedDestination: Destination | null = null;
+  selectedDestination: Country | null = null;
   phoneNumber: string = '';
-
+  operators$: BehaviorSubject<Operator[]> = new BehaviorSubject<Operator[]>([]);
 
   // Example data - Replace with your actual data source
-  operators: Operator[] = [
-    {
-      id: '1',
-      name: 'Claro',
-      icon: '/assets/img/shared/claro.svg'
-    }
-    // Add more operators
-  ];
-
-  destinations: Destination[] = [
-    {
-      id: '1',
-      name: 'United States',
-      flag: '/assets/img/shared/usflag.svg'
-    }
-    // Add more destinations
-  ];
+  // operators$: this.operatorService.getOperators();
+  countries$ = this.countryService.getCountries(); // Replace with your actual data source
+  // data$ = combineLatest({
+  //   countries: this.countryService.getCountries(),
+  // })
+  // countries = this.countryService.getCountries(); // Replace with your actual data source
   contactsList: ContactPayload[] = [];
 
   constructor(private modalController: ModalController) { }
@@ -68,13 +70,12 @@ export class ValidatePhoneComponent implements OnInit {
   ngOnInit() { }
 
   async openOperatorSheet() {
-    alert('openOperatorSheet');
     const modal = await this.modalController.create({
       component: OperatorsSheetComponent, // Create this component
       breakpoints: [0, 0.5, 1],
       initialBreakpoint: 0.8,
       componentProps: {
-        operators: this.operators,
+        operators: this.operators$.asObservable(),
         selectedOperator: this.selectedOperator
       }
     });
@@ -93,8 +94,9 @@ export class ValidatePhoneComponent implements OnInit {
       component: DestinationSheetComponent, // Create this component
       breakpoints: [0, 0.5, 1],
       initialBreakpoint: 0.8,
+      
       componentProps: {
-        destinations: this.destinations,
+        destinations: this.countries$,
         selectedDestination: this.selectedDestination
       }
     });
@@ -104,6 +106,16 @@ export class ValidatePhoneComponent implements OnInit {
     const { data } = await modal.onWillDismiss();
     if (data) {
       this.selectedDestination = data;
+      this.selectedOperator = null;
+      this.operatorService.getOperators("1",data.iso_code).subscribe({
+        next: (operators) => {
+          this.operators$.next(operators);
+          console.log('operators', operators);
+        },
+        error: (error) => {
+          console.error('Error fetching operators:', error);
+        }
+      });
     }
   }
 
