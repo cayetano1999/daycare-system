@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
         const { data } = await this.supabase.getSupabase().auth.getSession();
 
         if (data.session) {
-            this.router.navigate([RoutesApp.HOME]);
+            this.router.navigate([RoutesApp.PROFILE]);
         } else {
             this.router.navigate([RoutesApp.LOGIN]);
         }

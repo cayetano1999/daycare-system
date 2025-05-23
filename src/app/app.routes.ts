@@ -15,6 +15,7 @@ import { topUpRoutes } from './features/top-up/top-up.routes';
 import { billPaymentRoutes } from './features/bill-payment/bill-payment.routes';
 import { favoriteNumbers } from './features/favorite-numbers/favorite-numbers.routes';
 import { SessiongGuard as SessionGuard } from './core/guards/session.guard';
+import { profileRoutes } from './features/profile/profile.page.routes';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
   ...topUpRoutes,
   ...billPaymentRoutes,
   ...favoriteNumbers,
+  ...profileRoutes,
 
   {
     path: 'no-internet',
