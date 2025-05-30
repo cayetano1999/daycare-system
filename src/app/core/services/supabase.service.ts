@@ -57,11 +57,11 @@ export class SupabaseService {
     });
   }
 
-  profile(id: string) {
+  profile() {
     return this.supabase
       .from('profiles')
-      .select('username, website, avatar_url')
-      .eq('id', id)
+      .select('username,full_name, website, avatar_url')
+      .eq('id', this.session?.user.id)
       .single()
   }
 

@@ -6,6 +6,7 @@ import { SwiperOptions } from 'swiper/types';
 import { CreditCard } from '../creditcard/pages/create-credit-card/create-credit-card.component';
 import { CreditCardService } from 'src/app/core/services/credit-card.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,9 +20,11 @@ export class ProfilePage {
 
   private readonly navCtrl = inject(NavController);
   private readonly creditCardService = inject(CreditCardService);
+  private readonly supabaseService = inject(SupabaseService);
 
   slideOpts: SwiperOptions = { centeredSlides: true, pagination: true, slidesPerView: 1, autoplay: { delay: 5000, disableOnInteraction: false } };
   creditCards: CreditCard[] = [];
+  profile : any = {};
 
 
   settingsItems = [
@@ -64,8 +67,11 @@ export class ProfilePage {
 
   constructor() {}
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.loadCreditCards()
+    const{ data, error} = await this.supabaseService.profile();
+    this.profile = data;
+    console.log(this.profile);
   }
 
   redirectAddCard() {
