@@ -29,16 +29,19 @@ export class ForgotPasswordComponent  implements OnInit {
     private formBuilder = inject(FormBuilder);
   
     loginForm = this.formBuilder.nonNullable.group({
-      email: ['', [Validators.required, Validators.email]],
-      newPassword: ['', [Validators.required, Validators.pattern(REGEX.password)]],
-      confirmPassword: ['', [Validators.required, Validators.email]],
+      email: ['alejandroa.mercedes@gmail.com', [Validators.required, Validators.email]],
+      newPassword: ['klkpapa', [Validators.required, Validators.pattern(REGEX.password)]],
+      confirmPassword: ['Klkpapa123', [Validators.required]],
     }, { validators: passwordMatchValidator });
   
     async onSubmit() {
+      console.log('Form submitted', this.loginForm);
+
+      debugger
       if (this.loginForm.valid) {
         console.log('Form submitted', this.loginForm.value);
         // Aquí iría tu lógica de login
-        const {data, error} = await this.supabaseService.forgotPassword(this.loginForm.value.phone as string);
+        const {data, error} = await this.supabaseService.forgotPassword(this.loginForm.value.email as string);
         if(error==null){
           this.navCtrl.navigateRoot(RoutesApp.AUTH_OTP)
         }
