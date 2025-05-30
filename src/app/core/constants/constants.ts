@@ -14,3 +14,6 @@ export const IMAGES = {
 export const ANALITYCS_EVENTS = {
     
 }
+export const REGEX = {
+    password: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}/
+}
