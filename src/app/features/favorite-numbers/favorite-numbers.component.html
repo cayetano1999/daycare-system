@@ -36,8 +36,9 @@
 <ion-footer>
   <ion-toolbar>
     <div class="send-button-container">
-      <ion-button expand="block" class="send-button">
-        Send
+
+      <ion-button expand="block" (click)="openContactPicker()" class="send-button">
+        Add Favorite Number
       </ion-button>
     </div>
   </ion-toolbar>

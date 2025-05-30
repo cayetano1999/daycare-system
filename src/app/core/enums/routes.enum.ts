@@ -35,4 +35,7 @@ export enum RoutesApp{
 
     //Favorite numbers
     FAVORITE_NUMBERS = '/favorite-numbers',
+
+    //Credit Card
+    CREATE_CREDIT_CARD = '/creditcard/create',
 }

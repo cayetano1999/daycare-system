@@ -1,22 +1,47 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-no-border">
-    <ion-title>Select Destination</ion-title>
+    <ion-item lines="none" style="--background: #ff000000">
+      <ion-icon name="globe" slot="start"></ion-icon>
+      <ion-label><b>Countries Destinations</b>
+        <p>Select your destination country to send pop up</p>
+      </ion-label>
+    </ion-item>
   </ion-toolbar>
-</ion-header>
 
+  <ion-row>
+    <ion-col size="12" class="p-body mt-3">
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterCountries()" placeholder="Search by country name"
+        class="custom-searchbar" debounce="300">
+      </ion-searchbar>
+    </ion-col>
+
+    <ion-col size="12" class="p-body">
+
+      @if(selectedDestination) {
+      <ion-item class="country-list-selected mb-2" lines="none">
+        <ion-avatar slot="start">
+          <img [src]="selectedDestination.flag" alt="{{ selectedDestination.name }}">
+        </ion-avatar>
+        <ion-label style="color: white;"><b>{{ selectedDestination.name }}</b></ion-label>
+        <ion-checkbox color="light" checked slot="end"></ion-checkbox>
+      </ion-item>
+      }
+    </ion-col>
+  </ion-row>
+</ion-header>
 
 <ion-content>
   <ion-row>
-    <ion-col size="12">
+    <ion-col size="12" class="mt-4 p-body">
       <ion-list>
-        @for(destination of destinations | async; track destination) {
-        <ion-item  (click)="selectDestination(destination)">
+        <ion-item *ngFor="let destination of filteredCountries" class="country-list mb-2 shadow-sm" lines="none"
+          (click)="selectDestination(destination)">
           <ion-avatar slot="start">
             <img [src]="destination.flag" alt="{{ destination.name }}">
           </ion-avatar>
           <ion-label><b>{{ destination.name }}</b></ion-label>
+          <ion-checkbox slot="end"></ion-checkbox>
         </ion-item>
-      }
       </ion-list>
     </ion-col>
   </ion-row>

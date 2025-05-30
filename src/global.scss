@@ -222,6 +222,10 @@ ion-searchbar::part(icon) {
 
 }
 
+:host(.ion-color) .toast-wrapper {
+    background: red;
+}
+
 
 // p, h1, h2, h3, h4, h5, h6, ion-label, ion-button, ion-card-title, ion-card-subtitle, ion-card-header, ion-card-content, ion-item, ion-input, ion-textarea, ion-select, ion-select-option, ion-chip {
 //   font-family: 'aptops' sans-serif;

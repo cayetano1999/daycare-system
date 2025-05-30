@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 
@@ -12,17 +12,20 @@ import { IonicModule, ModalController } from '@ionic/angular';
 })
 export class TopUpConfirmationComponent  implements OnInit {
 
+  @Input() amount: number = 0;
   private readonly modalCtrl = inject(ModalController);
 
   topUpData = {
-    amount: '$4.99',
+    amount: this.amount,
     title: 'Top Up to send',
     description: 'Send this top up to continue sharing and connecting with that special someone'
   };
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.topUpData.amount = this.amount;
+  }
 
   onConfirm() {
     console.log('Confirmed top-up');
@@ -31,7 +34,7 @@ export class TopUpConfirmationComponent  implements OnInit {
 
   onCancel() {
     console.log('Cancelled top-up');
-    this.modalCtrl.dismiss({success: true})
+    this.modalCtrl.dismiss({success: false})
 
   }
 

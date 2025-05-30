@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 import { Country } from 'src/app/features/top-up/pages/validate-phone/validate-phone.component';
 
 @Component({
@@ -9,24 +9,38 @@ import { Country } from 'src/app/features/top-up/pages/validate-phone/validate-p
   templateUrl: './destination-sheet.component.html',
   styleUrls: ['./destination-sheet.component.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class DestinationSheetComponent implements OnInit {
+  private readonly modalCtrl = inject(ModalController);
 
-  //Services
-  private readonly modalCtrl = inject(ModalController)
-
-  @Input() destinations: Observable<Country[]> = new Observable<Country[]>();
+  @Input() destinations: Country[] = [];
+  @Input() countrySelected: Country | null = null;
   @Input() selectedDestination: any = null;
   destinationSelected: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  searchTerm: string = '';
+  filteredCountries: Country[] = [];
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.filteredCountries = this.getSortedCountries();
+
+    // this.filterCountries();
+  }
+
+  filterCountries() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredCountries = this.getSortedCountries().filter(country =>
+      country.name.toLowerCase().includes(term)
+    );
+  }
+
+  getSortedCountries(): Country[] {
+    return [...this.destinations].sort((a, b) => a.name.localeCompare(b.name));
+  }
 
   selectDestination(destination: any) {
-    // Emit the selected operator to the parent component
     this.destinationSelected.emit(destination);
-    this.modalCtrl.dismiss(destination)
+    this.modalCtrl.dismiss(destination);
   }
 }

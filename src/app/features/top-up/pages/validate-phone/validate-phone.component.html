@@ -9,6 +9,28 @@
       </ion-col>
     </ion-row>
 
+
+    <!-- Phone Number Input -->
+
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-field">
+          <span class="field-label">Phone number to Top-Up</span>
+          <div class="field-content phone-input">
+            <div class="input-container">
+              <ion-input type="tel" (ionBlur)="validatePhoneNumber()" [(ngModel)]="phoneNumber" placeholder="Enter phone number"
+                class="phone-number-input">
+                {{selectedOperator?.country?.prefix}}
+              </ion-input>
+            </div>
+            <ion-img src="../../../../../assets/img/shared/phone-form.svg"></ion-img>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+    @if(showInputs){
     <!-- Destination Selection -->
     <ion-row>
       <ion-col size="12">
@@ -38,24 +60,9 @@
         </div>
       </ion-col>
     </ion-row>
+  }
 
-    <!-- Phone Number Input -->
-    <ion-row>
-      <ion-col size="12">
-        <div class="form-field">
-          <span class="field-label">Phone number to Top-Up</span>
-          <div class="field-content phone-input">
-            <div class="input-container">
-              <ion-input type="tel" [(ngModel)]="phoneNumber" placeholder="Enter phone number"
-                class="phone-number-input">
-                {{selectedOperator?.country?.prefix}}
-              </ion-input>
-            </div>
-            <ion-img src="../../../../../assets/img/shared/phone-form.svg"></ion-img>
-          </div>
-        </div>
-      </ion-col>
-    </ion-row>
+    
   </ion-grid>
 </ion-content>
 
@@ -63,7 +70,7 @@
   <ion-grid>
     <ion-row class="ion-padding">
       <ion-col size="12">
-        <ion-button (click)="goToSend()" expand="block" class="send-topup-btn">
+        <ion-button [disabled]="!selectedOperator || !selectedDestination || !phoneNumber" (click)="goToSend()" expand="block" class="send-topup-btn">
           Send Top-Up
         </ion-button>
       </ion-col>

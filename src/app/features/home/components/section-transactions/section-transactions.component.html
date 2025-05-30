@@ -15,7 +15,7 @@
         </ion-avatar>
         <ion-label>
           <h2>{{ transaction.name }}</h2>
-          <p>{{ transaction.date }}</p>
+          <p>{{ transaction.date | date:'mediumDate' }}</p>
         </ion-label>
         <ion-note slot="end">
           <span [class.negative]="transaction.isNegative">{{ transaction.amount }}</span>

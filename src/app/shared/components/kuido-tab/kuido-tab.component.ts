@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, inject, OnInit } from '@angular/core';
+import { IonicModule, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-kuido-tab',
@@ -11,8 +11,15 @@ import { IonicModule } from '@ionic/angular';
 })
 export class KuidoTabComponent  implements OnInit {
 
+  private readonly navCtrl = inject(NavController);
+
   constructor() { }
 
   ngOnInit() {}
+
+
+  redirect(url: string) {
+    this.navCtrl.navigateRoot(url);
+  }
 
 }

@@ -16,6 +16,7 @@ import { billPaymentRoutes } from './features/bill-payment/bill-payment.routes';
 import { favoriteNumbers } from './features/favorite-numbers/favorite-numbers.routes';
 import { SessiongGuard as SessionGuard } from './core/guards/session.guard';
 import { profileRoutes } from './features/profile/profile.page.routes';
+import { creditcardRoutes } from './features/creditcard/creditcard.routes';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,7 @@ export const routes: Routes = [
   ...billPaymentRoutes,
   ...favoriteNumbers,
   ...profileRoutes,
+  ...creditcardRoutes,
 
   {
     path: 'no-internet',

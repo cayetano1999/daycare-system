@@ -1,10 +1,15 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertController, IonicModule, NavController } from '@ionic/angular';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { KuidoTabComponent } from 'src/app/shared/components/kuido-tab/kuido-tab.component';
+import { Country, Operator } from '../validate-phone/validate-phone.component';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { RoutesApp } from 'src/app/core/enums/routes.enum';
+import { TransactionService } from 'src/app/core/services/transaction.service';
 
 interface TopUpOption {
   id: number;
@@ -14,18 +19,28 @@ interface TopUpOption {
   isSelected: boolean;
 }
 
+export interface ToUpsData {
+  phoneNumber: string;
+  selectedOperator: Operator;
+  selectedDestination: Country;
+  navigationId: number;
+  contactName?: string;
+}
 @Component({
   selector: 'app-send-top-ups',
   templateUrl: './send-top-ups.component.html',
   styleUrls: ['./send-top-ups.component.scss'],
-    imports: [IonicModule, CommonModule, FormsModule, KuidoHeaderComponent, KuidoTabComponent]
-  
+  imports: [IonicModule, CommonModule, FormsModule, KuidoHeaderComponent, KuidoTabComponent]
+
 })
 export class SendTopUpsComponent implements OnInit {
 
   //Services
   private readonly navCtrl = inject(NavController);
   private readonly alertCtrl = inject(AlertControllerService);
+  private readonly location = inject(Location);
+  private readonly storageHelper = inject(StorageHelper);
+  private readonly transactionService = inject(TransactionService)
 
   amount: number = 0;
   topUpOptions: TopUpOption[] = [
@@ -52,8 +67,16 @@ export class SendTopUpsComponent implements OnInit {
     }
   ];
 
+  topUpData!: ToUpsData;
 
-  ngOnInit() {}
+  constructor() {
+    // Recibir por state los parámetros selectedDestination, selectedOperator y phoneNumber
+
+
+  }
+
+
+  ngOnInit() { }
 
   goBack() {
     this.navCtrl.back();
@@ -65,12 +88,33 @@ export class SendTopUpsComponent implements OnInit {
       isSelected: option.id === selectedOption.id
     }));
     this.amount = selectedOption.usdAmount;
+    this.confirmTopUp();
   }
 
-  async confirmTopUp() { 
-    const result = await this.alertCtrl.openModalConfirmTopUp();
-    result?.success ? this.alertCtrl.openModalTopUpSuccess() : null
+  async confirmTopUp() {
+    const result = await this.alertCtrl.openModalConfirmTopUp(this.amount);
+    if (result?.success) {
+      const topUpData = await this.storageHelper.getStorageKey<ToUpsData>(StorageKeys.TOP_UP_DATA);
+      this.alertCtrl.openModalAlert();
+      setTimeout(async () => {
+        const transaction = await this.transactionService.mapTransactionToInterface(topUpData, this.amount);
+        await this.transactionService.saveTransaction(transaction);
+        this.alertCtrl.dismiss();
+        this.alertCtrl.openModalTopUpSuccess(topUpData).then(result => {
+          this.navCtrl.navigateForward(RoutesApp.HOME)
+        });
+      }, 3000);
 
-    
+    }
+
+
+  }
+
+  async ionViewWillEnter() {
+    const navState = this.location.getState() as ToUpsData;
+    console.log('Received data from navigation:', navState);
+    this.topUpData = navState;
+    await this.storageHelper.setStorageKey(StorageKeys.TOP_UP_DATA, this.topUpData);
+
   }
 }

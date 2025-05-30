@@ -15,7 +15,9 @@
 
 .greeting-section {
   margin-top: 48px;
-  text-align: center;
+  //text-align: center;
+  display: inline-grid;
+    margin-left: 9vw;
 
   h2 {
     font-family: "Montserrat", Helvetica;

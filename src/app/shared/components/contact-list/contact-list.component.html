@@ -1,33 +1,66 @@
+<app-kuido-header title="Contacts Book"></app-kuido-header>
 <ion-content>
+  <div class="search-container">
+    <div class="search-wrapper">
+      <ion-input [(ngModel)]="searchTerm" (ionInput)="filterContacts()" placeholder="Search by contact name"
+        class="custom-searchbar" class="search-input">
+      </ion-input>
+      <img class="search-icon" src="assets/img/shared/find.svg" alt="Search icon" />
+    </div>
+  </div>
 
-  <ion-list>
-    <ion-list-header>
-      <ion-label>Seleccionar Contacto</ion-label>
-      <ion-button class="mb-3" (click)="closeModal()">Cerrar</ion-button>
-    </ion-list-header>
+  <ion-list class="contacts-container">
+    <ion-item *ngFor="let item of filteredContacts.slice(0, 100)" lines="none" class="contact-card">
+      <div class="contact-content">
+        <div class="contact-info">
+          <ion-avatar>
+            <ion-icon name="person-circle-sharp" style="font-size: 40px;"></ion-icon>
+          </ion-avatar>
+          <div class="contact-details">
+            <div class="contact-name">{{ item?.name?.display }}</div>
+            <div class="contact-phone">{{ item?.phones?.[0]?.number }}</div>
+          </div>
+        </div>
+      </div>
+      <ion-checkbox (click)="selectContact(item)" slot="end"></ion-checkbox>
 
-    <!-- Campo de búsqueda -->
-    <ion-item>
-      <ion-input
-        placeholder="Buscar por nombre o número"
-        [(ngModel)]="searchTerm"
-        (ionInput)="filterContacts()"
-      ></ion-input>
     </ion-item>
-
-    <!-- Lista filtrada de contactos -->
-    <ion-item  *ngFor="let item of filteredContacts.slice(0, 100)" (click)="selectContact(item)">
-      <ion-icon *ngIf="!item?.image?.base64String" name="person-circle-sharp" slot="start"></ion-icon>
-      <ion-avatar *ngIf="item?.image?.base64String">
-        <img [src]="item?.image?.base64String" />
-      </ion-avatar>
-      <ion-label>
-        <ion-card-subtitle style="font-size: 18px; color: black;">
-          {{ item?.name?.display || item?.phones?.[0]?.number }}
-        </ion-card-subtitle>
-      </ion-label>
-    </ion-item>
-
   </ion-list>
-
 </ion-content>
+
+
+
+
+<!-- <ion-content class="p-body">
+
+
+  <ion-row>
+    <ion-col size="12" class="p-body mt-3">
+      <ion-list>
+
+    
+        <ion-item lines="none" class="contact-list mb-2 " *ngFor="let item of filteredContacts.slice(0, 100)"
+          (click)="selectContact(item)">
+          <ion-icon *ngIf="!item?.image?.base64String" name="person-circle-sharp" slot="start"></ion-icon>
+          <ion-avatar *ngIf="item?.image?.base64String">
+            <img [src]="item?.image?.base64String" />
+          </ion-avatar>
+          <ion-label>
+            <ion-card-subtitle style="font-size: 18px; color: black;">
+              {{ item?.name?.display || item?.phones?.[0]?.number }}
+            </ion-card-subtitle>
+          </ion-label>
+
+          <ion-checkbox slot="end"></ion-checkbox>
+
+        </ion-item>
+
+      </ion-list>
+    </ion-col>
+  </ion-row>
+
+
+
+
+
+</ion-content> -->

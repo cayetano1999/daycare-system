@@ -39,16 +39,15 @@ export class ToastControllerService {
     toast.present();
   }
 
-  async showToastSuccess(message: string, icon: string, duration: number, css: string){
+  async showToastSuccess(message: string, duration: number, icon?: string, css?: string){
    const toast = await this.toastController.create({
       animated: true,
       message: message,
-      translucent: true,
       duration: duration || 5000,
       position: 'top',
-      color: 'success',
+      color: 'dark',
       icon: icon || 'checkmark',
-      cssClass: css || ''
+      cssClass: 'toast-success'
     });
     toast.present();
 

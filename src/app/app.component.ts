@@ -12,7 +12,12 @@ import { RoutesApp } from './core/enums/routes.enum';
 import { BackButtonService } from './core/services/back-button/back-button.service';
 import { PipesModule } from './shared/pipes/pipes.module';
 import { SupabaseService } from './core/services/supabase.service';
-
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { StorageHelper } from './core/helpers/storage.helper';
+import { StorageKeys } from './core/enums/storage.keys.enum';
+import { FirebaseMessagingService } from './core/services/firebase/firebase-messaging.service';
+import { register } from 'swiper/element/bundle';
+register(); // Register Swiper elements globally
 @Component({
     selector: 'app-root',
     templateUrl: 'app.component.html',
@@ -36,6 +41,8 @@ export class AppComponent implements OnInit {
     private readonly analyticsService = inject(FirebaseAnalyticsService);
     private readonly backBtnService = inject(BackButtonService);
     private readonly supabase = inject(SupabaseService);
+    private readonly storageHelper = inject(StorageHelper);
+    private readonly fcm = inject(FirebaseMessagingService);
 
     constructor() {
         this.setupRouterEvents();
@@ -55,15 +62,32 @@ export class AppComponent implements OnInit {
         }
 
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
+        this.loadFingerprint();
+        await this.fcm.initializeFirebaseMessaging();
+        const permissionGranted = await this.fcm.requestPermissions();
+
+        if( permissionGranted ) {
+            const token = await this.fcm.getToken();
+            if (token) {
+                await this.storageHelper.setStorageKey(StorageKeys.FCM_TOKEN, token);
+            }
+        }
+
+    }
+
+    async loadFingerprint() {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        await this.storageHelper.setStorageKey(StorageKeys.FINGERPRINT_DEVICE_ID, result.visitorId);
     }
 
     async checkSession() {
         const { data } = await this.supabase.getSupabase().auth.getSession();
 
         if (data.session) {
-            this.router.navigate([RoutesApp.PROFILE]);
+            this.router.navigate([RoutesApp.HOME]);
         } else {
-            this.router.navigate([RoutesApp.LOGIN]);
+            this.router.navigate([RoutesApp.SPLASH]);
         }
     }
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Transaction } from '../../home.page';
+import { TransactionTemplate } from '../../home.page';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class SectionTransactionsComponent  implements OnInit {
 
   //Inputs
-  @Input() transactions: Transaction[] = [];
+  @Input() transactions: TransactionTemplate[] = [];
 
   constructor() { }
 

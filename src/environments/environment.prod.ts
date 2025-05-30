@@ -1,5 +1,7 @@
+
+
 export const environment = {
-  production: true,
+  production: false,
   firebaseConfig: {
     apiKey: "AIzaSyBQCq9-El1NVMof3wUNxw90hvYwbfZlxbY",
     authDomain: "kuidoapp-60d43.firebaseapp.com",
@@ -9,7 +11,8 @@ export const environment = {
     appId: "1:193661590436:web:6f13c7352281189bdfff31",
     measurementId: "G-9B48Z5JY85"
   },
-
+  supabaseUrl: "",
+  supabaseKey: "",
   URL_API: "",
   APP_VERSION: "",
   LESS_VERSION: "",
