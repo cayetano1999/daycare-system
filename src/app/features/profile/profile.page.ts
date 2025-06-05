@@ -7,6 +7,7 @@ import { CreditCard } from '../creditcard/pages/create-credit-card/create-credit
 import { CreditCardService } from 'src/app/core/services/credit-card.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 
 @Component({
   selector: 'app-profile',
@@ -14,17 +15,18 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
   styleUrls: ['./profile.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, KuidoHeaderComponent],
-  schemas:[CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProfilePage {
 
   private readonly navCtrl = inject(NavController);
   private readonly creditCardService = inject(CreditCardService);
   private readonly supabaseService = inject(SupabaseService);
+  private readonly storageHelper = inject(StorageHelper);
 
   slideOpts: SwiperOptions = { centeredSlides: true, pagination: true, slidesPerView: 1, autoplay: { delay: 5000, disableOnInteraction: false } };
   creditCards: CreditCard[] = [];
-  profile : any = {};
+  profile: any = {};
 
 
   settingsItems = [
@@ -65,11 +67,11 @@ export class ProfilePage {
     }
   ];
 
-  constructor() {}
+  constructor() { }
 
   async ionViewWillEnter() {
     this.loadCreditCards()
-    const{ data, error} = await this.supabaseService.profile();
+    const { data, error } = await this.supabaseService.profile();
     this.profile = data;
     console.log(this.profile);
   }
@@ -78,9 +80,18 @@ export class ProfilePage {
     this.navCtrl.navigateRoot(RoutesApp.CREATE_CREDIT_CARD);
   }
 
-    onFeatureSelected(feature: any) {
+  onFeatureSelected(feature: any) {
   }
 
+  async logout() {
+    try {
+      await this.supabaseService.signOut();
+      this.navCtrl.navigateRoot(RoutesApp.LOGIN_PREVIEW);
+      this.storageHelper.clear();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  }
 
   onSlideChange(event: any) {
     // Reinicia la bandera después de procesar el evento
@@ -98,7 +109,7 @@ export class ProfilePage {
   async redirectToOption(option: any) {
   }
 
-  async loadCreditCards(){
-   this.creditCards = await this.creditCardService.getCreditCards();
+  async loadCreditCards() {
+    this.creditCards = await this.creditCardService.getCreditCards();
   }
 }
