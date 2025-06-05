@@ -68,7 +68,7 @@ export class ValidatePhoneComponent implements OnInit {
   constructor(private modalController: ModalController) { }
 
   ngOnInit() {
-    
+
   }
 
 
@@ -134,9 +134,12 @@ export class ValidatePhoneComponent implements OnInit {
       if (data) {
         this.selectedDestination = data;
         const prefix = this.selectedDestination?.prefix.replace("+", "");
-        if(prefix && !this.phoneNumber.startsWith(prefix)) {
-         this.phoneNumber = prefix+this.phoneNumber;
+
+        if (prefix && !this.phoneNumber.startsWith(prefix)) {
+          this.phoneNumber = prefix + this.phoneNumber;
+          await this.validatePhoneNumber();
         }
+
         this.selectedOperator = null;
         this.operatorService.getOperators("1", data.iso_code).subscribe({
           next: (operators) => {
@@ -192,7 +195,7 @@ export class ValidatePhoneComponent implements OnInit {
   }
 
   validatePhoneNumber() {
-    if (this.phoneNumber.trim() !== '' && !this.selectedOperator && !this.selectedDestination) {
+    if (this.phoneNumber.trim() !== '' && (!this.selectedOperator || !this.selectedDestination)) {
       this.alertService.openModalAlert();
       this.topUpService.getPhoneLookup(this.phoneNumber).subscribe({
         next: (response: any) => {
@@ -278,7 +281,7 @@ export class ValidatePhoneComponent implements OnInit {
       this.phoneNumber = '';
     }
 
-    if(this.selectedDestination || this.selectedOperator){
+    if (this.selectedDestination || this.selectedOperator) {
       this.showInputs = true;
     }
   }
