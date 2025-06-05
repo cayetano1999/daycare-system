@@ -68,7 +68,7 @@ export class ValidatePhoneComponent implements OnInit {
   constructor(private modalController: ModalController) { }
 
   ngOnInit() {
-
+    
   }
 
 
@@ -276,6 +276,10 @@ export class ValidatePhoneComponent implements OnInit {
       this.selectedDestination = null;
       this.selectedOperator = null;
       this.phoneNumber = '';
+    }
+
+    if(this.selectedDestination || this.selectedOperator){
+      this.showInputs = true;
     }
   }
 
