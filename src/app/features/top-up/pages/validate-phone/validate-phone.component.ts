@@ -73,6 +73,10 @@ export class ValidatePhoneComponent implements OnInit {
 
 
   async openOperatorSheet() {
+
+    if(!this.selectedDestination)
+      return;
+    
     this.alertService.openModalAlert();
 
     const showOperatorsModal = async (operators: Operator[]) => {
