@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Operator } from 'src/app/features/top-up/pages/validate-phone/validate-phone.component';
+import { SupabaseService } from './supabase.service';
 
 const ROUTES = {
   Base: 'https://kdvvfwiwtzrqufwtukiy.supabase.co/functions/v1',
@@ -12,12 +13,16 @@ const ROUTES = {
 })
 export class OperatorService {
 
-  // countriesBehaviorSubject = new BehaviorSubject<Country[]>([]);
-  httpClient = inject(HttpClient);
+  supabaseService = inject(SupabaseService);
+  supabaseClient = this.supabaseService.getSupabase();
+  
   constructor() { }
 
-  getOperators(service:string, isoCode: string) {
-    return this.httpClient.get<Operator[]>(ROUTES.getOperator(service,isoCode));
-  }
+  async getOperators(serviceId:number, isoCode: string) {
+    const result = this.supabaseClient.functions.invoke('operator', {
+      body: { isoCode, serviceId }
+    });
 
+    return result;
+  }
 }

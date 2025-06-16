@@ -17,6 +17,7 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { Transaction } from 'src/app/shared/interfaces/transaction.interface';
+import { OperatorService } from 'src/app/core/services/operator.service';
 
 export interface Service {
   id: number;
@@ -57,13 +58,14 @@ export class HomePage implements OnInit {
   private readonly statusBar = inject(StatusBarHelper);
   private readonly router = inject(Router);
   private readonly storageHelper = inject(StorageHelper);
+  private readonly operatorService = inject(OperatorService);
 
   supabase = inject(SupabaseService);
 
   constructor() { }
 
   async ngOnInit() {
-
+    const result = await this.operatorService.getOperators(1, "DOM"); 
   }
 
   services: Service[] = [

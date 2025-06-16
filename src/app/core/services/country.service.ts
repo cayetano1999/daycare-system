@@ -1,28 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { ApiService } from './api/api.service';
-import { BehaviorSubject } from 'rxjs';
-import { Country } from 'src/app/features/top-up/pages/validate-phone/validate-phone.component';
-import { HttpClient } from '@angular/common/http';
-
-
-const ROUTES = {
-  Base: 'https://kdvvfwiwtzrqufwtukiy.supabase.co/functions/v1',
-  getCountry: (isoCode: string) => `${ROUTES.Base}/country/${isoCode}`,
-  getCountries: () => `${ROUTES.Base}/country`,
-}
+import { SupabaseService } from './supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CountryService {
 
-  // countriesBehaviorSubject = new BehaviorSubject<Country[]>([]);
-  httpClient = inject(HttpClient);
+  supabaseService = inject(SupabaseService);
+  supabaseClient = this.supabaseService.getSupabase();
+
   constructor() { }
 
-  getCountries(isoCode?: string) {
-    const url = isoCode ? ROUTES.getCountry(isoCode) : ROUTES.getCountries();
-    return this.httpClient.get<Country[]>(url);
-  }
+  async getCountries(isoCode?: string) {
 
+    const result = this.supabaseClient.functions.invoke('country', {
+      body: { isoCode }
+    });
+
+    return result;
+  }
 }

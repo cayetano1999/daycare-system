@@ -71,100 +71,105 @@ export class ValidatePhoneComponent implements OnInit {
 
   }
 
-
-  async openOperatorSheet() {
-
-    if(!this.selectedDestination)
-      return;
-    
-    this.alertService.openModalAlert();
-
-    const showOperatorsModal = async (operators: Operator[]) => {
-      const modal = await this.modalController.create({
-        component: OperatorsSheetComponent, // Create this component
-        breakpoints: [0, 1, 1],
-        initialBreakpoint: 1,
-        componentProps: {
-          operators: operators,
-          selectedOperator: this.selectedOperator
-        }
-      });
-
-      this.alertService.dismiss();
-      await modal.present();
-
-      const { data } = await modal.onWillDismiss();
-      console.log('data', data);
-      if (data) {
-        this.selectedOperator = data;
+  async showOperatorsModal(operators: Operator[]) {
+    const modal = await this.modalController.create({
+      component: OperatorsSheetComponent, // Create this component
+      breakpoints: [0, 1, 1],
+      initialBreakpoint: 1,
+      componentProps: {
+        operators: operators,
+        selectedOperator: this.selectedOperator
       }
-    }
+    });
 
-    if (this.operators.length <= 0) {
-      this.operatorService.getOperators("1", this.selectedDestination?.iso_code || '').subscribe({
-        next: async (operators) => {
-          this.operators = operators;
-          await showOperatorsModal(operators);
-        },
-        error: (error) => {
-          console.error('Error fetching operators:', error);
-          this.alertService.dismiss();
-        }
-      });
-    }
-    else {
-      await showOperatorsModal(this.operators);
+    this.alertService.dismiss();
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    console.log('data', data);
+    if (data) {
+      this.selectedOperator = data;
     }
   }
 
+  async openOperatorSheet() {
+
+    if (!this.selectedDestination)
+      return;
+
+    this.alertService.openModalAlert();
+
+    if (this.operators.length <= 0) {
+      try {
+        const { data, error } = await this.operatorService.getOperators(1, this.selectedDestination?.iso_code || '');
+        if (error) {
+          this.operators = data;
+          await this.showOperatorsModal(data);
+        }
+      }
+      catch (error) {
+        console.error('Error fetching operators:', error);
+      }
+      finally {
+        this.alertService.dismiss();
+      }
+    }
+    else {
+      await this.showOperatorsModal(this.operators);
+    }
+  }
+
+  async showDestinationModal(countries: Country[]) {
+    const modal = await this.modalController.create({
+      component: DestinationSheetComponent, // Create this component
+      breakpoints: [0, 1, 1],
+      initialBreakpoint: 1,
+
+      componentProps: {
+        destinations: countries,
+        selectedDestination: this.selectedDestination
+      }
+    });
+    this.alertService.dismiss();
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      this.selectedDestination = data;
+      const prefix = this.selectedDestination?.prefix.replace("+", "");
+
+      if (prefix && !this.phoneNumber.startsWith(prefix)) {
+        this.phoneNumber = prefix + this.phoneNumber;
+        await this.validatePhoneNumber();
+      }
+
+      this.selectedOperator = null;
+
+      try {
+        const { data, error } = await this.operatorService.getOperators(1, this.selectedDestination?.iso_code || '');
+        if (data) {
+          this.operators = data;
+        }
+      } catch (error) {
+        console.error('Error fetching operators:', error);
+      }
+
+    }
+  }
   async openDestinationSheet() {
 
     this.alertService.openModalAlert();
-    const showModal = async (countries: Country[]) => {
-      const modal = await this.modalController.create({
-        component: DestinationSheetComponent, // Create this component
-        breakpoints: [0, 1, 1],
-        initialBreakpoint: 1,
 
-        componentProps: {
-          destinations: countries,
-          selectedDestination: this.selectedDestination
-        }
-      });
-      this.alertService.dismiss();
-      await modal.present();
-
-      const { data } = await modal.onWillDismiss();
-      if (data) {
-        this.selectedDestination = data;
-        const prefix = this.selectedDestination?.prefix.replace("+", "");
-
-        if (prefix && !this.phoneNumber.startsWith(prefix)) {
-          this.phoneNumber = prefix + this.phoneNumber;
-          await this.validatePhoneNumber();
-        }
-
-        this.selectedOperator = null;
-        this.operatorService.getOperators("1", data.iso_code).subscribe({
-          next: (operators) => {
-            this.operators = operators;
-          },
-          error: (error) => {
-            console.error('Error fetching operators:', error);
-          }
-        });
-      }
-    }
     if (this.countries.length <= 0) {
-      this.countryService.getCountries().subscribe({
-        next: async (countries) => {
-          this.countries = countries;
-          await showModal(countries);
-        }
-      })
+
+      const { data, error } = await this.countryService.getCountries();
+      console.log('countries', data, error);
+
+      if (!error)
+        this.countries = data
     }
     else {
-      await showModal(this.countries)
+      await this.showDestinationModal(this.countries)
     }
   }
 
@@ -198,41 +203,39 @@ export class ValidatePhoneComponent implements OnInit {
 
   }
 
-  validatePhoneNumber() {
+  async validatePhoneNumber() {
     if (this.phoneNumber.trim() !== '' && (!this.selectedOperator || !this.selectedDestination)) {
       this.alertService.openModalAlert();
-      this.topUpService.getPhoneLookup(this.phoneNumber).subscribe({
-        next: (response: any) => {
-          if (!response.errors) {
 
-            this.selectedDestination = response.country;
+      try {
+        const {data, error} =  await this.topUpService.getPhoneLookup(this.phoneNumber);
+        if (!error) {
+            this.selectedDestination = data.country;
             this.selectedOperator = {
-              id: response.id,
-              name: response.name,
-              logo: response.logo,
-              country: response.country,
-              service: response.service
+              id: data.id,
+              name: data.name,
+              logo: data.logo,
+              country: data.country,
+              service: data.service
             };
-            this.operatorService.getOperators("1", response.country.iso_code).pipe(take(1)).subscribe({
-              next: (operators) => {
-                this.operators = operators;
-                console.log('operators', operators);
-              },
-              error: (error) => {
-                console.error('Error fetching operators:', error);
+            try {
+              const { data, error } = await this.operatorService.getOperators(1, this.selectedDestination?.iso_code || '');
+              if (data) {
+                this.operators = data;
               }
-            })
+            } catch (error) {
+              console.error('Error fetching operators:', error);
+            }
           }
           this.showInputs = true;
-
-        },
-        error: (error) => {
+      } catch (error) {
           console.error('Error fetching phone lookup:', error);
-        },
-        complete: () => {
+        
+      }
+      finally{
           this.alertService.dismiss();
-        }
-      });
+
+      }
     }
   }
 

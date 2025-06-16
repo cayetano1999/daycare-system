@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { SupabaseService } from './supabase.service';
 
 const ROUTES = {
   Base: 'https://kdvvfwiwtzrqufwtukiy.supabase.co/functions/v1/lookup',
@@ -11,10 +12,16 @@ const ROUTES = {
 })
 export class TopUpService {
 
-  httpClient = inject(HttpClient);
+  supabaseService = inject(SupabaseService);
+  supabaseClient = this.supabaseService.getSupabase();
+
   constructor() { }
 
-  getPhoneLookup(phoneNumber: string) {
-    return this.httpClient.get(ROUTES.getPhoneLookup(phoneNumber));
+  async getPhoneLookup(phoneNumber: string) {
+    const result = this.supabaseClient.functions.invoke('lookup', {
+      body: { phoneNumber }
+    });
+
+    return result;
   }
 }
