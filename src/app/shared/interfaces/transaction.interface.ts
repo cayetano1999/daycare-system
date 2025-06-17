@@ -1,5 +1,7 @@
-import { Country, Operator } from "src/app/features/top-up/pages/validate-phone/validate-phone.component";
+
+import { Country } from "src/app/core/models/country.type";
 import { DeviceInfo } from "./device.interface";
+import { Operator } from "src/app/core/models/operator.type";
 
 export interface ContactInfo {
     name: string;

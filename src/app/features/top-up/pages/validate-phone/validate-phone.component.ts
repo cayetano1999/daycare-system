@@ -15,24 +15,9 @@ import { CountryService } from 'src/app/core/services/country.service';
 import { OperatorService } from 'src/app/core/services/operator.service';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { TopUpService } from 'src/app/core/services/top-up.service';
-
-export type Operator = {
-  country: Country;
-  logo: string;
-  name: string;
-  id: number;
-  service: {
-    id: number;
-    name: string;
-  }
-}
-
-export type Country = {
-  iso_code: string;
-  name: string;
-  flag: string;
-  prefix: string;
-}
+import { Country } from 'src/app/core/models/country.type';
+import { Operator } from 'src/app/core/models/operator.type';
+import { ServiceType } from 'src/app/core/enums/service-type.enum';
 
 @Component({
   selector: 'app-validate-phone',
@@ -57,7 +42,6 @@ export class ValidatePhoneComponent implements OnInit {
   phoneNumber: string = '';
   operators: Operator[] = [];
   countries: Country[] = [];
-  SERVICE_ID: number = 1; // Assuming 1 is the service ID for top-ups
 
   contactsList: ContactPayload[] = [];
   contactName: string = '';
@@ -96,6 +80,7 @@ export class ValidatePhoneComponent implements OnInit {
     if (this.operators.length <= 0) {
       this.alertService.openModalAlert();
 
+
       this.operators = await this.getOperators();
 
       this.alertService.dismiss();
@@ -118,9 +103,9 @@ export class ValidatePhoneComponent implements OnInit {
     const data = await this.showDestinationModal(this.countries);
 
     //Executed only when a  destination is selected
-     if (data) {
+    if (data) {
       this.selectedDestination = data;
-      
+
       //Add prefix to phone number if it doesn't start with the selected destination's prefix
       const prefix = this.selectedDestination?.prefix.replace("+", "");
       if (prefix && !this.phoneNumber.startsWith(prefix)) {
@@ -132,7 +117,7 @@ export class ValidatePhoneComponent implements OnInit {
       this.selectedOperator = null;
 
       // Fetch operators for the selected destination
-      this.operators = await this.getOperators()
+      this.operators = await this.getOperators();
 
     }
 
@@ -189,26 +174,22 @@ export class ValidatePhoneComponent implements OnInit {
 
   async getCountries() {
     try {
-      const { data, error } = await this.countryService.getCountries();
-      if (error) {
-        console.error(`Error fetching countries: ${error}`);
-      }
+      const data = await this.countryService.getCountries();
       return data
     } catch (error) {
-      console.error('Error fetching countries:', error);
+      console.error('Error fetching countries:');
     }
+    return [];
   }
 
   async getOperators() {
     try {
-      const { data, error } = await this.operatorService.getOperators(this.SERVICE_ID, this.selectedDestination!.iso_code || '');
-      if (error) {
-        console.error(`Error fetching operators: ${error}`);
-      }
+      const data = await this.operatorService.getOperators(ServiceType.TopUp, this.selectedDestination!.iso_code || '');
       return data
     } catch (error) {
       console.error('Error fetching operators:', error);
     }
+    return [];
   }
 
   async validatePhoneNumber() {
@@ -216,7 +197,7 @@ export class ValidatePhoneComponent implements OnInit {
       this.alertService.openModalAlert();
 
       try {
-        const { data, error } = await this.topUpService.getPhoneLookup(this.phoneNumber);
+        const data = await this.topUpService.getPhoneLookup(this.phoneNumber);
         if (data) {
           this.selectedDestination = data.country;
           this.selectedOperator = {

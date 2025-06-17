@@ -58,14 +58,13 @@ export class HomePage implements OnInit {
   private readonly statusBar = inject(StatusBarHelper);
   private readonly router = inject(Router);
   private readonly storageHelper = inject(StorageHelper);
-  private readonly operatorService = inject(OperatorService);
 
   supabase = inject(SupabaseService);
 
   constructor() { }
 
   async ngOnInit() {
-    const result = await this.operatorService.getOperators(1, "DOM"); 
+
   }
 
   services: Service[] = [

@@ -1,12 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Operator } from 'src/app/features/top-up/pages/validate-phone/validate-phone.component';
 import { Transaction } from '../../shared/interfaces/transaction.interface';
 import { StorageHelper } from '../helpers/storage.helper';
 import { StorageKeys } from '../enums/storage.keys.enum';
 import { ToUpsData } from 'src/app/features/top-up/pages/send-top-ups/send-top-ups.component';
 import { v4 as uuidv4 } from 'uuid'; // Using uuid library for generating unique IDs
-import { Observable } from 'rxjs';
 
 
 @Injectable({
