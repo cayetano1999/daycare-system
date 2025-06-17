@@ -15,7 +15,7 @@ export class SessiongGuard implements CanActivate {
   constructor(private supabase: SupabaseService, private router: Router) {}
 
   async canActivate(): Promise<boolean> {
-    const session = this.supabase.getSession();
+    const session = await this.supabase.getSession();
 
     if (session) {
       return true;

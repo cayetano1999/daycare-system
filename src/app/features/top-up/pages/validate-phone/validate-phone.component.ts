@@ -11,10 +11,8 @@ import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { ContactListComponent } from 'src/app/shared/components/contact-list/contact-list.component';
 import { Capacitor } from '@capacitor/core';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
-import { ApiService } from 'src/app/core/services/api/api.service';
 import { CountryService } from 'src/app/core/services/country.service';
 import { OperatorService } from 'src/app/core/services/operator.service';
-import { BehaviorSubject, take } from 'rxjs';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { TopUpService } from 'src/app/core/services/top-up.service';
 
@@ -59,7 +57,7 @@ export class ValidatePhoneComponent implements OnInit {
   phoneNumber: string = '';
   operators: Operator[] = [];
   countries: Country[] = [];
-
+  SERVICE_ID: number = 1; // Assuming 1 is the service ID for top-ups
 
   contactsList: ContactPayload[] = [];
   contactName: string = '';
@@ -87,36 +85,57 @@ export class ValidatePhoneComponent implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     console.log('data', data);
-    if (data) {
-      this.selectedOperator = data;
-    }
+    return data;
   }
 
-  async openOperatorSheet() {
+  async onOperatorClick() {
 
     if (!this.selectedDestination)
       return;
 
-    this.alertService.openModalAlert();
-
     if (this.operators.length <= 0) {
-      try {
-        const { data, error } = await this.operatorService.getOperators(1, this.selectedDestination?.iso_code || '');
-        if (error) {
-          this.operators = data;
-          await this.showOperatorsModal(data);
-        }
-      }
-      catch (error) {
-        console.error('Error fetching operators:', error);
-      }
-      finally {
-        this.alertService.dismiss();
-      }
+      this.alertService.openModalAlert();
+
+      this.operators = await this.getOperators();
+
+      this.alertService.dismiss();
     }
-    else {
-      await this.showOperatorsModal(this.operators);
+
+    this.selectedOperator = await this.showOperatorsModal(this.operators);
+  }
+
+
+  async onDestinationClick() {
+
+    if (this.countries.length <= 0) {
+      this.alertService.openModalAlert();
+
+      this.countries = await this.getCountries();
+
+      this.alertService.dismiss();
     }
+
+    const data = await this.showDestinationModal(this.countries);
+
+    //Executed only when a  destination is selected
+     if (data) {
+      this.selectedDestination = data;
+      
+      //Add prefix to phone number if it doesn't start with the selected destination's prefix
+      const prefix = this.selectedDestination?.prefix.replace("+", "");
+      if (prefix && !this.phoneNumber.startsWith(prefix)) {
+        this.phoneNumber = prefix + this.phoneNumber;
+        await this.validatePhoneNumber();
+      }
+
+      // Reset selected operator when a new destination is selected
+      this.selectedOperator = null;
+
+      // Fetch operators for the selected destination
+      this.operators = await this.getOperators()
+
+    }
+
   }
 
   async showDestinationModal(countries: Country[]) {
@@ -134,43 +153,8 @@ export class ValidatePhoneComponent implements OnInit {
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    if (data) {
-      this.selectedDestination = data;
-      const prefix = this.selectedDestination?.prefix.replace("+", "");
 
-      if (prefix && !this.phoneNumber.startsWith(prefix)) {
-        this.phoneNumber = prefix + this.phoneNumber;
-        await this.validatePhoneNumber();
-      }
-
-      this.selectedOperator = null;
-
-      try {
-        const { data, error } = await this.operatorService.getOperators(1, this.selectedDestination?.iso_code || '');
-        if (data) {
-          this.operators = data;
-        }
-      } catch (error) {
-        console.error('Error fetching operators:', error);
-      }
-
-    }
-  }
-  async openDestinationSheet() {
-
-    this.alertService.openModalAlert();
-
-    if (this.countries.length <= 0) {
-
-      const { data, error } = await this.countryService.getCountries();
-      console.log('countries', data, error);
-
-      if (!error)
-        this.countries = data
-    }
-    else {
-      await this.showDestinationModal(this.countries)
-    }
+    return data;
   }
 
   async openContactPicker() {
@@ -203,38 +187,53 @@ export class ValidatePhoneComponent implements OnInit {
 
   }
 
+  async getCountries() {
+    try {
+      const { data, error } = await this.countryService.getCountries();
+      if (error) {
+        console.error(`Error fetching countries: ${error}`);
+      }
+      return data
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+    }
+  }
+
+  async getOperators() {
+    try {
+      const { data, error } = await this.operatorService.getOperators(this.SERVICE_ID, this.selectedDestination!.iso_code || '');
+      if (error) {
+        console.error(`Error fetching operators: ${error}`);
+      }
+      return data
+    } catch (error) {
+      console.error('Error fetching operators:', error);
+    }
+  }
+
   async validatePhoneNumber() {
     if (this.phoneNumber.trim() !== '' && (!this.selectedOperator || !this.selectedDestination)) {
       this.alertService.openModalAlert();
 
       try {
-        const {data, error} =  await this.topUpService.getPhoneLookup(this.phoneNumber);
-        if (!error) {
-            this.selectedDestination = data.country;
-            this.selectedOperator = {
-              id: data.id,
-              name: data.name,
-              logo: data.logo,
-              country: data.country,
-              service: data.service
-            };
-            try {
-              const { data, error } = await this.operatorService.getOperators(1, this.selectedDestination?.iso_code || '');
-              if (data) {
-                this.operators = data;
-              }
-            } catch (error) {
-              console.error('Error fetching operators:', error);
-            }
-          }
-          this.showInputs = true;
+        const { data, error } = await this.topUpService.getPhoneLookup(this.phoneNumber);
+        if (data) {
+          this.selectedDestination = data.country;
+          this.selectedOperator = {
+            id: data.id,
+            name: data.name,
+            logo: data.logo,
+            country: data.country,
+            service: data.service
+          };
+        }
       } catch (error) {
-          console.error('Error fetching phone lookup:', error);
-        
-      }
-      finally{
-          this.alertService.dismiss();
+        console.error('Error fetching phone lookup:', error);
 
+      }
+      finally {
+        this.showInputs = true;
+        this.alertService.dismiss();
       }
     }
   }

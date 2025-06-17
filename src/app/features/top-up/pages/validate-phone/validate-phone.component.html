@@ -15,7 +15,7 @@
     <!-- Destination Selection -->
     <ion-row>
       <ion-col size="12">
-        <div class="form-field" (click)="openDestinationSheet()">
+        <div class="form-field" (click)="onDestinationClick()">
           <span class="field-label">Destination</span>
           <div class="field-content">
             <img [src]="selectedDestination?.flag || ''" [alt]="selectedDestination?.name || ''" class="country-flag"
@@ -30,7 +30,7 @@
     <!-- Operator Selection -->
     <ion-row>
       <ion-col size="12">
-        <div class="form-field" (click)="openOperatorSheet()">
+        <div class="form-field" (click)="onOperatorClick()">
           <span class="field-label">Operator</span>
           <div class="field-content">
             <img [src]="selectedOperator?.logo || ''" [alt]="selectedOperator?.name || ''" class="operator-icon"
@@ -54,7 +54,7 @@
                 <!-- {{selectedOperator?.country?.prefix}} -->
               </ion-input>
             </div>
-            <ion-img src="../../../../../assets/img/shared/phone-form.svg"></ion-img>
+            <ion-img src="../../../../../assets/img/shared/phone-form.svg" style="pointer-events: none;"></ion-img>
           </div>
         </div>
       </ion-col>

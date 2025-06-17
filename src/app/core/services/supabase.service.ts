@@ -69,11 +69,20 @@ export class SupabaseService {
     return this.supabase.auth.signOut();
   }
 
-  getSession() {
+  async getSession() {
+    if (!this.session) {
+      this.session = (await this.supabase.auth.getSession()).data.session;
+    }
     return this.session;
   }
 
   getSupabase() {
     return this.supabase;
+  }
+
+  async isSessionExpired(): Promise<boolean> {
+    const session = await this.getSession();
+    if (!session) return true;
+    return (session.expires_at ?? 0) < Math.floor(Date.now() / 1000);
   }
 }

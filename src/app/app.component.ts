@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
         await this.fcm.initializeFirebaseMessaging();
         const permissionGranted = await this.fcm.requestPermissions();
 
-        if( permissionGranted ) {
+        if (permissionGranted) {
             const token = await this.fcm.getToken();
             if (token) {
                 await this.storageHelper.setStorageKey(StorageKeys.FCM_TOKEN, token);
@@ -82,12 +82,12 @@ export class AppComponent implements OnInit {
     }
 
     async checkSession() {
-        const { data } = await this.supabase.getSupabase().auth.getSession();
+        const isSessionExpired = await this.supabase.isSessionExpired();
 
-        if (data.session) {
-            this.router.navigate([RoutesApp.HOME]);
-        } else {
+        if (isSessionExpired) {
             this.router.navigate([RoutesApp.SPLASH]);
+        } else {
+            this.router.navigate([RoutesApp.HOME]);
         }
     }
 
