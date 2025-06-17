@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Operator } from 'src/app/features/top-up/pages/validate-phone/validate-phone.component';
 import { SupabaseService } from './supabase.service';
+import { Product } from '../models/product.type';
+import { Operator } from '../models/operator.type';
+import { ServiceType } from '../enums/service-type.enum';
 
 const ROUTES = {
   Base: 'https://kdvvfwiwtzrqufwtukiy.supabase.co/functions/v1',
@@ -18,11 +19,19 @@ export class OperatorService {
   
   constructor() { }
 
-  async getOperators(serviceId:number, isoCode: string) {
-    const result = this.supabaseClient.functions.invoke('operator', {
-      body: { isoCode, serviceId }
+  async getOperators(serviceType: ServiceType, isoCode: string) {
+    const {data, error} = await this.supabaseClient.functions.invoke<Operator[]>('operator', {
+      body: { isoCode, serviceId: serviceType }
     });
 
-    return result;
+    return data??[];
+  }
+
+  async getProductAmmounts(serviceType: ServiceType, isoCode: string, operatorId: number) {
+    const {data, error} = await this.supabaseClient.functions.invoke<Product[]>('products', {
+      body: { isoCode, serviceId: serviceType, operatorId }
+    });
+
+    return data?.map(product=> product.source);
   }
 }

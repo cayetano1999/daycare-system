@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { Country } from 'src/app/features/top-up/pages/validate-phone/validate-phone.component';
+import { Country } from 'src/app/core/models/country.type';
 
 @Component({
   selector: 'app-destination-sheet',

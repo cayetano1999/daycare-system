@@ -5,11 +5,14 @@ import { AlertController, IonicModule, NavController } from '@ionic/angular';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 import { KuidoTabComponent } from 'src/app/shared/components/kuido-tab/kuido-tab.component';
-import { Country, Operator } from '../validate-phone/validate-phone.component';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { TransactionService } from 'src/app/core/services/transaction.service';
+import { Operator } from 'src/app/core/models/operator.type';
+import { Country } from 'src/app/core/models/country.type';
+import { OperatorService } from 'src/app/core/services/operator.service';
+import { ServiceType } from 'src/app/core/enums/service-type.enum';
 
 interface TopUpOption {
   id: number;
@@ -41,42 +44,23 @@ export class SendTopUpsComponent implements OnInit {
   private readonly location = inject(Location);
   private readonly storageHelper = inject(StorageHelper);
   private readonly transactionService = inject(TransactionService)
+  private readonly operatorService = inject(OperatorService)
 
   amount: number = 0;
-  topUpOptions: TopUpOption[] = [
-    {
-      id: 1,
-      usdAmount: 4.99,
-      dopAmount: 317.25,
-      icon: '/assets/img/shared/sendtopup.svg',
-      isSelected: true
-    },
-    {
-      id: 2,
-      usdAmount: 9.99,
-      dopAmount: 634.50,
-      icon: '/assets/img/shared/sendtopup.svg',
-      isSelected: false
-    },
-    {
-      id: 3,
-      usdAmount: 14.99,
-      dopAmount: 951.75,
-      icon: '/assets/img/shared/sendtopup.svg',
-      isSelected: false
-    }
-  ];
+  topUpOptions: TopUpOption[] = [];
+
 
   topUpData!: ToUpsData;
 
   constructor() {
     // Recibir por state los parámetros selectedDestination, selectedOperator y phoneNumber
-
-
   }
 
 
-  ngOnInit() { }
+  async ngOnInit() {
+    
+
+  }
 
   goBack() {
     this.navCtrl.back();
@@ -114,6 +98,25 @@ export class SendTopUpsComponent implements OnInit {
     const navState = this.location.getState() as ToUpsData;
     console.log('Received data from navigation:', navState);
     this.topUpData = navState;
+
+    this.alertCtrl.openModalAlert();
+    const topUpOptions = await this.operatorService.getProductAmmounts(ServiceType.TopUp, this.topUpData.selectedDestination.iso_code, this.topUpData.selectedOperator.id);
+    console.log('Top Up Options:', topUpOptions);
+    if (topUpOptions) {
+      this.topUpOptions = topUpOptions.map((item,index) => {
+        return {
+          id: index,
+          usdAmount: Number(item.amount),
+          //Todo: Change conversion rate
+          dopAmount: Number(item.amount) * 60,
+          icon: '/assets/img/shared/sendtopup.svg',
+          isSelected: false
+        }
+      });
+    }
+    this.alertCtrl.dismiss();
+
+
     await this.storageHelper.setStorageKey(StorageKeys.TOP_UP_DATA, this.topUpData);
 
   }

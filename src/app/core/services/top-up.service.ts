@@ -18,10 +18,10 @@ export class TopUpService {
   constructor() { }
 
   async getPhoneLookup(phoneNumber: string) {
-    const result = this.supabaseClient.functions.invoke('lookup', {
+    const {data, error} = await this.supabaseClient.functions.invoke('lookup', {
       body: { phoneNumber }
     });
 
-    return result;
+    return data;
   }
 }
