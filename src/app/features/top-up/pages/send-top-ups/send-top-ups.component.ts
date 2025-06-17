@@ -48,29 +48,7 @@ export class SendTopUpsComponent implements OnInit {
 
   amount: number = 0;
   topUpOptions: TopUpOption[] = [];
-  // [
-  //   {
-  //     id: 1,
-  //     usdAmount: 4.99,
-  //     dopAmount: 317.25,
-  //     icon: '/assets/img/shared/sendtopup.svg',
-  //     isSelected: true
-  //   },
-  //   {
-  //     id: 2,
-  //     usdAmount: 9.99,
-  //     dopAmount: 634.50,
-  //     icon: '/assets/img/shared/sendtopup.svg',
-  //     isSelected: false
-  //   },
-  //   {
-  //     id: 3,
-  //     usdAmount: 14.99,
-  //     dopAmount: 951.75,
-  //     icon: '/assets/img/shared/sendtopup.svg',
-  //     isSelected: false
-  //   }
-  // ];
+
 
   topUpData!: ToUpsData;
 
@@ -129,6 +107,7 @@ export class SendTopUpsComponent implements OnInit {
         return {
           id: index,
           usdAmount: Number(item.amount),
+          //Todo: Change conversion rate
           dopAmount: Number(item.amount) * 60,
           icon: '/assets/img/shared/sendtopup.svg',
           isSelected: false
