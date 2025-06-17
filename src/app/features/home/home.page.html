@@ -1,0 +1,21 @@
+<ion-header class="ion-no-border" style="height: 30px;">
+  <ion-toolbar class="ion-no-border pb-2">
+    <p class="title" style="margin-left: 20px ;" slot="start">kuidopay</p>
+    <ion-icon slot="end" name="notifications-outline"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+ <div class="header-bg"></div>
+
+ <ion-row>
+    <ion-col size="12" style="margin-top: -15vw;">
+      <app-profile-section></app-profile-section>
+    </ion-col>
+  </ion-row>
+  <app-section-services [services]="services"></app-section-services>
+  <app-section-transactions [transactions]="transactionsTemplate"></app-section-transactions>
+</ion-content>
+
+<app-kuido-tab></app-kuido-tab>

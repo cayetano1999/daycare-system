@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { App } from '@capacitor/app';
+import { IonicModule } from '@ionic/angular';
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
@@ -7,7 +8,8 @@ import { remoteConfig } from 'src/environments/environment.remoteconfig';
     selector: 'app-maintenance',
     templateUrl: './maintenance.page.html',
     styleUrls: ['./maintenance.page.scss'],
-    standalone: false
+    standalone: true,
+    imports: [IonicModule]
 })
 export class MaintenancePage   {
   texts = remoteConfig.SCREENS.MAINTENANCE;

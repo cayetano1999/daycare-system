@@ -1,0 +1,101 @@
+.success-dialog {
+    --background: transparent;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    .dialog-container {
+      background: white;
+      border-radius: 20px;
+      padding: 38px 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 327px;
+      margin: auto;
+    }
+  
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 29px;
+    }
+  
+    .title {
+      color: #536758;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 27px;
+    }
+  
+    .subtitle {
+      color: #536758;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
+  
+    .recipient {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 27px;
+    }
+  
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+    }
+  
+    .recipient-details {
+      text-align: center;
+      
+      .name {
+        color: #536758;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+  
+      .phone {
+        color: #9e9e9e;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        margin: 0;
+      }
+    }
+  
+    ion-button {
+      --background: #3cb53f;
+      --border-radius: 20px;
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      margin: 0;
+      color: white;
+      width: 100%;
+    }
+  }
+  
+
+    
+  ion-modal {
+    --width: auto;
+    --height: auto;
+    --min-height: auto;
+    --max-height: 80%;
+    --top: 50%;
+    --left: 50%;
+    transform: translate(-50%, -50%);
+    --background: #00000087; 
+  }

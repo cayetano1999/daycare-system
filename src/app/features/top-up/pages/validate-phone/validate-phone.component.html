@@ -1,0 +1,83 @@
+<app-kuido-header title="Validate Mobile"></app-kuido-header>
+<ion-content>
+
+  <ion-grid class="main-content">
+    <ion-row>
+      <ion-col size="12" class="title-section">
+        <h2 class="title">Phone Number</h2>
+        <p class="subtitle">Complete the following fields to top up</p>
+      </ion-col>
+    </ion-row>
+
+
+    <!-- Phone Number Input -->
+    @if(showInputs){
+    <!-- Destination Selection -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-field" (click)="onDestinationClick()">
+          <span class="field-label">Destination</span>
+          <div class="field-content">
+            <img [src]="selectedDestination?.flag || ''" [alt]="selectedDestination?.name || ''" class="country-flag"
+              *ngIf="selectedDestination">
+            <span class="field-value">{{ selectedDestination?.name || 'Select Destination' }}</span>
+            <ion-icon name="chevron-forward" class="field-arrow"></ion-icon>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <!-- Operator Selection -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-field" (click)="onOperatorClick()">
+          <span class="field-label">Operator</span>
+          <div class="field-content">
+            <img [src]="selectedOperator?.logo || ''" [alt]="selectedOperator?.name || ''" class="operator-icon"
+              *ngIf="selectedOperator">
+            <span class="field-value">{{ selectedOperator?.name || 'Select Operator' }}</span>
+            <ion-icon name="chevron-forward" class="field-arrow"></ion-icon>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    }
+
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-field">
+          <span class="field-label">Phone number to Top-Up</span>
+          <div class="field-content phone-input">
+            <div class="input-container">
+              <ion-input type="tel" (ionBlur)="validatePhoneNumber()" [(ngModel)]="phoneNumber"
+                placeholder="Enter phone number" class="phone-number-input">
+                <!-- {{selectedOperator?.country?.prefix}} -->
+              </ion-input>
+            </div>
+            <ion-img src="../../../../../assets/img/shared/phone-form.svg" style="pointer-events: none;"></ion-img>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-grid>
+    <ion-row class="ion-padding">
+      <ion-col size="12">
+        <ion-button [disabled]="!selectedOperator || !selectedDestination || !phoneNumber" (click)="goToSend()"
+          expand="block" class="send-topup-btn">
+          Send Top-Up
+        </ion-button>
+      </ion-col>
+      <ion-col size="12">
+        <ion-button (click)="openContactPicker()" expand="block" fill="outline" class="contacts-btn">
+          Send to Contacts
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

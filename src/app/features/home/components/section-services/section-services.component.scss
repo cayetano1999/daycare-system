@@ -1,0 +1,73 @@
+
+  .services-section {
+    padding: 24px 16px;
+  
+    h3 {
+      font-family: 'Montserrat', Helvetica;
+      font-weight: 700;
+      color: #536758;
+      font-size: 17px;
+      margin: 0 0 12px;
+    }
+  
+    .service-card {
+      margin: 0;
+      height: 85px;
+      border-radius: 15px;
+      box-shadow: 0px 3px 10px 3px #0000000d;
+  
+      ion-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        padding: 14px 8px;
+      }
+  
+      ion-img {
+        width: 28px;
+        height: 28px;
+      }
+  
+      .service-title {
+        font-family: 'Montserrat', Helvetica;
+        font-size: 11px;
+        color: #536758;
+        text-align: center;
+      }
+    }
+
+
+    .service-card-inactive {
+      margin: 0;
+      height: 85px;
+      border-radius: 15px;
+      box-shadow: 0px 3px 10px 3px #0000000d;
+      background: #e9e6e6;
+  
+      ion-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        padding: 14px 8px;
+      }
+  
+      ion-img {
+        width: 28px;
+        height: 28px;
+      }
+  
+      .service-title {
+        font-family: 'Montserrat', Helvetica;
+        font-size: 11px;
+        color: #536758;
+        text-align: center;
+      }
+    }
+  }
+  
+  
+  

@@ -1,0 +1,30 @@
+ion-toolbar {
+  --background: var(--ion-color-light);
+}
+
+.country-list {
+  --background: #fbfbfb;
+  border: 1px solid #ebebeb;
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.country-list-selected {
+  --background: var(--ion-color-primary);
+  --border: 1px solid #ebebeb;
+  --border-radius: 20px;
+  padding: 5px;
+}
+
+.custom-searchbar {
+  --background: #ffffff;
+  --border-radius: 10px;
+  --box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+}
+
+.p-body {
+  padding-left: 20px;
+  padding-right: 20px;
+}

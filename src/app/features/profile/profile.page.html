@@ -1,0 +1,143 @@
+
+<app-kuido-header title="Profile"></app-kuido-header>
+
+<ion-content>
+  <div class="profile-container">
+    <!-- Header -->
+    <!-- <div class="header">
+      <img src="assets/img/shared/back-icon.svg" alt="Back" class="back-icon">
+      <span class="title">Profile</span>
+      <div class="placeholder"></div>
+    </div> -->
+
+    <!-- Profile Info -->
+    <div class="profile-info">
+      <img src="assets/img/shared/profile.svg" alt="Profile" class="avatar">
+      <div class="user-info">
+        <span class="name">{{profile.full_name}}</span>
+        <span class="edit">Edit name</span>
+      </div>
+      <button class="camera-btn">
+        <img src="assets/img/shared/camera.svg" alt="Edit">
+      </button>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="cards-section" >
+      <div class="cards-header" style="  padding: 0 24px;">
+        <span class="section-title">Yours cards</span>
+        <span class="add-card" (click)="redirectAddCard()"><b>+ ADD CARD</b></span>
+      </div>
+
+
+      <swiper-container class="banner-header" (touchstart)="onUserInteractionStart()"
+        (touchend)="onUserInteractionEnd()" (autoplay)="onAutoPlayTriggered()" [loop]="true" [config]="slideOpts"
+        autoplay-delay="2000" autoplay-disable-on-interaction="true" autoplay-reverse-direction="false"
+        [slidesPerView]="1.1" #headerBanners (swiperslidechange)="onSlideChange($event)">
+
+        @for(item of creditCards; track item; let i = $index;) {
+        <swiper-slide class="mb-4" style="height: 100%;">
+
+          <ion-grid fixed>
+            <ion-row>
+              <ion-col size="12" style="padding: 0px;">
+                <div class="card-container">
+                  <div class="card">
+                    <span class="card-title">Card</span>
+                    <button class="close-btn">
+                      <img src="../../../assets/img/shared/circulo-marca-x.svg" alt="Close">
+                    </button>
+                    <div class="card-number">**** **** **** {{item.cardNumber | slice:-4}}</div>
+                    <div class="card-footer">
+                      <span class="status">Active</span>
+                      <div class="card-logos">
+                        <img src="../../../assets/img/shared/visa.png" alt="Visa" class="visa">
+                        <img src="../../../assets/img/shared/mastercard.png" alt="Mastercard" class="mastercard">
+                        <img src="../../../assets/img/shared/americanexpress.svg" alt="Amex" class="amex">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </swiper-slide>
+        }
+      </swiper-container>
+
+      <!-- Card -->
+      <!-- <div class="card-container">
+        <div class="card">
+          <span class="card-title">Card</span>
+          <button class="close-btn">
+            <img src="../../../assets/img/shared/circulo-marca-x.svg" alt="Close">
+          </button>
+          <div class="card-number">**** **** **** 2367</div>
+          <div class="card-footer">
+            <span class="status">Active</span>
+            <div class="card-logos">
+              <img src="../../../assets/img/shared/visa.png" alt="Visa" class="visa">
+              <img src="../../../assets/img/shared/mastercard.png" alt="Mastercard" class="mastercard">
+              <img src="../../../assets/img/shared/americanexpress.svg" alt="Amex" class="amex">
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Settings -->
+    <div class="settings">
+      <div class="setting-item">
+        <div class="setting-left">
+          <img src="../../../assets/img/shared/bell.svg" alt="Notifications" class="setting-icon">
+          <span>Notifications</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-left">
+          <img src="../../../assets/img/shared/changepass.svg" alt="Password" class="setting-icon">
+          <span>Change password</span>
+        </div>
+        <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-left">
+          <img src="../../../assets/img/shared/language.svg" alt="Language" class="setting-icon">
+          <span>Language</span>
+        </div>
+        <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-left">
+          <img src="../../../assets/img/shared/terms.svg" alt="Terms" class="setting-icon">
+          <span>Terms and conditions</span>
+        </div>
+        <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+      <div class="danger-item">
+        <img src="assets/img/shared/eliminar-usuario.svg" alt="Delete" class="danger-icon">
+        <span>Deleted account</span>
+      </div>
+      <div class="danger-item" (click)="logout()">
+        <img src="assets/img/shared/salida-del-avion.svg" alt="Logout" class="danger-icon">
+        <span>Log out</span>
+      </div>
+    </div>
+
+    <!-- Version -->
+    <div class="version">
+      Version 0.0.1 | Kuidopay
+    </div>
+  </div>
+</ion-content>

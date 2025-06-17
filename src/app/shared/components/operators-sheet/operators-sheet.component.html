@@ -1,0 +1,73 @@
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-title>Select Operator</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12">
+      <ion-list>
+        @for(operator of operators | async; track operator) {
+        <ion-item  (click)="selectOperator(operator)">
+          <ion-avatar slot="start">
+            <img [src]="operator.logo" alt="{{ operator.name }}">
+          </ion-avatar>
+          <ion-label><b>{{ operator.name }}</b></ion-label>
+        </ion-item>
+      }
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-content> -->
+
+
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-item lines="none" style="--background: #ff000000">
+      <ion-icon name="globe" slot="start"></ion-icon>
+      <ion-label><b>Operators</b>
+        <p>Select the operator to send top up</p>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+
+  <ion-row>
+    <ion-col size="12" class="p-body mt-3">
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterOperators()" placeholder="Search by operator name"
+        class="custom-searchbar" debounce="300">
+      </ion-searchbar>
+    </ion-col>
+
+    <ion-col size="12" class="p-body">
+
+      @if(selectedOperator) {
+      <ion-item class="operator-list-selected mb-2" lines="none">
+        <ion-avatar slot="start">
+          <img [src]="selectedOperator.logo" alt="{{ selectedOperator.name }}">
+        </ion-avatar>
+        <ion-label style="color: white;"><b>{{ selectedOperator.name }}</b></ion-label>
+        <ion-checkbox color="light" checked slot="end"></ion-checkbox>
+      </ion-item>
+      }
+    </ion-col>
+  </ion-row>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12" class="mt-4 p-body">
+      <ion-list>
+        <ion-item *ngFor="let operator of filteredOperators" class="operator-list mb-2 shadow-sm" lines="none"
+          (click)="selectOperator(operator)">
+          <ion-avatar slot="start">
+            <img [src]="operator.logo" alt="{{ operator.name }}">
+          </ion-avatar>
+          <ion-label><b>{{ operator.name }}</b></ion-label>
+          <ion-checkbox slot="end"></ion-checkbox>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-content>

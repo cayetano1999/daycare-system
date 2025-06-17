@@ -1,0 +1,28 @@
+<div class="success-dialog ">
+  <div class="dialog-container ">
+    <!-- Success Icon -->
+    <img src="../../../../assets/img/shared/check.svg" alt="Success" class="success-icon">
+    
+    <!-- Success Message -->
+    <h2 class="title">Successful!</h2>
+    <p class="subtitle">Was sent to</p>
+    
+    <!-- Recipient Info -->
+    <div class="recipient">
+      <!-- <img [src]="recipientImage" alt="Recipient" class="avatar"> -->
+      <ion-icon color="primary" style="font-size: 30px;" name="person"></ion-icon>
+      <div class="recipient-details">
+        <h3 class="name">{{ recipientName }}</h3>
+        <p class="phone">{{ recipientPhone }}</p>
+      </div>
+    </div>
+    
+    <!-- Action Button -->
+    
+        <ion-button expand="block" (click)="dismiss()">
+          Accept
+        </ion-button>
+  </div>
+
+ 
+</div>

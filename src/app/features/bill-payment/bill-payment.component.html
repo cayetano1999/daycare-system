@@ -1,0 +1,77 @@
+<app-kuido-header title="Bill Payments"></app-kuido-header>
+<ion-content>
+  
+
+  <div class="content mt-5">
+    <h2 class="services-title">Services</h2>
+    
+
+    <ion-row>
+      <ion-col class="center-content" size="3" *ngFor="let service of serviceOptions" >
+        <div class="service-cards">
+      <div 
+           class="service-card"
+           [class.active]="service.isActive"
+           (click)="selectService(service.id)">
+        <img [src]="service.icon" [alt]="service.name">
+        <span>{{ service.name }}</span>
+      </div>
+    </div>
+      </ion-col>
+    </ion-row>
+    
+
+    <h3 class="payment-title">Mobile bill payment</h3>
+
+    <div class="form-container">
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-field">
+            <span class="field-label">Destination</span>
+            <div class="field-content">
+              <img src="../../../assets/img/shared/usflag.svg" alt="US Flag" class="country-flag">
+              <span class="field-value">United States</span>
+              <ion-icon name="chevron-forward" class="field-arrow"></ion-icon>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-field">
+            <span class="field-label">Phone number</span>
+            <div class="field-content">
+              <span class="field-value placeholder">+1</span>
+              <img src="../../../assets/img/shared/phone-form.svg" alt="Phone" class="field-icon">
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-field">
+            <span class="field-label">Amount to pay</span>
+            <div class="field-content">
+              <span class="field-value placeholder">$0</span>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ion-button expand="block mb-4" class="pay-button">
+      PAY
+    </ion-button>
+  </div>
+
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Transactions</ion-title>
+    </ion-toolbar>
+  </ion-header>
+</ion-content>
+
+<app-kuido-tab></app-kuido-tab>

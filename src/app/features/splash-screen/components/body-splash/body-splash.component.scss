@@ -1,0 +1,156 @@
+// Variables
+$primary-color: #3cb53f;
+$secondary-color: #536758;
+$link-color: #135ef2;
+$shadow-color: rgba(27, 57, 255, 0.2);
+
+// Import Montserrat font
+
+
+.splash-screen {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .content-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+  }
+}
+
+// Background elements
+.background-gradient {
+  position: absolute;
+  width: 100%;
+  height: 66%;
+  top: -9%;
+//   left: -23%;
+  
+  .vector-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url('/assets/vector.svg') 100% 100%;
+    
+    .vector-overlay {
+      position: absolute;
+      width: 100%;
+      height: 94%;
+      top: 2%;
+    //   left: 2%;
+    }
+  }
+}
+
+// Logo
+.logo {
+  position: absolute;
+  width: 160px;
+  top: 29%;
+  left: 50%;
+  transform: translateX(-50%);
+  object-fit: cover;
+}
+
+.vector-accent {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: 0;
+  right: 5%;
+}
+
+// Text elements
+.welcome-title {
+  position: absolute;
+  top: 60%;
+  left: 10%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: $primary-color;
+  font-size: 24px;
+  line-height: 30px;
+  margin: 0;
+}
+
+.description {
+  position: absolute;
+  top: 70%;
+  left: 10%;
+  width: 80%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  color: $secondary-color;
+  font-size: 18px;
+  line-height: 1.75rem;
+  margin: 0;
+}
+
+// Buttons
+.next-button-container {
+  position: absolute;
+  bottom: 11%;
+  right: 10%;
+  
+  .button-primary {
+    --background: #{$primary-color};
+    --background-hover: #{darken($primary-color, 5%)};
+    --background-activated: #{darken($primary-color, 10%)};
+    --border-radius: 17px;
+    --box-shadow: 0px 8px 16px #{$shadow-color};
+    --padding-start: 1.5rem;
+    --padding-end: 1.5rem;
+    
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    height: 45px;
+    
+    .arrow-container {
+      margin-left: 8px;
+      display: flex;
+      align-items: center;
+      
+      .arrow-icon {
+        width: 18px;
+        height: 9px;
+      }
+    }
+
+    color: white;
+  }
+}
+
+.button-link {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  color: #135ef2;
+  --background: transparent;
+  --background-hover: transparent;
+  --background-activated: transparent;
+  --box-shadow: none;
+  --padding-start: 0;
+  --padding-end: 0;
+  
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: underline;
+  height: auto;
+  
+  &:hover {
+    --color: #{darken($link-color, 10%)};
+  }
+}
+
+// Ionic overrides
+ion-button {
+  --ripple-color: transparent;
+}

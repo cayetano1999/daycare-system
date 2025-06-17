@@ -1,0 +1,20 @@
+<ion-header class="ion-no-padding animate__animated animate__fadeIn">
+  @if(!keyBoard) {
+  <ion-toolbar class="ion-no-border ion-no-padding" style="height: 80px;">
+    <div class="h-36 header-gradient overflow-hidden">
+      <svg class="bottom-0 left-0 w-full" viewBox="0 0 1440 320" style="position: relative; height: 150px; width: 49em" preserveAspectRatio="none">
+        <path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
+      </svg>
+    </div>
+  </ion-toolbar>
+}
+
+  <ion-toolbar class="ion-no-border ion-no-padding" style="--background: white; --border-width:0px">
+    <div class="center-content animate__animated animate__pulse">
+      <img [src]="image" alt="Kuido Logo" style="width: 200px;" />
+    </div>
+    @if(!keyBoard) {
+    <h5 class="text-gray-800 mb-6 text-center mt-4 animate__animated animate__pulse" style="font-size: 16px;" [innerHTML]="label" ></h5>
+    }
+  </ion-toolbar>
+</ion-header>
