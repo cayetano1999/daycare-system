@@ -19,4 +19,5 @@ export const environment = {
   APP_MAINTENANCE: false,
   URL_TERMS: "",
   URL_APP_ANDROID: "",
+  SpPk:""
 };

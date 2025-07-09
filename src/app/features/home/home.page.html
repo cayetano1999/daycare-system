@@ -7,15 +7,18 @@
 
 <ion-content>
 
- <div class="header-bg"></div>
+  <div class="header-bg"></div>
 
- <ion-row>
+  <ion-row>
     <ion-col size="12" style="margin-top: -15vw;">
       <app-profile-section></app-profile-section>
     </ion-col>
   </ion-row>
   <app-section-services [services]="services"></app-section-services>
   <app-section-transactions [transactions]="transactionsTemplate"></app-section-transactions>
+  <button type="submit" (click)="doTopUp()" class="login-button">
+    Pagar
+  </button>
 </ion-content>
 
 <app-kuido-tab></app-kuido-tab>

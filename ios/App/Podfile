@@ -13,6 +13,8 @@ def capacitor_pods
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCommunityContacts', :path => '../../node_modules/@capacitor-community/contacts'
   pod 'CapacitorCommunityHttp', :path => '../../node_modules/@capacitor-community/http'
+  pod 'CapacitorCommunityStripe', :path => '../../node_modules/@capacitor-community/stripe'
+  pod 'CapacitorFirebaseMessaging', :path => '../../node_modules/@capacitor-firebase/messaging'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorBrowser', :path => '../../node_modules/@capacitor/browser'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'

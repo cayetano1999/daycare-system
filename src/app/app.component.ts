@@ -17,6 +17,9 @@ import { StorageHelper } from './core/helpers/storage.helper';
 import { StorageKeys } from './core/enums/storage.keys.enum';
 import { FirebaseMessagingService } from './core/services/firebase/firebase-messaging.service';
 import { register } from 'swiper/element/bundle';
+import { Stripe } from '@capacitor-community/stripe';
+
+
 register(); // Register Swiper elements globally
 @Component({
     selector: 'app-root',
@@ -50,6 +53,7 @@ export class AppComponent implements OnInit {
         this.checkSession();
     }
 
+
     async ngOnInit() {
         const isConnected = await Network.getStatus();
         if (!isConnected.connected) {
@@ -72,6 +76,11 @@ export class AppComponent implements OnInit {
                 await this.storageHelper.setStorageKey(StorageKeys.FCM_TOKEN, token);
             }
         }
+
+        console.log("Stripe", environment.SpPk);
+        await Stripe.initialize({
+            publishableKey: environment.SpPk, // TU CLAVE PUBLICABLE DE PRUEBA
+        });
 
     }
 
