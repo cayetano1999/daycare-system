@@ -18,7 +18,6 @@ buildscript {
 }
 
 apply from: "variables.gradle"
-apply plugin: 'kotlin-android'
 allprojects {
     repositories {
         google()

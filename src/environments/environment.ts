@@ -9,7 +9,7 @@ export const environment = {
     storageBucket: "kuidoapp-60d43.firebasestorage.app",
     messagingSenderId: "193661590436",
     appId: "1:193661590436:web:6f13c7352281189bdfff31",
-    measurementId: "G-9B48Z5JY85"
+    measurementId: "G-9B48Z5JY85",
   },
   supabaseUrl: "",
   supabaseKey: "",

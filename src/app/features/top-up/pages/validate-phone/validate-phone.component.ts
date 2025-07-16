@@ -26,7 +26,7 @@ import { ServiceType } from 'src/app/core/enums/service-type.enum';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, KuidoHeaderComponent]
 })
-export class ValidatePhoneComponent implements OnInit {
+export class ValidatePhoneComponent {
   //Services
   private readonly loadingCtrl = inject(LoadingController);
   private readonly storage = inject(StorageHelper);
@@ -46,12 +46,11 @@ export class ValidatePhoneComponent implements OnInit {
   contactsList: ContactPayload[] = [];
   contactName: string = '';
   showInputs: boolean = false;
-
+  
   constructor(private modalController: ModalController) { }
 
-  ngOnInit() {
 
-  }
+
 
   async showOperatorsModal(operators: Operator[]) {
     const modal = await this.modalController.create({
