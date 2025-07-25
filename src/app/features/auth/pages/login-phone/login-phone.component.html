@@ -15,7 +15,14 @@
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
           <div class="form-group">
             <label>Phone Number</label>
-            <input type="tel" formControlName="phone" placeholder="+18093716874">
+            <input
+  type="tel"
+  formControlName="phone"
+  placeholder="18095551234"
+  inputmode="numeric"
+  pattern="^[1-9][0-9]{9,14}$"
+/>
+
           </div>
 
 

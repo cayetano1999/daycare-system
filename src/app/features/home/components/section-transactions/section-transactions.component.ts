@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TransactionTemplate } from '../../home.page';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
@@ -15,8 +15,15 @@ export class SectionTransactionsComponent  implements OnInit {
   //Inputs
   @Input() transactions: TransactionTemplate[] = [];
 
+  //Outputs
+  @Output() topUp = new EventEmitter<void>();
+
   constructor() { }
 
   ngOnInit() {}
+
+  emitTopUp() {
+    this.topUp.emit();
+  }
 
 }

@@ -1,21 +1,15 @@
-
 <app-kuido-header title="Profile"></app-kuido-header>
 
 <ion-content>
   <div class="profile-container">
-    <!-- Header -->
-    <!-- <div class="header">
-      <img src="assets/img/shared/back-icon.svg" alt="Back" class="back-icon">
-      <span class="title">Profile</span>
-      <div class="placeholder"></div>
-    </div> -->
+
 
     <!-- Profile Info -->
     <div class="profile-info">
-      <img src="assets/img/shared/profile.svg" alt="Profile" class="avatar">
+      <img [src]="'assets/img/shared/'+profile.avatar_url" alt="Profile" class="avatar">
       <div class="user-info">
         <span class="name">{{profile.full_name}}</span>
-        <span class="edit">Edit name</span>
+        <span (click)="openUpdateProfile()" class="edit">Edit name</span>
       </div>
       <button class="camera-btn">
         <img src="assets/img/shared/camera.svg" alt="Edit">
@@ -23,7 +17,7 @@
     </div>
 
     <!-- Cards Section -->
-    <div class="cards-section" >
+    <div class="cards-section">
       <div class="cards-header" style="  padding: 0 24px;">
         <span class="section-title">Yours cards</span>
         <span class="add-card" (click)="redirectAddCard()"><b>+ ADD CARD</b></span>
@@ -65,24 +59,7 @@
         }
       </swiper-container>
 
-      <!-- Card -->
-      <!-- <div class="card-container">
-        <div class="card">
-          <span class="card-title">Card</span>
-          <button class="close-btn">
-            <img src="../../../assets/img/shared/circulo-marca-x.svg" alt="Close">
-          </button>
-          <div class="card-number">**** **** **** 2367</div>
-          <div class="card-footer">
-            <span class="status">Active</span>
-            <div class="card-logos">
-              <img src="../../../assets/img/shared/visa.png" alt="Visa" class="visa">
-              <img src="../../../assets/img/shared/mastercard.png" alt="Mastercard" class="mastercard">
-              <img src="../../../assets/img/shared/americanexpress.svg" alt="Amex" class="amex">
-            </div>
-          </div>
-        </div>
-      </div> -->
+
     </div>
 
     <!-- Settings -->
@@ -90,7 +67,7 @@
       <div class="setting-item">
         <div class="setting-left">
           <img src="../../../assets/img/shared/bell.svg" alt="Notifications" class="setting-icon">
-          <span>Notifications</span>
+          <span><b>Notifications</b></span>
         </div>
         <label class="switch">
           <input type="checkbox" checked>
@@ -100,16 +77,27 @@
 
       <div class="setting-item">
         <div class="setting-left">
-          <img src="../../../assets/img/shared/changepass.svg" alt="Password" class="setting-icon">
-          <span>Change password</span>
+          <img src="../../../assets/img/shared/faceid_icon.svg" alt="Biometric" class="setting-icon">
+          <span><b>Biometric Auth</b></span>
         </div>
-        <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
+        <label class="switch">
+          <input type="checkbox" [checked]="biometricEnabled" (change)="onBiometricToggle($event)">
+          <span class="slider"></span>
+        </label>
       </div>
 
       <div class="setting-item">
         <div class="setting-left">
+          <img src="../../../assets/img/shared/changepass.svg" alt="Password" class="setting-icon">
+          <span><b>Change password</b></span>
+        </div>
+        <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
+      </div>
+
+      <div class="setting-item" (click)="changeLanguage()">
+        <div class="setting-left">
           <img src="../../../assets/img/shared/language.svg" alt="Language" class="setting-icon">
-          <span>Language</span>
+          <span><b>Language</b></span>
         </div>
         <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
       </div>
@@ -117,7 +105,7 @@
       <div class="setting-item">
         <div class="setting-left">
           <img src="../../../assets/img/shared/terms.svg" alt="Terms" class="setting-icon">
-          <span>Terms and conditions</span>
+          <span><b>Terms and conditions</b></span>
         </div>
         <img src="assets/img/shared/angulo-derecho.svg" alt="Arrow" class="arrow">
       </div>
@@ -127,11 +115,11 @@
     <div class="danger-zone">
       <div class="danger-item">
         <img src="assets/img/shared/eliminar-usuario.svg" alt="Delete" class="danger-icon">
-        <span>Deleted account</span>
+        <span><b>Deleted account</b></span>
       </div>
       <div class="danger-item" (click)="logout()">
         <img src="assets/img/shared/salida-del-avion.svg" alt="Logout" class="danger-icon">
-        <span>Log out</span>
+        <span><b>Log out</b></span>
       </div>
     </div>
 
@@ -141,3 +129,5 @@
     </div>
   </div>
 </ion-content>
+
+<app-kuido-tab></app-kuido-tab>

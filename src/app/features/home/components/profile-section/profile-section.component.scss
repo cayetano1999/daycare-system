@@ -14,16 +14,16 @@
 }
 
 .greeting-section {
-  margin-top: 48px;
-  //text-align: center;
-  display: inline-grid;
-    margin-left: 9vw;
+  // margin-top: 48px;
+  // //text-align: center;
+  // display: inline-grid;
+  //   margin-left: 9vw;
 
-  h2 {
+  b {
     font-family: "Montserrat", Helvetica;
     font-weight: 700;
     color: #536758;
-    font-size: 22px;
+    font-size: 4vw;
     margin: 0;
   }
 
@@ -199,4 +199,9 @@ ion-footer {
       }
     }
   }
+}
+
+ion-avatar {
+  width: 17vw;
+  height: 17vw;
 }

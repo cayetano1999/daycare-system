@@ -39,7 +39,8 @@ bootstrapApplication(AppComponent, {
       mode: 'ios',
       backButtonText: '',
       swipeBackEnabled: true,
-      hardwareBackButton: true
+      hardwareBackButton: true,
+      animated: false,
     })),
     importProvidersFrom(PipesModule), // Pipes compartidos
     importProvidersFrom(CommonModule),

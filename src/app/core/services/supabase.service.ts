@@ -57,10 +57,11 @@ export class SupabaseService {
     });
   }
 
+
   profile() {
     return this.supabase
       .from('profiles')
-      .select('username,full_name, website, avatar_url')
+      .select('id,username,full_name, website,avatar_url')
       .eq('id', this.session?.user.id)
       .single()
   }
@@ -80,9 +81,71 @@ export class SupabaseService {
     return this.supabase;
   }
 
+  getRecord(table: string, columns: string[], field: string, value: string) {
+    return this.supabase
+      .from(table)
+      .select(columns.join(','))
+      .eq(field, value)
+      .single();
+  }
+
+  // Generic Create
+  createRecord<T>(table: string, data: T) {
+    return this.supabase
+      .from(table)
+      .insert([data])
+      .select()
+      .single();
+  }
+
+  // Generic Update
+  updateRecord<T>(table: string, id: string, data: Partial<T>) {
+    return this.supabase
+      .from(table)
+      .update(data)
+      .eq('id', id)
+      .select()
+      .single();
+  }
+
+  // Generic Delete
+  deleteRecord(table: string, id: string) {
+    return this.supabase
+      .from(table)
+      .delete()
+      .eq('id', id)
+      .single();
+  }
+ 
+
   async isSessionExpired(): Promise<boolean> {
     const session = await this.getSession();
     if (!session) return true;
     return (session.expires_at ?? 0) < Math.floor(Date.now() / 1000);
   }
+
+  //Auth OTP
+  signInWithPhone(phone: string) {
+    return this.supabase.auth.signInWithOtp({
+      phone,
+    });
+  }
+
+  verifyPhoneOtp(phone: string, token: string) {
+    return this.supabase.auth.verifyOtp({
+      phone,
+      token,
+      type: 'sms',
+    });
+  }
+
+  //verify email otp
+  verifyEmailOtp(email: string, token: string) {
+    return this.supabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'email',
+    });
+  }
+
 }

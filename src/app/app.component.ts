@@ -18,6 +18,8 @@ import { StorageKeys } from './core/enums/storage.keys.enum';
 import { FirebaseMessagingService } from './core/services/firebase/firebase-messaging.service';
 import { register } from 'swiper/element/bundle';
 import { Stripe } from '@capacitor-community/stripe';
+import { KuidoTabComponent } from './shared/components/kuido-tab/kuido-tab.component';
+import { FingerprintService } from './core/services/fingerprint.service';
 
 
 register(); // Register Swiper elements globally
@@ -26,7 +28,7 @@ register(); // Register Swiper elements globally
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
     standalone: true,
-    imports: [IonicModule, CommonModule, PipesModule]
+    imports: [IonicModule, CommonModule, PipesModule, KuidoTabComponent]
 })
 export class AppComponent implements OnInit {
     // Properties
@@ -46,6 +48,7 @@ export class AppComponent implements OnInit {
     private readonly supabase = inject(SupabaseService);
     private readonly storageHelper = inject(StorageHelper);
     private readonly fcm = inject(FirebaseMessagingService);
+    private readonly fingerprint = inject(FingerprintService);
 
     constructor() {
         this.setupRouterEvents();

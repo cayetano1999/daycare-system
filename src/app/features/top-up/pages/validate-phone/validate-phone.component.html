@@ -4,8 +4,8 @@
   <ion-grid class="main-content">
     <ion-row>
       <ion-col size="12" class="title-section">
-        <h2 class="title">Phone Number</h2>
-        <p class="subtitle">Complete the following fields to top up</p>
+        <h2 class="title text-center"><b>Please enter the phone number to top-up</b></h2>
+        <!-- <p class="subtitle">Complete the following fields to top up</p> -->
       </ion-col>
     </ion-row>
 
@@ -46,7 +46,7 @@
     <ion-row>
       <ion-col size="12">
         <div class="form-field">
-          <span class="field-label">Phone number to Top-Up</span>
+          <span class="field-label">Phone number</span>
           <div class="field-content phone-input">
             <div class="input-container">
               <ion-input type="tel" (ionBlur)="validatePhoneNumber()" [(ngModel)]="phoneNumber"
@@ -55,9 +55,17 @@
               </ion-input>
             </div>
             <ion-img src="../../../../../assets/img/shared/phone-form.svg" style="pointer-events: none;"></ion-img>
+           
           </div>
         </div>
       </ion-col>
+      @if(!selectedOperator){
+      <ion-col size="12">
+         <ion-note style="margin-top: -10px;" class="ml-2">
+              Make sure to enter the country area code with the "+" symbol in front of it (+555), followed by the phone number.
+            </ion-note>
+      </ion-col>
+    }
     </ion-row>
 
 

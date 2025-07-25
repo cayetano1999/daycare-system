@@ -1,0 +1,35 @@
+
+    <div class="success-dialog ">
+      <div class="dialog-container ">
+        <!-- Success Icon -->
+        <img [src]="img" alt="image" class="success-icon">
+
+        <!-- Success Message -->
+        <h2 class="title">{{title}}</h2>
+        <p class="subtitle">{{message}}</p>
+
+
+        @if(type === 'question'){
+        <ion-row>
+          <ion-col size="6">
+            <ion-button style="color: white!important;" class="btn-question success" color="success" expand="block" (click)="dismissConfirm(true)">
+              Yes
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-button class="btn-question danger" color="danger" expand="block" (click)="dismissConfirm(false)">
+              No
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        }
+        @else {
+        <ion-button expand="block" (click)="dismiss()">
+          {{textConfirm}}
+        </ion-button>
+        }
+      </div>
+
+
+    </div>

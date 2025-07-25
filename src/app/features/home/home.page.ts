@@ -20,6 +20,9 @@ import { Transaction } from 'src/app/shared/interfaces/transaction.interface';
 import { OperatorService } from 'src/app/core/services/operator.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { PaymentSheetEventsEnum } from '@capacitor-community/stripe';
+import { v4 as uuidv4 } from 'uuid'; // Using uuid library for generating unique IDs
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+
 
 export interface Service {
   id: number;
@@ -60,9 +63,13 @@ export class HomePage implements OnInit {
   private readonly statusBar = inject(StatusBarHelper);
   private readonly router = inject(Router);
   private readonly storageHelper = inject(StorageHelper);
+  private readonly alertCtrl = inject(AlertControllerService);
 
   supabase = inject(SupabaseService);
   paymentService = inject(PaymentService);
+  profile: any;
+  session: any;
+  supabaseClient = this.supabase.getSupabase();
 
   constructor() { }
 
@@ -84,7 +91,7 @@ export class HomePage implements OnInit {
       // 1. Solicita el PaymentIntent a tu función Edge de Supabase
       const response = await this.paymentService.createPaymentIntent(data);
       console.log("Response", response);
-      
+
       const clientSecret = response.client_secret;
 
       // 2. Muestra el formulario de Stripe para pagar
@@ -113,7 +120,7 @@ export class HomePage implements OnInit {
     {
       id: 2,
       title: 'Bill Payment',
-      icon: 'assets/img/shared/payments.svg',
+      icon: 'assets/img/shared/bill-disabled.svg',
       alt: 'Ticket alt duotone',
       url: 'bill-payment',
       active: false,
@@ -121,7 +128,7 @@ export class HomePage implements OnInit {
     {
       id: 3,
       title: 'Gift\nCards',
-      icon: 'assets/img/shared/cards.svg',
+      icon: 'assets/img/shared/gift-card-disabled.svg',
       alt: 'Icon',
       url: 'gift-cards',
       active: false,
@@ -213,6 +220,7 @@ export class HomePage implements OnInit {
         return a.active ? -1 : 1;
       });
 
+    await this.fillMissingProfileFileds();
 
   }
 
@@ -232,6 +240,38 @@ export class HomePage implements OnInit {
 
     console.log('Mapped Transactions:', test);
     return test.reverse().slice(0, 10);
+  }
+
+  async fillMissingProfileFileds() {
+    await this.alertCtrl.openModalAlert();
+
+    const profile = await this.supabase.profile();
+    const session = (await this.supabaseClient.auth.getSession()).data.session;
+    console.log('Session:', session);
+    if (!session?.user?.id || profile.data?.full_name) {
+      this.profile = profile.data;
+      await this.alertCtrl.dismiss();
+      return;
+    }
+
+
+    const { data, error } = await this.supabaseClient.functions.invoke('fill-profile-fields', {
+      body: { user_id: session.user.id }
+    });
+    if (error) {
+      await this.alertCtrl.dismiss();
+      console.error('Error calling function:', error.message);
+    } else {
+      await this.alertCtrl.dismiss();
+      
+      console.log('Profile filled successfully:', data);
+      this.profile = JSON.parse(data).profile;
+      await this.alertCtrl.dismiss();
+    }
+  }
+
+  handleTopUp() {
+    this.router.navigate(['top-up/validate-phone']);
   }
 
 }

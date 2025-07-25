@@ -1,6 +1,3 @@
-// ion-content {
-//   --background: var(--ion-color-danger);
-// }
 
 :host {
   --ion-background-color: white;
@@ -13,9 +10,6 @@ img {
   }
 
 .nav-header {
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
   padding-top: 20px;
   .back-button {
     --padding-start: 0;
@@ -34,7 +28,7 @@ img {
     font-weight: 700;
     font-size: 18px;
     line-height: 28px;
-    color: black;
+    color: #3CB53F;
   }
 
   .placeholder {
@@ -118,51 +112,24 @@ img {
       background-size: cover;
     }
 
-    .google-icon {
-    //   background-image: url("../../../../assets/img/shared/google.svg");
-    }
-
-    .facebook-icon {
-    //   background-image: url("../../../../assets/img/shared/facebook.svg");
-    }
   }
 }
 
-//   ion-toolbar {
-//     --background: white;
-//     // --border-radius: 20px;
-//     // --padding-top: 16px;
-//     // --padding-bottom: 16px;
-//     // margin-bottom: 11px;
-//     font-family: 'Montserrat', sans-serif;
-//     margin-top: -10px;
-//     // font-weight: 700;
-//     // font-size: 16px;
-//     // text-transform: none;
-// }
+  ion-toolbar {
+    --background: white;
+    font-family: 'Montserrat', sans-serif;
+}
 
 ion-icon {
   font-size: 24px;
 }
 
 
-  ion-toolbar {
-    --background: #F2FAF2;
-  }
-
-  .header-bg {
-  width: 100%;
-  height: 100px;
-  background-image: url("../../../assets/img/shared/header-shape.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
  .title {
     font-family: "Montserrat", sans-serif;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 7vw;
     line-height: 28px;
-    color: black;
+    color: #3CB53F;
+
   }

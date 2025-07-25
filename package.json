@@ -46,6 +46,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/firebase": "^3.2.3",
     "animation.css": "^0.1.0",
+    "capacitor-native-biometric": "^4.2.2",
     "capacitor-plugin-app-tracking-transparency": "^2.0.5",
     "crypto-js": "^4.2.0",
     "firebase": "^10.14.1",

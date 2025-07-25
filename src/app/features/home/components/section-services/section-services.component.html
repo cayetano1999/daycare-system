@@ -7,7 +7,7 @@
   <ion-col size="3">
     <ion-card [ngClass]="{'service-card': service.active, 'service-card-inactive': !service.active}" (click)="redirectToService(service)">
       <ion-card-content>
-        <ion-img [src]="service.icon" [alt]="service.alt"></ion-img>
+        <ion-img class="mb-1" [src]="service.icon" [alt]="service.alt"></ion-img>
         <div class="service-title">{{ service.title }}</div>
       </ion-card-content>
     </ion-card>

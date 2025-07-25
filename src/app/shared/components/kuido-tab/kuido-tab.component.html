@@ -1,21 +1,26 @@
-  <ion-tab-bar class="ion-no-border mb-3" slot="bottom">
-    <ion-tab-button tab="tab1">
-       <ion-img src="../../../assets/img/shared/home_5.svg"></ion-img>
-      <ion-label>Home</ion-label>
-    </ion-tab-button>
-    <ion-tab-button tab="tab2">
-      <ion-img src="../../../assets/img/shared/bills.svg"></ion-img>
-      <ion-label>Bills</ion-label>
-    </ion-tab-button>
-    <ion-tab-button tab="tab3">
-      <ion-img src="../../../assets/img/shared/kuidocircle.svg"></ion-img>
-    </ion-tab-button>
-      <ion-tab-button tab="tab4">
-         <ion-img src="../../../assets/img/shared/bagfooter.svg"></ion-img>
-        <ion-label>Gif Cards</ion-label>
-      </ion-tab-button>
-      <ion-tab-button (click)="redirect('profile')" tab="tab5">
-        <ion-img src="../../../assets/img/shared/user_3.svg"></ion-img>
-        <ion-label>Profile</ion-label>
-      </ion-tab-button>
-  </ion-tab-bar>
+<ion-tab-bar class="py-3" slot="bottom" [ngClass]="{'mb-3': isIos}">
+<ion-tab-button (click)="redirect('home')" tab="tab1" class="mt-3">
+  <ion-img style="width: 7vw;" [src]="getTabIcon('home')"></ion-img>
+  <ion-label><b>Home</b></ion-label>
+</ion-tab-button>
+
+<ion-tab-button tab="tab2" class="mt-3">
+  <ion-img style="width: 7vw;" [src]="getTabIcon('bills')"></ion-img>
+  <ion-label><b>Bills</b></ion-label>
+</ion-tab-button>
+
+<ion-tab-button tab="tab3" class="mt-3" style="height: 18vw;">
+  <ion-img style="width: 15vw; margin-top: -10px;" [src]="getTabIcon('main')"></ion-img>
+</ion-tab-button>
+
+<ion-tab-button tab="tab4" class="mt-3">
+  <ion-img style="width: 7vw;" [src]="getTabIcon('gifcards')"></ion-img>
+  <ion-label><b>Gif Cards</b></ion-label>
+</ion-tab-button>
+
+<ion-tab-button (click)="redirect('profile')" tab="tab5" class="mt-3">
+  <ion-img style="width: 7vw;" [src]="getTabIcon('profile')"></ion-img>
+  <ion-label><b>Profile</b></ion-label>
+</ion-tab-button>
+
+</ion-tab-bar>

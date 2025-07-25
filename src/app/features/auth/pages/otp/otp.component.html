@@ -1,55 +1,59 @@
 <app-kuido-header title="OTP Authentication"></app-kuido-header>
 
-
 <ion-content>
   <div class="otp-container">
-    
     <ion-row>
       <ion-col size="12">
         <div class="otp-description">
-      <p>An authentication code has been sent to</p>
-      <p class="phone-number">(+84) 999 999 999</p>
-    </div>
+          <p>An authentication code has been sent to</p>
+          <p class="phone-number">{{ currentContact }}</p>
+        </div>
       </ion-col>
     </ion-row>
-    
 
     <div class="otp-input-container">
-      <input
-        #otp1
-        type="number"
-        maxlength="1"
-        (keyup)="onKeyUp($event, otp1, null, otp2)"
-        (keydown)="onKeyDown($event, otp1, null, otp2)"
-      >
-      <input
-        #otp2
-        type="number"
-        maxlength="1"
-        (keyup)="onKeyUp($event, otp2, otp1, otp3)"
-        (keydown)="onKeyDown($event, otp2, otp1, otp3)"
-      >
-      <input
-        #otp3
-        type="number"
-        maxlength="1"
-        (keyup)="onKeyUp($event, otp3, otp2, otp4)"
-        (keydown)="onKeyDown($event, otp3, otp2, otp4)"
-      >
-      <input
-        #otp4
-        type="number"
-        maxlength="1"
-        (keyup)="onKeyUp($event, otp4, otp3, null)"
-        (keydown)="onKeyDown($event, otp4, otp3, null)"
-      >
+      <ion-row class="ion-justify-content-center ion-align-items-center">
+        <ion-col size="2">
+          <input #otp1 type="number" maxlength="1" (keyup)="onKeyUp($event, otp1, null, otp2)" (keydown)="onKeyDown($event, otp1, null, otp2)">
+        </ion-col>
+        <ion-col size="2">
+          <input #otp2 type="number" maxlength="1" (keyup)="onKeyUp($event, otp2, otp1, otp3)" (keydown)="onKeyDown($event, otp2, otp1, otp3)">
+        </ion-col>
+        <ion-col size="2">
+          <input #otp3 type="number" maxlength="1" (keyup)="onKeyUp($event, otp3, otp2, otp4)" (keydown)="onKeyDown($event, otp3, otp2, otp4)">
+        </ion-col>
+        <ion-col size="2">
+          <input #otp4 type="number" maxlength="1" (keyup)="onKeyUp($event, otp4, otp3, otp5)" (keydown)="onKeyDown($event, otp4, otp3, otp5)">
+        </ion-col>
+        <ion-col size="2">
+          <input #otp5 type="number" maxlength="1" (keyup)="onKeyUp($event, otp5, otp4, otp6)" (keydown)="onKeyDown($event, otp5, otp4, otp6)">
+        </ion-col>
+        <ion-col size="2">
+          <input #otp6 type="number" maxlength="1" (keyup)="onKeyUp($event, otp6, otp5, null)" (keydown)="onKeyDown($event, otp6, otp5, null)">
+        </ion-col>
+      </ion-row>
     </div>
 
     <div class="resend-code">
-      <span>Haven't receive code?</span>
-      <a fill="clear" (click)="resendCode()">
-        Resend code
-      </a>
+      <span>Haven't received code?</span>
+
+      @if (!canResend) {
+        <div class="text-center">
+          <p class="timer">Wait {{ resendTimer }}s to resend</p>
+        </div>
+      }
+
+      @if (canResend && resendAttempts < 3) {
+        <a fill="clear" (click)="resendCode()">
+          Resend code
+        </a>
+      }
+
+      @if (resendAttempts >= 3) {
+        <span class="max-attempts">
+          Max attempts reached
+        </span>
+      }
     </div>
   </div>
 </ion-content>

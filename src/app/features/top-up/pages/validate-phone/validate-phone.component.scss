@@ -1,170 +1,181 @@
 :host {
-    --page-padding: 24px;
-    --primary-color: #3cb53f;
-    --text-color: #536758;
-    --field-bg: #f3f4f7;
-    --border-radius: 20px;
-  }
-  
-  .header-bg {
-    background-image: url('/assets/images/header-bg.png');
-    background-size: cover;
-    background-position: center;
-    height: 122px;
-    position: relative;
-    padding-top: 52px;
-  
-    .back-button {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: 24px;
-      
-      ion-icon {
-        color: black;
-        font-size: 24px;
-      }
-    }
-  
-    .header-title {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 18px;
-      margin: 0;
+  --page-padding: 24px;
+  --primary-color: #3cb53f;
+  --text-color: #536758;
+  --field-bg: #f3f4f7;
+  --border-radius: 20px;
+}
+
+.header-bg {
+  background-image: url("/assets/images/header-bg.png");
+  background-size: cover;
+  background-position: center;
+  height: 122px;
+  position: relative;
+  padding-top: 52px;
+
+  .back-button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 24px;
+
+    ion-icon {
       color: black;
+      font-size: 24px;
     }
   }
-  
-  .main-content {
-    padding: var(--page-padding);
+
+  .header-title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0;
+    color: black;
   }
-  
-  .title-section {
-    margin-bottom: 20px;
-  
-    .title {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 20px;
-      color: var(--text-color);
-      margin: 0;
-    }
-  
-    .subtitle {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      color: var(--text-color);
-      margin: 4px 0 0;
-    }
+}
+
+.main-content {
+  padding: var(--page-padding);
+}
+
+.title-section {
+  margin-bottom: 20px;
+
+  .title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--text-color);
+    margin: 0;
   }
-  
-  .form-field {
-    margin-bottom: 20px;
-  
-    .field-label {
-      display: block;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      color: var(--text-color);
-      margin-bottom: 8px;
-    }
-  
-    .field-content {
-      background-color: var(--field-bg);
-      border-radius: var(--border-radius);
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      min-height: 52px;
-  
-      &.phone-input {
-        justify-content: space-between;
-        padding: 8px 16px;
-        
-        .input-container {
-          display: flex;
-          align-items: center;
-          flex: 1;
-  
-          .phone-prefix {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            color: var(--text-color);
-            margin-right: 8px;
-          }
-  
-          .phone-number-input {
-            --padding-start: 0;
-            --padding-end: 0;
-            --placeholder-color: var(--text-color);
-            --placeholder-opacity: 0.5;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            color: var(--text-color);
-          }
-        }
-  
-        .field-icon {
-          color: var(--text-color);
-          font-size: 24px;
-          margin-left: 12px;
-        }
-      }
-  
-      .operator-icon {
-        width: 71px;
-        height: 40px;
-        margin-right: 12px;
-        object-fit: contain;
-      }
-  
-      .country-flag {
-        width: 31px;
-        height: 31px;
-        margin-right: 12px;
-        object-fit: cover;
-      }
-  
-      .field-value {
+
+  .subtitle {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: var(--text-color);
+    margin: 4px 0 0;
+  }
+}
+
+.form-field {
+  margin-bottom: 20px;
+
+  .field-label {
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+
+  .field-content {
+    background-color: var(--field-bg);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+
+    &.phone-input {
+      justify-content: space-between;
+      padding: 8px 16px;
+
+      .input-container {
+        display: flex;
+        align-items: center;
         flex: 1;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 16px;
-        color: var(--text-color);
+
+        .phone-prefix {
+          font-family: "Montserrat", sans-serif;
+          font-size: 16px;
+          color: var(--text-color);
+          margin-right: 8px;
+        }
+
+        .phone-number-input {
+          --padding-start: 0;
+          --padding-end: 0;
+          --placeholder-color: var(--text-color);
+          --placeholder-opacity: 0.5;
+          font-family: "Montserrat", sans-serif;
+          font-size: 16px;
+          color: var(--text-color);
+        }
       }
-  
-      .field-arrow {
+
+      .field-icon {
         color: var(--text-color);
         font-size: 24px;
+        margin-left: 12px;
       }
     }
-  }
-  
 
-  ion-footer {
-    ion-button {
-      margin: 0;
-      height: 52px;
-      border-radius: var(--border-radius);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
+    .operator-icon {
+      width: 71px;
+      height: 40px;
+      margin-right: 12px;
+      object-fit: contain;
+    }
+
+    .country-flag {
+      width: 31px;
+      height: 31px;
+      margin-right: 12px;
+      object-fit: cover;
+    }
+
+    .field-value {
+      flex: 1;
+      font-family: "Montserrat", sans-serif;
       font-size: 16px;
-      text-transform: none;
+      color: var(--text-color);
     }
-  
-    .send-topup-btn {
-      --background: var(--primary-color);
-      --background-hover: #35a338;
-      color: white;
 
-    }
-  
-    .contacts-btn {
-      --color: var(--primary-color);
-      --border-color: var(--primary-color);
-      --background-hover: #f9fff9;
-      margin-top: 8px;
+    .field-arrow {
+      color: var(--text-color);
+      font-size: 24px;
     }
   }
+}
+
+ion-footer {
+  ion-button {
+    margin: 0;
+    height: 52px;
+    border-radius: var(--border-radius);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: none;
+  }
+
+  .send-topup-btn {
+    --background: var(--primary-color);
+    --background-hover: #35a338;
+    color: white;
+  }
+
+  .contacts-btn {
+    --color: var(--primary-color);
+    --border-color: var(--primary-color);
+    --background-hover: #f9fff9;
+    margin-top: 8px;
+  }
+}
+
+ion-note {
+  /* Make sure to enter the country area code with the "+" symbol in front of it (+555), followed by the phone number. */
+
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 23px;
+  /* or 192% */
+
+  color: #536758;
+}

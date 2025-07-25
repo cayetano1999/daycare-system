@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 @Component({
@@ -11,8 +11,15 @@ import { IonicModule } from '@ionic/angular';
 })
 export class ProfileSectionComponent  implements OnInit {
 
+  @Input() profile!: any;
+
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.profile?.avatar_url) {
+      this.profile.avatar_url = 'avatar-profile.png'; // Default avatar
+      console.log('Profile Section Component Initialized', this.profile);
+    }
+  }
 
 }

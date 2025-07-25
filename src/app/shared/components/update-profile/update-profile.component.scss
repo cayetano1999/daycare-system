@@ -1,0 +1,174 @@
+// Box Component Styles
+// @import url('https://fonts.googleapis.com/css?family=Poppins:700,600,400');
+
+// CSS Variables
+:root {
+  --neutral-3: rgba(157, 164, 180, 1);
+  --neutral-5: rgba(243, 244, 247, 1);
+  --primary-1: rgba(19, 94, 242, 1);
+}
+
+.box-container {
+ 
+}
+
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgb(255, 255, 255);
+}
+
+.sheet-content {
+ 
+}
+
+.sheet-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 5px;
+  margin: 13px auto 0;
+  background-color: #d9d9d9;
+  border-radius: 100px;
+}
+
+.email-section {
+  margin-top: 20px;
+  margin-left: 34px;
+  margin-right: 34px;
+}
+
+.email-text {
+  font-family: 'Poppins', Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 17px;
+  margin: 0;
+}
+
+.email-label {
+  font-weight: 600;
+}
+
+.name-section {
+  margin-left: 17px;
+  margin-right: 17px;
+  margin-top: 14px;
+}
+
+.input-container {
+  position: relative;
+}
+
+.name-label {
+  position: absolute;
+  top: -1px;
+  left: 17px;
+  font-family: 'Poppins', Helvetica, sans-serif;
+  font-weight: 600;
+  color: black;
+  font-size: 15px;
+  line-height: 15px;
+  z-index: 1;
+}
+
+.name-input {
+  margin-top: 24px;
+  height: 52px;
+  width: 100%;
+  background-color: var(--neutral-5);
+  border-radius: 100px;
+  padding-left: 17px;
+  padding-right: 17px;
+  font-family: 'Poppins', Helvetica, sans-serif;
+  font-weight: 400;
+  color: black;
+  font-size: 15px;
+  line-height: 18px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+
+  &:focus {
+    border-color: var(--primary-1);
+    box-shadow: 0 0 0 2px rgba(19, 94, 242, 0.1);
+  }
+}
+
+.button-section {
+  margin-left: 17px;
+  margin-right: 17px;
+  margin-top: 20px;
+}
+
+.save-button {
+  width: 100%;
+  height: 52px;
+  background-color: #3cb53f;
+  border-radius: 20px;
+  font-family: 'Poppins', Helvetica, sans-serif;
+  font-weight: 700;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #35a038;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(60, 181, 63, 0.3);
+  }
+
+  &:active {
+    background-color: #2e8c32;
+  }
+}
+
+.cancel-button {
+  width: 100%;
+  height: 52px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  font-family: 'Poppins', Helvetica, sans-serif;
+  font-weight: 700;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  border: 1px solid rgba(208, 204, 204, 0.986);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #dbdbdb;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(33, 33, 33, 0.3);
+  }
+
+  &:active {
+    background-color: #ffffff;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 375px) {
+  .box-container,
+  .sheet-content {
+    width: 100vw;
+  }
+}

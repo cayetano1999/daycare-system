@@ -1,4 +1,4 @@
-<ion-row class="transactions-section">
+<ion-row class="transactions-section" >
   <ion-col size="12">
     <div class="section-header">
       <h3>Latest transactions</h3>
@@ -6,7 +6,7 @@
     </div>
   </ion-col>
 
-  <ion-col size="12">
+  <ion-col size="12" style="height: 100%;">
     <ion-list>
       @for(transaction of transactions; track transaction) {
       <ion-item lines="none">
@@ -22,7 +22,14 @@
           <p class="transaction-type">{{ transaction.description }}</p>
         </ion-note>
       </ion-item>
-    }
+      }
+
+      @if(transactions.length === 0) {
+      <div class="text-no-transfers mt-5 px-2">
+        ¡You don't have transactions!
+        Start by sending a top-up. <b (click)="emitTopUp()" style="color: #135EF2;">Send Top-Up</b>
+      </div>
+      }
 
     </ion-list>
   </ion-col>

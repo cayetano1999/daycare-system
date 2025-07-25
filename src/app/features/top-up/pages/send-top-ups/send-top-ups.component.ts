@@ -13,6 +13,8 @@ import { Operator } from 'src/app/core/models/operator.type';
 import { Country } from 'src/app/core/models/country.type';
 import { OperatorService } from 'src/app/core/services/operator.service';
 import { ServiceType } from 'src/app/core/enums/service-type.enum';
+import { FingerprintService } from 'src/app/core/services/fingerprint.service';
+import { ALERT_ICONS } from 'src/app/core/constants/constants';
 
 interface TopUpOption {
   id: number;
@@ -33,7 +35,8 @@ export interface ToUpsData {
   selector: 'app-send-top-ups',
   templateUrl: './send-top-ups.component.html',
   styleUrls: ['./send-top-ups.component.scss'],
-  imports: [IonicModule, CommonModule, FormsModule, KuidoHeaderComponent, KuidoTabComponent]
+  imports: [IonicModule, CommonModule, FormsModule, KuidoHeaderComponent, KuidoTabComponent],
+  providers: [FingerprintService]
 
 })
 export class SendTopUpsComponent implements OnInit {
@@ -45,6 +48,8 @@ export class SendTopUpsComponent implements OnInit {
   private readonly storageHelper = inject(StorageHelper);
   private readonly transactionService = inject(TransactionService)
   private readonly operatorService = inject(OperatorService)
+  private readonly fingerprint = inject(FingerprintService);
+  private readonly alertCtrlIonic = inject(AlertController);
 
   amount: number = 0;
   topUpOptions: TopUpOption[] = [];
@@ -58,7 +63,7 @@ export class SendTopUpsComponent implements OnInit {
 
 
   async ngOnInit() {
-    
+
 
   }
 
@@ -76,22 +81,51 @@ export class SendTopUpsComponent implements OnInit {
   }
 
   async confirmTopUp() {
-    const result = await this.alertCtrl.openModalConfirmTopUp(this.amount);
-    if (result?.success) {
-      const topUpData = await this.storageHelper.getStorageKey<ToUpsData>(StorageKeys.TOP_UP_DATA);
-      this.alertCtrl.openModalAlert();
-      setTimeout(async () => {
-        const transaction = await this.transactionService.mapTransactionToInterface(topUpData, this.amount);
-        await this.transactionService.saveTransaction(transaction);
-        this.alertCtrl.dismiss();
-        this.alertCtrl.openModalTopUpSuccess(topUpData).then(result => {
-          this.navCtrl.navigateForward(RoutesApp.HOME)
-        });
-      }, 3000);
+    try {
+      const result = await this.alertCtrl.openModalConfirmTopUp(this.amount);
+      if (result?.success) {
+        const topUpData = await this.storageHelper.getStorageKey<ToUpsData>(StorageKeys.TOP_UP_DATA);
 
+        const authentication = await this.fingerprint.authenticate();
+        if (!authentication) {
+          this.alertCtrl.openModalAlertMessage('Please try again.', 'Authentication Failed', ALERT_ICONS.ERROR, 'alert', 'OK');
+          return;
+        }
+
+        this.alertCtrl.openModalAlert();
+        setTimeout(async () => {
+          const transaction = await this.transactionService.mapTransactionToInterface(topUpData, this.amount);
+          await this.transactionService.saveTransaction(transaction);
+          this.alertCtrl.dismiss();
+          this.alertCtrl.openModalTopUpSuccess(topUpData).then(result => {
+            this.navCtrl.navigateForward(RoutesApp.HOME)
+          });
+        }, 3000);
+
+      }
     }
+    catch (error) {
+      console.error('Error confirming top-up:', error);
+      this.alertCtrl.error('Error', JSON.stringify(error));
+    }
+  }
 
 
+  async loginWithBiometrics() {
+    const credentials = await this.fingerprint.authenticate();
+
+    alert('Biometric authentication result: ' + JSON.stringify(credentials));
+
+    
+  }
+
+  async showAlert(title: string, message: string) {
+    const alert = await this.alertCtrlIonic.create({
+      header: title,
+      message,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
   async ionViewWillEnter() {
@@ -103,7 +137,7 @@ export class SendTopUpsComponent implements OnInit {
     const topUpOptions = await this.operatorService.getProductAmmounts(ServiceType.TopUp, this.topUpData.selectedDestination.iso_code, this.topUpData.selectedOperator.id);
     console.log('Top Up Options:', topUpOptions);
     if (topUpOptions) {
-      this.topUpOptions = topUpOptions.map((item,index) => {
+      this.topUpOptions = topUpOptions.map((item, index) => {
         return {
           id: index,
           usdAmount: Number(item.amount),

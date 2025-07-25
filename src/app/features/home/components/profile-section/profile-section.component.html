@@ -1,12 +1,17 @@
-<ion-row style="display: inline-table; margin-left: 45px;">
-  <ion-col size="12" class="center-content ctop" style="margin-top: 40px;">
-    <ion-avatar class="profile-avatar">
-      <img src="assets/img/shared/profile.svg" alt="Profile" />
-    </ion-avatar>
+@if(profile){
+
+
+<ion-row>
+  <ion-col size="12" style="margin-left: -3vw;">
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img [src]="'assets/img/shared/'+profile?.avatar_url || 'assets/img/shared/profile.svg'" alt="Profile" />
+      </ion-avatar> 
+      <ion-label class="greeting-section">
+        <b>Welcome</b>
+        <p>{{profile?.full_name}}</p>
+      </ion-label>
+    </ion-item>
   </ion-col>
 </ion-row>
-<!-- User Greeting Section -->
-<div class="greeting-section">
-  <h2>Welcome</h2>
-  <p>alejandromercedes&#64;gmail.com</p>
-</div>
+}

@@ -1,0 +1,17 @@
+<ion-content>
+  <ion-row class="mt-3">
+    <ion-col size="12">
+
+      <ion-list-header>
+        <ion-label>Languages</ion-label>
+      </ion-list-header>
+      <ion-list lines="none" class="language-list">
+        <ion-item *ngFor="let language of languages" (click)="selectLanguage(language)" class="language-item">
+          <ion-label><b>{{ language }}</b></ion-label>
+          <ion-checkbox slot="end" [checked]="language === selectedLanguage" ></ion-checkbox>
+        </ion-item>
+      </ion-list>
+
+    </ion-col>
+  </ion-row>
+</ion-content>

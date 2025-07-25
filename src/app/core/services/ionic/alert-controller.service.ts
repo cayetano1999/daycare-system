@@ -6,6 +6,10 @@ import { ToastControllerService } from './toast-controller.service';
 import { TopUpConfirmationComponent } from 'src/app/features/top-up/components/top-up-confirmation/top-up-confirmation.component';
 import { TopUpSuccessComponent } from 'src/app/shared/components/top-up-success/top-up-success.component';
 import { ToUpsData } from 'src/app/features/top-up/pages/send-top-ups/send-top-ups.component';
+import { OtpComponent } from 'src/app/features/auth/pages/otp/otp.component';
+import { UpdateProfileComponent } from 'src/app/shared/components/update-profile/update-profile.component';
+import { AlertMessageComponent, AlertMessageType } from 'src/app/shared/components/alert-message/alert-message.component';
+import { LanguageSelectorComponent } from 'src/app/shared/components/language-selector/language-selector.component';
 @Injectable({
     providedIn: 'root'
 })
@@ -150,7 +154,7 @@ export class AlertControllerService {
           setTimeout(async () => {
             const element = document.getElementById('modal-loading');
             if (element) {
-                this.toastCtrl.showToastError('Error al cargar la información');
+                // this.toastCtrl.showToastError('Error al cargar la información');
                 await this.modalCtrl.dismiss();
             }
           }, 60000);
@@ -205,5 +209,69 @@ export class AlertControllerService {
           return result.data;
     }
 
-  
+        async openModalValidateOtp(contact: string, isFromRecover: boolean) {
+
+            const modal = await this.modalCtrl.create({
+                component: OtpComponent,
+                cssClass: '',
+                componentProps: {
+                currentContact: contact,
+                    isFromRecover: isFromRecover
+                },
+            });
+            await modal.present();
+            const result = await modal.onDidDismiss();
+            return result.data;
+        }
+
+    async openModalUpdateProfile(profile: any) {
+        const modal = await this.modalCtrl.create({
+            component: UpdateProfileComponent,
+            cssClass: '',
+            componentProps: {
+                profile
+            },
+            initialBreakpoint: 0.5,
+            breakpoints: [0, 0.5, 1]
+        });
+        await modal.present();
+
+        const result = await modal.onDidDismiss();
+        return result.data;
+    }
+
+    async openModalAlertMessage(message: string, title: string, img?: string, type?: AlertMessageType, textConfirm?: string) {
+        const modal = await this.modalCtrl.create({
+            component: AlertMessageComponent,
+            cssClass: 'backdrop-modal',
+            componentProps: {
+                message: message,
+                title: title,
+                img: img || '',
+                type: type || 'alert',
+                textConfirm: textConfirm || 'OK'
+            },
+        });
+        await modal.present();
+        const result = await modal.onDidDismiss();
+        return result.data;
+
+    }
+
+    async openModalLanguage() {
+        const modal = await this.modalCtrl.create({
+            component: LanguageSelectorComponent,
+            cssClass: 'backdrop-modal',
+            componentProps: {
+                languages: ['English', 'Spanish'],
+                selectedLanguage: 'English'
+            },
+             initialBreakpoint: 0.5,
+            breakpoints: [0, 0.5, 1]
+        });
+        await modal.present();
+        const result = await modal.onDidDismiss();
+        return result.data;
+    }
+
 }

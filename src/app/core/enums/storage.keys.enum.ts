@@ -10,5 +10,6 @@ export enum StorageKeys  {
     FAVORITIES_NUMBER = 'favorities_number',
     FCM_TOKEN = 'fcm_token',
     CREDIT_CARDS = 'credit_cards',
+    BIOMETRIC_AUTH = 'biometric_auth',
 
 }

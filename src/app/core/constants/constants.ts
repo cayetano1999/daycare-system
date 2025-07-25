@@ -17,3 +17,9 @@ export const ANALITYCS_EVENTS = {
 export const REGEX = {
     password: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}/
 }
+
+export const ALERT_ICONS = {
+    SUCCESS: 'assets/img/shared/check.svg',
+    ERROR: 'assets/img/shared/error_icon.svg',
+    QUESTION: 'assets/img/shared/question_icon.svg',
+}
