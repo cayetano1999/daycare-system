@@ -28,8 +28,8 @@ export class LoginEmailComponent {
 
 
   loginForm = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    email: ['alamador@apap.com.do', [Validators.required, Validators.email]],
+    password: ['Klkpapa123', [Validators.required, Validators.minLength(6)]]
   });
 
   showPassword = signal(false);

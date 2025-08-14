@@ -15,10 +15,14 @@ import { OperatorService } from 'src/app/core/services/operator.service';
 import { ServiceType } from 'src/app/core/enums/service-type.enum';
 import { FingerprintService } from 'src/app/core/services/fingerprint.service';
 import { ALERT_ICONS } from 'src/app/core/constants/constants';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { PaymentSheetEventsEnum, Stripe } from '@capacitor-community/stripe';
+import { PaymentService } from 'src/app/core/services/payment.service';
 
 interface TopUpOption {
   id: number;
   usdAmount: number;
+  currency: string;
   dopAmount: number;
   icon: string;
   isSelected: boolean;
@@ -43,6 +47,7 @@ export class SendTopUpsComponent implements OnInit {
 
   //Services
   private readonly navCtrl = inject(NavController);
+  private readonly supabaseService = inject(SupabaseService);
   private readonly alertCtrl = inject(AlertControllerService);
   private readonly location = inject(Location);
   private readonly storageHelper = inject(StorageHelper);
@@ -50,8 +55,10 @@ export class SendTopUpsComponent implements OnInit {
   private readonly operatorService = inject(OperatorService)
   private readonly fingerprint = inject(FingerprintService);
   private readonly alertCtrlIonic = inject(AlertController);
+  private readonly paymentService = inject(PaymentService);
 
   amount: number = 0;
+  currency: string = "";
   topUpOptions: TopUpOption[] = [];
 
 
@@ -77,14 +84,56 @@ export class SendTopUpsComponent implements OnInit {
       isSelected: option.id === selectedOption.id
     }));
     this.amount = selectedOption.usdAmount;
+    this.currency = selectedOption.currency;
     this.confirmTopUp();
+  }
+
+  async doTopUp() {
+    let userId = "";
+    if (this.supabaseService.session?.user.id)
+      userId = this.supabaseService.session.user.id;
+
+    const data = {
+      amount: this.amount, // en centavos (ej: $10.00)
+      currency: this.currency,
+      destination_number: this.topUpData.phoneNumber,
+    };
+
+    try {
+      // 1. Solicita el PaymentIntent a tu función Edge de Supabase
+      const { paymentIntent, ephemeralKey, customer, stripe_pk } = await this.paymentService.createPaymentIntent(data);
+      console.log("Response", paymentIntent, ephemeralKey, customer, stripe_pk);
+
+      // 2. Muestra el formulario de Stripe para pagar
+      // const result = await this.paymentService.payWithStripe(customer, ephemeralKey ,paymentIntent);
+
+      await Stripe.createPaymentFlow({
+        paymentIntentClientSecret: paymentIntent,
+        customerEphemeralKeySecret: ephemeralKey,
+        merchantDisplayName: 'Kuido',
+        customerId: customer,
+      });
+
+      
+      const result = await Stripe.presentPaymentFlow();
+      // Confirm PaymentFlow. Completed.
+      const confirmResult = await Stripe.confirmPaymentFlow();
+      // if (result.paymentResult === PaymentSheetEventsEnum.Completed) {
+      //   alert('Recarga exitosa');
+      // } else {
+      //   alert('Pago no completado');
+      // }
+    } catch (error) {
+      console.log("Error en el pago", error);
+    }
   }
 
   async confirmTopUp() {
     try {
-      const result = await this.alertCtrl.openModalConfirmTopUp(this.amount);
+      const result = await this.alertCtrl.openModalConfirmTopUp(this.amount, this.currency);
       if (result?.success) {
         const topUpData = await this.storageHelper.getStorageKey<ToUpsData>(StorageKeys.TOP_UP_DATA);
+        await this.doTopUp();
 
         const authentication = await this.fingerprint.authenticate();
         if (!authentication) {
@@ -116,7 +165,7 @@ export class SendTopUpsComponent implements OnInit {
 
     alert('Biometric authentication result: ' + JSON.stringify(credentials));
 
-    
+
   }
 
   async showAlert(title: string, message: string) {
@@ -141,6 +190,8 @@ export class SendTopUpsComponent implements OnInit {
         return {
           id: index,
           usdAmount: Number(item.amount),
+
+          currency: item.unit,
           //Todo: Change conversion rate
           dopAmount: Number(item.amount) * 60,
           icon: '/assets/img/shared/sendtopup.svg',

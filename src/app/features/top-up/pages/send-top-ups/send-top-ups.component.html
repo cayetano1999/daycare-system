@@ -9,22 +9,22 @@
         <!-- <ion-card class="recipient-card">
           <ion-card-content> -->
 
-            <ion-item lines="none" class="" style="padding-top: 5px; padding-bottom: 5px;">
-              <ion-avatar slot="start" class="mt-2">
-                <!-- <img src="../../../../../assets/img/shared/person.svg" alt="Recipient avatar" class="avatar" /> -->
-                <ion-icon color="primary" name="person-sharp" style="font-size: 30px;"></ion-icon>
-              </ion-avatar>
-              <ion-label>
-                <p class="recipient-text">Send to<span class="bold"> {{topUpData.contactName || ':'}}</span></p>
-                <p class="phone-number">{{topUpData.selectedDestination.prefix}} {{topUpData.phoneNumber}}</p>
+        <ion-item lines="none" class="" style="padding-top: 5px; padding-bottom: 5px;">
+          <ion-avatar slot="start" class="mt-2">
+            <!-- <img src="../../../../../assets/img/shared/person.svg" alt="Recipient avatar" class="avatar" /> -->
+            <ion-icon color="primary" name="person-sharp" style="font-size: 30px;"></ion-icon>
+          </ion-avatar>
+          <ion-label>
+            <p class="recipient-text">Send to<span class="bold"> {{topUpData.contactName || ':'}}</span></p>
+            <p class="phone-number">{{topUpData.selectedDestination.prefix}} {{topUpData.phoneNumber}}</p>
 
-              </ion-label>
-                <ion-avatar slot="end">
-                <img [src]="topUpData.selectedOperator.logo" alt="Flag" class="flag" />
+          </ion-label>
+          <ion-avatar slot="end">
+            <img [src]="topUpData.selectedOperator.logo" alt="Flag" class="flag" />
 
-              </ion-avatar>
+          </ion-avatar>
 
-            </ion-item>
+        </ion-item>
 
         }
       </ion-col>
@@ -45,11 +45,10 @@
             <div class="top-up-content">
               <img [src]="option.icon" alt="Top up icon" class="top-up-icon" />
               <div class="top-up-info">
-                <p class="top-up-text">Send this top up worth<br />USD${{option.usdAmount}} / DOP${{option.dopAmount}}
-                </p>
-                <ion-button class="select-button" style="color: white;">
-                  USD${{option.usdAmount}} / DOP${{option.dopAmount}}
-                </ion-button>
+                <!-- <p class="top-up-text">Send this top up worth<br />USD${{option.usdAmount}} / DOP${{option.dopAmount}}</p> -->
+                <p class="top-up-text">Send this top up worth<br />{{option.currency}}${{option.usdAmount}}</p>
+                <ion-button class="select-button" style="color: white;"> {{option.currency}}$ {{option.usdAmount}}</ion-button>
+                <!-- <ion-button class="select-button" style="color: white;"> USD${{option.usdAmount}} / DOP${{option.dopAmount}}</ion-button> -->
               </div>
             </div>
           </ion-card-content>

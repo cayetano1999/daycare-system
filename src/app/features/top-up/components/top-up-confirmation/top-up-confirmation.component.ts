@@ -13,10 +13,12 @@ import { IonicModule, ModalController } from '@ionic/angular';
 export class TopUpConfirmationComponent  implements OnInit {
 
   @Input() amount: number = 0;
+  @Input() currency: string = "USD";
   private readonly modalCtrl = inject(ModalController);
 
   topUpData = {
     amount: this.amount,
+    currency: this.currency,
     title: 'Top Up to send',
     description: 'Send this top up to continue sharing and connecting with that special someone'
   };
@@ -25,6 +27,7 @@ export class TopUpConfirmationComponent  implements OnInit {
 
   ngOnInit() { 
     this.topUpData.amount = this.amount;
+    this.topUpData.currency = this.currency;
   }
 
   onConfirm() {

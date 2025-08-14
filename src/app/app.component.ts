@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
     constructor() {
         this.setupRouterEvents();
         this.setupBackButton();
-        this.checkSession();
     }
 
 
@@ -84,6 +83,7 @@ export class AppComponent implements OnInit {
         await Stripe.initialize({
             publishableKey: environment.SpPk, // TU CLAVE PUBLICABLE DE PRUEBA
         });
+        await this.checkSession();
 
     }
 
@@ -95,11 +95,11 @@ export class AppComponent implements OnInit {
 
     async checkSession() {
         const isSessionExpired = await this.supabase.isSessionExpired();
-
+        console.log("Session expired?", isSessionExpired);
         if (isSessionExpired) {
-            this.router.navigate([RoutesApp.SPLASH]);
+            await this.router.navigate([RoutesApp.SPLASH]);
         } else {
-            this.router.navigate([RoutesApp.HOME]);
+            await this.router.navigate([RoutesApp.HOME]);
         }
     }
 

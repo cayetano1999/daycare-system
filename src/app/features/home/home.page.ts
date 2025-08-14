@@ -19,7 +19,7 @@ import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { Transaction } from 'src/app/shared/interfaces/transaction.interface';
 import { OperatorService } from 'src/app/core/services/operator.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
-import { PaymentSheetEventsEnum } from '@capacitor-community/stripe';
+import { PaymentSheetEventsEnum, Stripe } from '@capacitor-community/stripe';
 import { v4 as uuidv4 } from 'uuid'; // Using uuid library for generating unique IDs
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 
@@ -77,36 +77,6 @@ export class HomePage implements OnInit {
 
   }
 
-
-  async doTopUp() {
-    // Supón que tienes estos datos de un formulario
-    const data = {
-      amount: 1000, // en centavos (ej: $10.00)
-      currency: 'usd',
-      user_id: 'eb2e1bd6-c92a-4921-b30e-1bbf3dc0d689', // el que corresponda en tu app
-      destination_number: '8091234567',
-    };
-
-    try {
-      // 1. Solicita el PaymentIntent a tu función Edge de Supabase
-      const response = await this.paymentService.createPaymentIntent(data);
-      console.log("Response", response);
-
-      const clientSecret = response.client_secret;
-
-      // 2. Muestra el formulario de Stripe para pagar
-      const result = await this.paymentService.payWithStripe(clientSecret);
-      console.log("result", result);
-      if (result.paymentResult === PaymentSheetEventsEnum.Completed) {
-        alert('Recarga exitosa');
-      } else {
-        alert('Pago no completado');
-      }
-    } catch (error: any) {
-      console.log("Error en el pago", error);
-      alert('Error en el pago: ' + (error.message || error));
-    }
-  }
 
   services: Service[] = [
     {
@@ -220,7 +190,7 @@ export class HomePage implements OnInit {
         return a.active ? -1 : 1;
       });
 
-    await this.fillMissingProfileFileds();
+    // await this.fillMissingProfileFileds();
 
   }
 
@@ -263,7 +233,7 @@ export class HomePage implements OnInit {
       console.error('Error calling function:', error.message);
     } else {
       await this.alertCtrl.dismiss();
-      
+
       console.log('Profile filled successfully:', data);
       this.profile = JSON.parse(data).profile;
       await this.alertCtrl.dismiss();

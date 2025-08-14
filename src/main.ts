@@ -10,6 +10,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { AppComponent } from './app/app.component';
+import { defineCustomElements } from 'stripe-pwa-elements/loader';
 
 // Servicios
 import { ApiService } from './app/core/services/api/api.service';
@@ -70,4 +71,6 @@ bootstrapApplication(AppComponent, {
       multi: true
     }
   ]
-}).catch(err => console.error(err));
+})
+.then(() => defineCustomElements(window))
+.catch(err => console.error(err));

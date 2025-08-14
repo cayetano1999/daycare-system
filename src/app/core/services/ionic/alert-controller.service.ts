@@ -176,14 +176,15 @@ export class AlertControllerService {
           const result = await modalLives.onDidDismiss();
     }
 
-    async openModalConfirmTopUp(amount: number) {
+    async openModalConfirmTopUp(amount: number, currency: string) {
         const modalConfirm = await this.modalCtrl.create({
             component: TopUpConfirmationComponent,
             id: 'modal-topup',
             cssClass: 'backdrop-modal',
             backdropDismiss: false,
             componentProps: {
-                amount: amount
+                amount: amount,
+                currency: currency
             }
           });
     
