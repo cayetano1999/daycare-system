@@ -18,6 +18,7 @@ import { ALERT_ICONS } from 'src/app/core/constants/constants';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { PaymentSheetEventsEnum, Stripe } from '@capacitor-community/stripe';
 import { PaymentService } from 'src/app/core/services/payment.service';
+import { loadStripe } from '@stripe/stripe-js';
 
 interface TopUpOption {
   id: number;
@@ -107,22 +108,36 @@ export class SendTopUpsComponent implements OnInit {
       // 2. Muestra el formulario de Stripe para pagar
       // const result = await this.paymentService.payWithStripe(customer, ephemeralKey ,paymentIntent);
 
-      await Stripe.createPaymentFlow({
+      // const stripe = await loadStripe(stripe_pk);
+      // if (stripe) {
+      //   const elements = stripe.elements({ clientSecret: paymentIntent });
+
+      //   const paymentElement = elements.create('payment'); // shows saved cards + add new
+      //   paymentElement.mount('#payment-element');
+
+      //   Later, confirm:
+      //   const { error } = await stripe.confirmPayment({
+      //     elements,
+      //     confirmParams: { return_url: 'https://your.app/return' }, // or handle result without redirect
+      //   });
+      // }
+
+      await Stripe.createPaymentSheet({
         paymentIntentClientSecret: paymentIntent,
         customerEphemeralKeySecret: ephemeralKey,
         merchantDisplayName: 'Kuido',
         customerId: customer,
       });
 
-      
-      const result = await Stripe.presentPaymentFlow();
-      // Confirm PaymentFlow. Completed.
-      const confirmResult = await Stripe.confirmPaymentFlow();
-      // if (result.paymentResult === PaymentSheetEventsEnum.Completed) {
-      //   alert('Recarga exitosa');
-      // } else {
-      //   alert('Pago no completado');
-      // }
+
+      const result = await Stripe.presentPaymentSheet();
+      // // Confirm PaymentFlow. Completed.
+      // const confirmResult = await Stripe.confirmPaymentFlow();
+      if (result.paymentResult === PaymentSheetEventsEnum.Completed) {
+        alert('Recarga exitosa');
+      } else {
+        alert('Pago no completado');
+      }
     } catch (error) {
       console.log("Error en el pago", error);
     }
