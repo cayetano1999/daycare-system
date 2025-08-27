@@ -130,6 +130,7 @@ export class SendTopUpsComponent implements OnInit {
       });
 
 
+      // const result = await Stripe.presentPaymentSheet();
       const result = await Stripe.presentPaymentSheet();
       // // Confirm PaymentFlow. Completed.
       // const confirmResult = await Stripe.confirmPaymentFlow();
