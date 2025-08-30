@@ -6,6 +6,8 @@ import { LoginSelectorComponent } from '../../components/login-selector/login-se
 import { StatusBarHelper } from 'src/app/core/helpers/status-bar.helper';
 import { COLORS } from 'src/app/core/constants/constants';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
+import { GoogleAuthService } from 'src/app/core/services/firebase/firebase-auth.service';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 
 @Component({
   selector: 'app-login-preview',
@@ -19,6 +21,8 @@ export class LoginPreviewComponent  implements OnInit {
   //Services
   private readonly statusBar = inject(StatusBarHelper);
   private readonly navCtrl = inject(NavController);
+  private firebaseAuthService = inject(GoogleAuthService);
+  private readonly supabaseService = inject(SupabaseService);
 
   constructor() { }
 
@@ -31,12 +35,20 @@ export class LoginPreviewComponent  implements OnInit {
 
   goToEmailLogin() {
     // redirigir a login con email
-    this.navCtrl.navigateForward(RoutesApp.LOGIN_EMAIL);
+    this.navCtrl.navigateRoot(RoutesApp.LOGIN_EMAIL);
   }
   
   goToPhoneLogin() {
     // redirigir a login con teléfono
-    this.navCtrl.navigateForward(RoutesApp.LOGIN_PHONE);
+    this.navCtrl.navigateRoot(RoutesApp.LOGIN_PHONE);
+  }
+
+  loginViaGoogle(){
+    this.supabaseService.signInWithGoogle().then((result) => {
+      console.log(result);
+    }).catch((error) => {
+      alert('Error al iniciar sesión con Google');
+    });
   }
 
 }

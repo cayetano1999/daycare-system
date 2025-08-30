@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-kuido-social-login',
@@ -8,8 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KuidoSocialLoginComponent  implements OnInit {
 
+  @Output() googleLogin = new EventEmitter<void>();
+
   constructor() { }
 
   ngOnInit() {}
+
+  emitGoogleLogin() {
+    this.googleLogin.emit();
+  }
 
 }

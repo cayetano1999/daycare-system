@@ -33,15 +33,12 @@ export class OtpComponent implements OnInit {
   @Input() isFromRecover: boolean = false;
 
 
-  get phoneFormState() {
-    return this.router.getCurrentNavigation()?.extras.state?.['phone'] || '';
+  get getContactState() {
+    return this.router.getCurrentNavigation()?.extras.state?.['phone'] || this.router.getCurrentNavigation()?.extras.state?.['email'] || '';
   }
 
   ngOnInit(): void {
-    const phoneFromState = this.phoneFormState;
-    if (phoneFromState) {
-      this.currentContact = phoneFromState;
-    }
+    this.currentContact = this.getContactState || this.currentContact;
     this.startResendTimer();
   }
 
@@ -88,14 +85,11 @@ export class OtpComponent implements OnInit {
 
     const params: any = {
       token: otp,
-      type: this.isFromRecover ? 'email' : 'sms',
+      type: this.isFromRecover || this.currentContact.includes('@') ? 'email' : 'sms',
+      ...(this.isFromRecover || this.currentContact.includes('@')
+      ? { email: contact }
+      : { phone: contact })
     };
-
-    if (this.isFromRecover) {
-      params.email = contact;
-    } else {
-      params.phone = contact;
-    }
 
     try {
       console.log('Verifying OTP with params:', params);
@@ -106,7 +100,7 @@ export class OtpComponent implements OnInit {
         return;
       }
 
-      this.isFromRecover
+      this.isFromRecover || this.getContactState.includes('@')
         ? this.modalCtrl.dismiss({ success: true })
         : this.navCtrl.navigateRoot(RoutesApp.HOME);
 

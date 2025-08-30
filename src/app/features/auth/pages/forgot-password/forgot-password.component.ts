@@ -94,7 +94,7 @@ export class ForgotPasswordComponent implements OnInit {
       }
 
       await this.alertCtrl.openModalAlertMessage('Success', 'Your password has been updated successfully.', ALERT_ICONS.SUCCESS, 'alert');
-      this.navCtrl.navigateForward(RoutesApp.LOGIN_PREVIEW);
+      this.navCtrl.navigateRoot(RoutesApp.LOGIN_PREVIEW);
 
     } catch (err: any) {
       console.error('Unexpected error:', err);

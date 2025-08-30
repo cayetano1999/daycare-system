@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { ActionSheetController, IonicModule, NavController } from '@ionic/angular';
+import { cleanPhoneNumber } from 'src/app/core/constants/constants';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { ContactService } from 'src/app/core/services/contacts.service';
 import { ToastControllerService } from 'src/app/core/services/ionic/toast-controller.service';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { KuidoHeaderComponent } from 'src/app/shared/components/kuido-header/kuido-header.component';
 interface FavoritiesContact {
-  id: number;
+  id?: string;
   name: string;
   phone: string;
   image: string;
-  isFavorite: boolean;
+  user_id: string;
 }
 
 @Component({
@@ -21,70 +23,133 @@ interface FavoritiesContact {
   standalone: true,
   imports: [IonicModule, CommonModule, KuidoHeaderComponent]
 })
-export class FavoriteNumbersComponent  implements OnInit {
+export class FavoriteNumbersComponent implements OnInit {
 
   private readonly contactService = inject(ContactService)
   private readonly storageHelper = inject(StorageHelper)
-  private readonly toastCtrl = inject(ToastControllerService)
+  private readonly toastCtrl = inject(ToastControllerService);
+  private readonly actionSheet = inject(ActionSheetController);
+  private readonly nav = inject(NavController);
+  private supabaseService = inject(SupabaseService);
 
   contacts: FavoritiesContact[] = [
-    {
-      id: 1,
-      name: 'Kathya Yu',
-      phone: '(+84) 984 943 432',
-      image: 'assets/img/shared/person.svg',
-      isFavorite: true,
-    },
-    {
-      id: 2,
-      name: 'Arlene McCoy',
-      phone: '(307) 555-0133',
-      image: 'assets/img/shared/profile.svg',
-      isFavorite: false,
-    }
+
   ];
+  phoneSelected!: string;
 
   constructor() { }
 
   async ngOnInit() {
-   await this.loadContacts();
+    await this.loadContacts();
   }
 
-  async openContactPicker(){
+
+  async openContactPicker() {
     const contacts = await this.contactService.openContactPicker();
     const contactSelected = await this.contactService.openContactModal(contacts || []);
     console.log(contactSelected);
 
-    if(contactSelected) {
+    //abrir un action sheet con el contacto seleccionado
+    const actionSheet = await this.actionSheet.create({
+      header: 'Select a phone number',
+      subHeader: `Name: ${contactSelected?.name?.display || ''}`,
+      buttons: [
+        ...(contactSelected?.phones?.map((phone: any) => ({
+          text: phone.number,
+          handler: async () => {
+            // Puedes guardar el número seleccionado aquí si lo necesitas
+            // Por ejemplo: this.saveSelectedPhone(phone.number);
+            this.phoneSelected = phone.number;
+            if (contactSelected && this.phoneSelected) {
+              const user = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
 
-      const newContact: FavoritiesContact = {
-        id: +contactSelected.contactId,
-        name: contactSelected?.name?.display || contactSelected?.name?.given || contactSelected?.name?.family || contactSelected?.name?.middle || '',
-        phone: contactSelected?.phones?.[0]?.number || '',
-        image: 'assets/img/shared/avatar-default.svg',
-        isFavorite: true
-      }
-      const favorities: any[] = await this.storageHelper.getStorageKey(StorageKeys.FAVORITIES_NUMBER) || [];
-      favorities.push(newContact);
-      await this.storageHelper.setStorageKey(StorageKeys.FAVORITIES_NUMBER,favorities);
-      await this.toastCtrl.showToastSuccess('Contact saved', 2000);
-      this.loadContacts();
-    }
+              const newContact: FavoritiesContact = {
+                name: contactSelected?.name?.display || contactSelected?.name?.given || contactSelected?.name?.family || contactSelected?.name?.middle || '',
+                phone: cleanPhoneNumber(this.phoneSelected) || '',
+                image: 'assets/img/shared/avatar-default.svg',
+                user_id: user.id || '', // Aquí debes asignar el user_id correspondiente
+              }
+
+              const { data, error } = await this.supabaseService.createRecord('favorite_numbers', newContact);
+              if (error) {
+                await this.toastCtrl.showToastError('Error saving contact');
+                return;
+              }
+
+              await this.toastCtrl.showToastSuccess('Contact saved', 2000);
+              this.loadContacts();
+            }
+          }
+        })) || []),
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+    await actionSheet.present();
+
 
   }
 
   async loadContacts() {
-     this.contacts = await this.storageHelper.getStorageKey(StorageKeys.FAVORITIES_NUMBER) || [];
+
+    const user = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
+    const { data, error } = await this.supabaseService.getRecords('favorite_numbers', ['id', 'name', 'phone', 'image'], 'user_id', user.id);
+    if (error) {
+      // await this.toastCtrl.showToastError('Error loading contacts');
+      this.contacts = [];
+      return;
+    }
+    this.contacts = data as any;
   }
 
   editContact(contact: any) {
-  console.log('Editar contacto:', contact);
-  // Lógica para editar
-}
+    console.log('Editar contacto:', contact);
+    // Lógica para editar
+  }
 
-deleteContact(contact: any) {
-  console.log('Eliminar contacto:', contact);
-  // Lógica para eliminar
-}
+  async deleteContact(contact: any) {
+    // Lógica para eliminar
+    const {data, error} = await this.supabaseService.deleteRecord('favorite_numbers', contact.id);
+    if (error) {
+      await this.toastCtrl.showToastError('Error deleting contact');
+      return;
+    }
+    await this.toastCtrl.showToastSuccess('Contact deleted', 2000);
+    this.loadContacts();
+  }
+
+  async actionsForContact(contact: any) {
+    console.log('Acciones para el contacto:', contact);
+    // Lógica para las acciones del contacto
+
+    //aqui debe aparecer un action sheet con las opciones de "Recargar", "Eliminar contacto" en ingles
+
+    const actionSheet = await this.actionSheet.create({
+      header: 'Actions for Contact',
+      buttons: [
+        {
+          text: `Top Up to ${contact.name}`,
+          handler: () => {
+            console.log('Recargar contacto:', contact);
+            this.nav.navigateRoot('/top-up/validate-phone', { state: { phone: contact.phone } });
+          }
+        },
+        {
+          text: 'Delete Contact',
+          handler: async () => {
+            console.log('Eliminar contacto:', contact);
+            await this.deleteContact(contact);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
 
 }

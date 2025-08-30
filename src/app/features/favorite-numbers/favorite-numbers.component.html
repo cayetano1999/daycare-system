@@ -13,7 +13,7 @@
 
   <ion-list class="contacts-container">
     <ion-item *ngFor="let contact of contacts" lines="none" class="contact-card">
-      <div class="contact-content">
+      <div (click)="actionsForContact(contact)" class="contact-content">
         <div class="contact-info">
           <ion-avatar>
             <img [src]="contact.image" [alt]="contact.name + ' profile'" />

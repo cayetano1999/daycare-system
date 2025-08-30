@@ -28,8 +28,8 @@ export class LoginEmailComponent {
 
 
   loginForm = this.formBuilder.group({
-    email: ['alamador@apap.com.do', [Validators.required, Validators.email]],
-    password: ['Klkpapa123', [Validators.required, Validators.minLength(6)]]
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   showPassword = signal(false);
@@ -55,7 +55,6 @@ export class LoginEmailComponent {
 
       } catch (error) {
         if (error instanceof Error) {
-          alert(error.message)
         }
       } finally {
         this.loginForm.reset()
@@ -66,11 +65,11 @@ export class LoginEmailComponent {
   }
 
   redirectForgotPassword() {
-    this.navCtrl.navigateForward(RoutesApp.AUTH_FORGOT_PASSWORD);
+    this.navCtrl.navigateRoot(RoutesApp.AUTH_FORGOT_PASSWORD);
   }
 
   redirectToRegister() {
-    this.navCtrl.navigateForward(RoutesApp.AUTH_REGISTER);
+    this.navCtrl.navigateRoot(RoutesApp.AUTH_REGISTER);
   }
   
   //Lifecycle methods

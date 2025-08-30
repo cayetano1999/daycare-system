@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule, ModalController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-kuido-header',
@@ -15,16 +15,18 @@ export class KuidoHeaderComponent  implements OnInit {
   isIos: boolean = Capacitor.getPlatform() === 'ios';
   //Services
   private readonly navCtrl = inject(NavController);
+  private modalCtrl = inject(ModalController);
   //Inputs
   @Input() title: string = '';
   @Input() bells: boolean = false;
+  @Input() isModal: boolean = false;
 
   constructor() { }
 
   ngOnInit() {}
 
   back(){
-    this.navCtrl.back();
+    this.isModal ? this.modalCtrl.dismiss() : this.navCtrl.back();
   }
 
 }

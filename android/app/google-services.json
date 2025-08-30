@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "193661590436",
+    "project_id": "kuidoapp-60d43",
+    "storage_bucket": "kuidoapp-60d43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193661590436:android:a5f7607c3e19330edfff31",
+        "android_client_info": {
+          "package_name": "com.kuidomobileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193661590436-6mbgp90lr1c6a1il9jnqgjojgefr9qhp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kuidomobileapp",
+            "certificate_hash": "2223d0426d4db713d7e26de2a63b3c6c10063258"
+          }
+        },
+        {
+          "client_id": "193661590436-pik35gum993dh1r0imj8b3debnnblbsu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs1H_15A3ar9EdATbsYH5UVmGBUgwwDrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193661590436-pik35gum993dh1r0imj8b3debnnblbsu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "193661590436-lhdkoot91og17vg56v58ghghho0m2922.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kuidomobileapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

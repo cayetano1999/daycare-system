@@ -23,7 +23,7 @@ export class SplashScreenComponent {
 
   handleOnNextClick(event?: any) {
     // Handle next button click
-    this.navController.navigateForward(RoutesApp.LOGIN_PREVIEW);
+    this.navController.navigateRoot(RoutesApp.LOGIN_PREVIEW);
   }
 
   handleNoLoginVersion(event?: any) {

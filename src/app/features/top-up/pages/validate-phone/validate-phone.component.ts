@@ -18,6 +18,7 @@ import { TopUpService } from 'src/app/core/services/top-up.service';
 import { Country } from 'src/app/core/models/country.type';
 import { Operator } from 'src/app/core/models/operator.type';
 import { ServiceType } from 'src/app/core/enums/service-type.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-validate-phone',
@@ -26,9 +27,9 @@ import { ServiceType } from 'src/app/core/enums/service-type.enum';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, KuidoHeaderComponent]
 })
-export class ValidatePhoneComponent {
+export class ValidatePhoneComponent implements OnInit {
   //Services
-  private readonly loadingCtrl = inject(LoadingController);
+  private readonly router = inject(Router);
   private readonly storage = inject(StorageHelper);
   private readonly modalCtrl = inject(ModalController);
   private readonly navCtrl = inject(NavController)
@@ -46,11 +47,16 @@ export class ValidatePhoneComponent {
   contactsList: ContactPayload[] = [];
   contactName: string = '';
   showInputs: boolean = false;
-  
-  constructor(private modalController: ModalController) { }
 
-
-
+  constructor(private modalController: ModalController) {
+    
+  }
+  async ngOnInit() {
+    this.phoneNumber = this.router.getCurrentNavigation()?.extras.state?.['phone'] || '';
+    if (this.phoneNumber.length) {
+      await this.validatePhoneNumber();
+    }
+  }
 
   async showOperatorsModal(operators: Operator[]) {
     const modal = await this.modalController.create({
@@ -264,17 +270,19 @@ export class ValidatePhoneComponent {
     } else {
       this.selectedDestination = null;
       this.selectedOperator = null;
-      this.phoneNumber = '';
+      
     }
 
     if (this.selectedDestination || this.selectedOperator) {
       this.showInputs = true;
     }
+    
   }
 
   //cicli de vida de inic cuando se abandona la pagina 
   async ionViewWillLeave() {
     await this.storage.removeStorageKey(StorageKeys.TOP_UP_DATA);
+    this.phoneNumber = '';
   }
 
   cleanString(value: string): string {

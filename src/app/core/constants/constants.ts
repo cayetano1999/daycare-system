@@ -23,3 +23,8 @@ export const ALERT_ICONS = {
     ERROR: 'assets/img/shared/error_icon.svg',
     QUESTION: 'assets/img/shared/question_icon.svg',
 }
+
+export function cleanPhoneNumber(phone: string): string {
+  if (!phone) return '';
+  return phone.replace(/\D/g, ''); // elimina todo lo que no sea dígito
+}

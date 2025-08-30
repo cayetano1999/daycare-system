@@ -89,6 +89,13 @@ export class SupabaseService {
       .single();
   }
 
+   getRecords(table: string, columns: string[], field: string, value: string) {
+    return this.supabase
+      .from(table)
+      .select(columns.join(','))
+      .eq(field, value);
+  }
+
   // Generic Create
   createRecord<T>(table: string, data: T) {
     return this.supabase
@@ -116,7 +123,7 @@ export class SupabaseService {
       .eq('id', id)
       .single();
   }
- 
+
 
   async isSessionExpired(): Promise<boolean> {
     const session = await this.getSession();
@@ -145,6 +152,44 @@ export class SupabaseService {
       email,
       token,
       type: 'email',
+    });
+  }
+
+  signInWithGoogle() {
+    return this.supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `kuidoappmobile://login-callback`,
+        // @ts-ignore → para ignorar el error de TS
+        flow: 'pkce'
+      },
+    });
+  }
+
+  // 1) SignUp con email/clave (crea el usuario en Auth)
+  async signUpWithEmail(opts: { email: string; password: string; full_name: string; phone: string }) {
+    const { email, password, full_name, phone } = opts;
+
+    const { data, error } = await this.supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        // metadata va al user_metadata de Auth (útil para saludar antes de tener profile)
+        data: { full_name, phone },
+        // si confirmación por correo está activa, Supabase redirigirá aquí
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) throw error;
+
+    //update user
+    
+
+  }
+
+  sendEmailOtp(email: string) {
+    return this.supabase.auth.signInWithOtp({
+      email,
     });
   }
 

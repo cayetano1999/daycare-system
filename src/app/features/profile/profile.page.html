@@ -6,7 +6,7 @@
 
     <!-- Profile Info -->
     <div class="profile-info">
-      <img [src]="'assets/img/shared/'+profile.avatar_url" alt="Profile" class="avatar">
+      <img [src]="profile.avatar_url" alt="Profile" class="avatar">
       <div class="user-info">
         <span class="name">{{profile.full_name}}</span>
         <span (click)="openUpdateProfile()" class="edit">Edit name</span>
@@ -16,51 +16,7 @@
       </button>
     </div>
 
-    <!-- Cards Section -->
-    <div class="cards-section">
-      <div class="cards-header" style="  padding: 0 24px;">
-        <span class="section-title">Yours cards</span>
-        <span class="add-card" (click)="redirectAddCard()"><b>+ ADD CARD</b></span>
-      </div>
-
-
-      <swiper-container class="banner-header" (touchstart)="onUserInteractionStart()"
-        (touchend)="onUserInteractionEnd()" (autoplay)="onAutoPlayTriggered()" [loop]="true" [config]="slideOpts"
-        autoplay-delay="2000" autoplay-disable-on-interaction="true" autoplay-reverse-direction="false"
-        [slidesPerView]="1.1" #headerBanners (swiperslidechange)="onSlideChange($event)">
-
-        @for(item of creditCards; track item; let i = $index;) {
-        <swiper-slide class="mb-4" style="height: 100%;">
-
-          <ion-grid fixed>
-            <ion-row>
-              <ion-col size="12" style="padding: 0px;">
-                <div class="card-container">
-                  <div class="card">
-                    <span class="card-title">Card</span>
-                    <button class="close-btn">
-                      <img src="../../../assets/img/shared/circulo-marca-x.svg" alt="Close">
-                    </button>
-                    <div class="card-number">**** **** **** {{item.cardNumber | slice:-4}}</div>
-                    <div class="card-footer">
-                      <span class="status">Active</span>
-                      <div class="card-logos">
-                        <img src="../../../assets/img/shared/visa.png" alt="Visa" class="visa">
-                        <img src="../../../assets/img/shared/mastercard.png" alt="Mastercard" class="mastercard">
-                        <img src="../../../assets/img/shared/americanexpress.svg" alt="Amex" class="amex">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </swiper-slide>
-        }
-      </swiper-container>
-
-
-    </div>
+  
 
     <!-- Settings -->
     <div class="settings">

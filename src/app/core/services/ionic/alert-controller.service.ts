@@ -30,7 +30,7 @@ export class AlertControllerService {
         cancel: (params?: any) => void,
         cancelTextBtn?: string,
     ) {
- 
+
         const alert = await this.alertController.create({
             cssClass: 'my-custom-class',
             header: title,
@@ -54,7 +54,7 @@ export class AlertControllerService {
             ],
             id: 'ionic-alert'
         });
-       
+
         await alert.present();
 
     }
@@ -77,7 +77,7 @@ export class AlertControllerService {
 
 
         });
-       
+
         await alert.present();
 
         const { role } = await alert.onDidDismiss();
@@ -101,7 +101,7 @@ export class AlertControllerService {
 
 
         });
-       
+
         await alert.present();
 
         const { role } = await alert.onDidDismiss();
@@ -127,7 +127,7 @@ export class AlertControllerService {
 
         });
 
-       
+
         await alert.present();
 
         await alert.onDidDismiss();
@@ -139,7 +139,7 @@ export class AlertControllerService {
             loadingModal.remove();
         }
         //remove the loading modal if exists
-        
+
     }
 
     async openModalAlert(title?: string, message?: string, img?: string, btnClass?: string) {
@@ -150,16 +150,16 @@ export class AlertControllerService {
             backdropDismiss: false,
             componentProps: {
             }
-          });
-          setTimeout(async () => {
+        });
+        setTimeout(async () => {
             const element = document.getElementById('modal-loading');
             if (element) {
                 // this.toastCtrl.showToastError('Error al cargar la información');
                 await this.modalCtrl.dismiss();
             }
-          }, 60000);
-          await modalLoading.present();
-          
+        }, 60000);
+        await modalLoading.present();
+
     }
 
     async openForceUpdateAlert() {
@@ -169,11 +169,11 @@ export class AlertControllerService {
             backdropDismiss: false,
             componentProps: {
             },
-            initialBreakpoint: 1,      
-      
-          });
-          await modalLives.present();
-          const result = await modalLives.onDidDismiss();
+            initialBreakpoint: 1,
+
+        });
+        await modalLives.present();
+        const result = await modalLives.onDidDismiss();
     }
 
     async openModalConfirmTopUp(amount: number, currency: string) {
@@ -186,44 +186,44 @@ export class AlertControllerService {
                 amount: amount,
                 currency: currency
             }
-          });
-    
-          await modalConfirm.present();
-          const result = await modalConfirm.onDidDismiss();
-          return result.data;
-          
+        });
+
+        await modalConfirm.present();
+        const result = await modalConfirm.onDidDismiss();
+        return result.data;
+
     }
 
     async openModalTopUpSuccess(topUpData: ToUpsData) {
-    
+
         const modal = await this.modalCtrl.create({
             component: TopUpSuccessComponent,
             cssClass: 'backdrop-modal',
             componentProps: {
-              recipientName: topUpData.contactName || '',
-              recipientPhone: `${topUpData.selectedDestination.prefix} ${topUpData.phoneNumber}`
-            //   recipientImage: 'assets/img/shared/person.svg'
+                recipientName: topUpData.contactName || '',
+                recipientPhone: `${topUpData.selectedDestination.prefix} ${topUpData.phoneNumber}`
+                //   recipientImage: 'assets/img/shared/person.svg'
             },
-          });
-          await modal.present();
-          const result = await modal.onDidDismiss();
-          return result.data;
+        });
+        await modal.present();
+        const result = await modal.onDidDismiss();
+        return result.data;
     }
 
-        async openModalValidateOtp(contact: string, isFromRecover: boolean) {
+    async openModalValidateOtp(contact: string, isFromRecover: boolean) {
 
-            const modal = await this.modalCtrl.create({
-                component: OtpComponent,
-                cssClass: '',
-                componentProps: {
+        const modal = await this.modalCtrl.create({
+            component: OtpComponent,
+            cssClass: '',
+            componentProps: {
                 currentContact: contact,
-                    isFromRecover: isFromRecover
-                },
-            });
-            await modal.present();
-            const result = await modal.onDidDismiss();
-            return result.data;
-        }
+                isFromRecover: isFromRecover
+            },
+        });
+        await modal.present();
+        const result = await modal.onDidDismiss();
+        return result.data;
+    }
 
     async openModalUpdateProfile(profile: any) {
         const modal = await this.modalCtrl.create({
@@ -267,12 +267,21 @@ export class AlertControllerService {
                 languages: ['English', 'Spanish'],
                 selectedLanguage: 'English'
             },
-             initialBreakpoint: 0.5,
+            initialBreakpoint: 0.5,
             breakpoints: [0, 0.5, 1]
         });
         await modal.present();
         const result = await modal.onDidDismiss();
         return result.data;
+    }
+
+    public async showAlert(title: string, message: string) {
+        const alert = await this.alertController.create({
+            header: title,
+            message,
+            buttons: ['OK']
+        });
+        await alert.present();
     }
 
 }

@@ -40,7 +40,7 @@ export class LoginPhoneComponent implements OnInit {
   async onSubmit() {
     // const phone = this.loginForm.value.phone!;
 
-    // this.navCtrl.navigateForward(RoutesApp.AUTH_OTP, { state: { phone } }); // navigate to the enter code screen
+    // this.navCtrl.navigateRoot(RoutesApp.AUTH_OTP, { state: { phone } }); // navigate to the enter code screen
     // return;
     // if (this.loginForm.invalid) return;
 
@@ -56,7 +56,7 @@ export class LoginPhoneComponent implements OnInit {
         this.showAlert('Error', error.message);
       } else {
         this.showAlert('Success', 'OTP code has been sent to the number.');
-        this.navCtrl.navigateForward(RoutesApp.AUTH_OTP, { state: { phone } }); // navigate to the enter code screen
+        this.navCtrl.navigateRoot(RoutesApp.AUTH_OTP, { state: { phone } }); // navigate to the enter code screen
       }
     } catch (err: any) {
       await loading.dismiss();
@@ -65,7 +65,7 @@ export class LoginPhoneComponent implements OnInit {
   }
 
   redirectToRegister() {
-    this.navCtrl.navigateForward(RoutesApp.AUTH_REGISTER);
+    this.navCtrl.navigateRoot(RoutesApp.AUTH_REGISTER);
   }
 
   async ionViewWillEnter() {
@@ -80,4 +80,12 @@ export class LoginPhoneComponent implements OnInit {
     });
     await alert.present();
   }
+
+  loginViaGoogle(){
+    this.supabaseService.signInWithGoogle().then((result) => {
+      console.log(result);
+    }).catch((error) => {
+    });
+  }
+
 }

@@ -7,8 +7,11 @@ const config: CapacitorConfig = {
   webDir: 'www/browser',
   android: {
     allowMixedContent: true,
-    webContentsDebuggingEnabled: false,
+    webContentsDebuggingEnabled: true,
     
+  },
+  ios: {
+    webContentsDebuggingEnabled: true,
   },
   plugins: {
     Keyboard: {
@@ -27,10 +30,7 @@ const config: CapacitorConfig = {
     },
   },
 
-  server: {
-    cleartext: true,
-    allowNavigation: ['35.202.111.227'],
-  },
+ 
 };
 
 export default config;

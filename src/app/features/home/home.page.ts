@@ -114,30 +114,7 @@ export class HomePage implements OnInit {
   ];
 
   transactionsTemplate: TransactionTemplate[] = [
-    // {
-    //   name: 'Kathya Yu',
-    //   image: 'assets/img/shared/person.svg',
-    //   date: 'Jan 7, 2025',
-    //   amount: '-$4.99',
-    //   description: 'Sent top-up',
-    //   isNegative: true
-    // },
-    // {
-    //   name: 'Received',
-    //   image: 'assets/img/shared/money.svg',
-    //   date: 'Jan 7, 2025',
-    //   amount: '$9.99',
-    //   description: 'Received top-up',
-    //   isNegative: false
-    // },
-    // {
-    //   name: 'Key Food gif card',
-    //   image: 'assets/img/shared/bag.svg',
-    //   date: 'Jan 7, 2025',
-    //   amount: '-$9.99',
-    //   description: 'Sent gif card',
-    //   isNegative: true
-    // }
+  
   ];
 
   navItems: NavItem[] = [
@@ -171,12 +148,9 @@ export class HomePage implements OnInit {
   ];
 
 
-
-
-
   //Lifecycle
   async ionViewWillEnter() {
-    await this.statusBar.setStatusBarStyle(COLORS.headerGreen);
+    // await this.statusBar.setStatusBarStyle(COLORS.headerGreen);
     await this.storageHelper.removeStorageKey(StorageKeys.TOP_UP_DATA)
     this.transactionsTemplate = await this.getTransactions();
     console.log('Transactions Template:', this.transactionsTemplate);
@@ -190,7 +164,7 @@ export class HomePage implements OnInit {
         return a.active ? -1 : 1;
       });
 
-    // await this.fillMissingProfileFileds();
+    await this.fillMissingProfileFileds();
 
   }
 
@@ -216,17 +190,24 @@ export class HomePage implements OnInit {
     await this.alertCtrl.openModalAlert();
 
     const profile = await this.supabase.profile();
+    await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, profile.data);
+    console.log('Profile SUPABASE:', profile);
     const session = (await this.supabaseClient.auth.getSession()).data.session;
-    console.log('Session:', session);
-    if (!session?.user?.id || profile.data?.full_name) {
+      console.log('Session SUPABASE:', session);
+    if ((!session?.user?.id || profile.data?.full_name) && profile.data?.avatar_url) {
       this.profile = profile.data;
       await this.alertCtrl.dismiss();
       return;
     }
 
 
+    if(!session){
+      await this.alertCtrl.dismiss();
+      return;
+    }
+    const full_name = await this.storageHelper.getStorageKey<string>(StorageKeys.USER_FULL_NAME);
     const { data, error } = await this.supabaseClient.functions.invoke('fill-profile-fields', {
-      body: { user_id: session.user.id }
+      body: { user_id: session.user.id, username: session.user.email || session.user.phone, full_name: full_name || 'Kuido User' }
     });
     if (error) {
       await this.alertCtrl.dismiss();
@@ -235,7 +216,7 @@ export class HomePage implements OnInit {
       await this.alertCtrl.dismiss();
 
       console.log('Profile filled successfully:', data);
-      this.profile = JSON.parse(data).profile;
+      this.profile = data.profile;
       await this.alertCtrl.dismiss();
     }
   }

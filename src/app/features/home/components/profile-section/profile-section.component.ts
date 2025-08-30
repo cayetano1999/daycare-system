@@ -17,7 +17,7 @@ export class ProfileSectionComponent  implements OnInit {
 
   ngOnInit() {
     if (!this.profile?.avatar_url) {
-      this.profile.avatar_url = 'avatar-profile.png'; // Default avatar
+      this.profile.avatar_url = 'assets/img/shared/avatar-profile.png'; // Default avatar
       console.log('Profile Section Component Initialized', this.profile);
     }
   }

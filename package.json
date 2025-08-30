@@ -10,7 +10,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "lint:fix": "eslint --fix 'src/**/*.{js,ts,tsx}'"
+    "lint:fix": "eslint --fix 'src/**/*.{js,ts,tsx}'",
+    "android": "ionic build --prod && npx cap sync android && npx cap open android",
+    "ios": "ionic build --prod && npx cap sync ios && npx cap open ios",
+    "generate-assets": "npx capacitor-assets generate"
   },
   "private": true,
   "dependencies": {

@@ -11,5 +11,7 @@ export enum StorageKeys  {
     FCM_TOKEN = 'fcm_token',
     CREDIT_CARDS = 'credit_cards',
     BIOMETRIC_AUTH = 'biometric_auth',
+    USER_FULL_NAME = 'user_full_name',
+    USER_DATA = 'user_data'
 
 }

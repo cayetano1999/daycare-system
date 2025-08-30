@@ -101,6 +101,12 @@ export class SendTopUpsComponent implements OnInit {
     };
 
     try {
+
+      const authentication = await this.fingerprint.authenticate();
+      if (!authentication) {
+        this.alertCtrl.openModalAlertMessage('Please try again.', 'Authentication Failed', ALERT_ICONS.ERROR, 'alert', 'OK');
+        return;
+      }
       // 1. Solicita el PaymentIntent a tu función Edge de Supabase
       const { paymentIntent, ephemeralKey, customer, stripe_pk } = await this.paymentService.createPaymentIntent(data);
       console.log("Response", paymentIntent, ephemeralKey, customer, stripe_pk);
@@ -134,9 +140,9 @@ export class SendTopUpsComponent implements OnInit {
       // // Confirm PaymentFlow. Completed.
       // const confirmResult = await Stripe.confirmPaymentFlow();
       if (result.paymentResult === PaymentSheetEventsEnum.Completed) {
-        alert('Recarga exitosa');
+        // alert('Recarga exitosa');
       } else {
-        alert('Pago no completado');
+        // alert('Pago no completado');
       }
     } catch (error) {
       console.log("Error en el pago", error);
@@ -150,11 +156,7 @@ export class SendTopUpsComponent implements OnInit {
         const topUpData = await this.storageHelper.getStorageKey<ToUpsData>(StorageKeys.TOP_UP_DATA);
         await this.doTopUp();
 
-        const authentication = await this.fingerprint.authenticate();
-        if (!authentication) {
-          this.alertCtrl.openModalAlertMessage('Please try again.', 'Authentication Failed', ALERT_ICONS.ERROR, 'alert', 'OK');
-          return;
-        }
+
 
         this.alertCtrl.openModalAlert();
         setTimeout(async () => {
@@ -162,7 +164,7 @@ export class SendTopUpsComponent implements OnInit {
           await this.transactionService.saveTransaction(transaction);
           this.alertCtrl.dismiss();
           this.alertCtrl.openModalTopUpSuccess(topUpData).then(result => {
-            this.navCtrl.navigateForward(RoutesApp.HOME)
+            this.navCtrl.navigateRoot(RoutesApp.HOME)
           });
         }, 3000);
 
@@ -177,9 +179,6 @@ export class SendTopUpsComponent implements OnInit {
 
   async loginWithBiometrics() {
     const credentials = await this.fingerprint.authenticate();
-
-    alert('Biometric authentication result: ' + JSON.stringify(credentials));
-
 
   }
 

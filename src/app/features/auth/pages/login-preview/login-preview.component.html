@@ -7,7 +7,7 @@
       (loginWithEmail)="goToEmailLogin()"
       (loginWithPhone)="goToPhoneLogin()">
     </app-login-selector>
-      <app-kuido-social-login></app-kuido-social-login>
+      <app-kuido-social-login (googleLogin)="loginViaGoogle()"></app-kuido-social-login>
     </div>
   </div>
 </ion-content>

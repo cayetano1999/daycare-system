@@ -20,6 +20,7 @@ import { register } from 'swiper/element/bundle';
 import { Stripe } from '@capacitor-community/stripe';
 import { KuidoTabComponent } from './shared/components/kuido-tab/kuido-tab.component';
 import { FingerprintService } from './core/services/fingerprint.service';
+import { App } from '@capacitor/app';
 
 
 register(); // Register Swiper elements globally
@@ -84,6 +85,33 @@ export class AppComponent implements OnInit {
             publishableKey: environment.SpPk, // TU CLAVE PUBLICABLE DE PRUEBA
         });
         await this.checkSession();
+
+
+        App.addListener('appUrlOpen', async ({ url }) => {
+            if (url?.includes('access_token')) {
+                const fragment = url.split('#')[1];
+                const params = new URLSearchParams(fragment);
+
+                const access_token = params.get('access_token');
+                const refresh_token = params.get('refresh_token');
+
+                if (access_token && refresh_token) {
+                    const { data, error } = await this.supabase.getSupabase().auth.setSession({
+                        access_token,
+                        refresh_token,
+                    });
+                    if (error) {
+                        console.error('❌ Error al establecer sesión:', error.message);
+                        alert('Error al iniciar sesión');
+                        return;
+                    }
+                    await this.checkSession(); // Ya tienes al usuario autenticado
+                } else {
+                    alert('❌ No se encontraron tokens en el redirect');
+                }
+            }
+        });
+
 
     }
 

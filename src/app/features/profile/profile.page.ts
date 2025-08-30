@@ -180,6 +180,7 @@ export class ProfilePage {
 
       // Ocultar cargando
       await this.alertCtrl.dismiss();
+      await this.storageHelper.setStorageKey(StorageKeys.USER_FULL_NAME, result.full_name);
 
       // Mostrar éxito
       await this.alertCtrl.openModalAlertMessage(
@@ -241,11 +242,11 @@ export class ProfilePage {
           title: 'Authentication Required',
         }).then(async (result) => {
 
-            await this.storageHelper.setStorageKey(StorageKeys.BIOMETRIC_AUTH, true);
-            this.biometricEnabled = true;
+          await this.storageHelper.setStorageKey(StorageKeys.BIOMETRIC_AUTH, true);
+          this.biometricEnabled = true;
 
-            // Opcional: guardar credenciales biométricas
-            // await NativeBiometric.setCredentials({ username, password, server: 'kuido-login' });
+          // Opcional: guardar credenciales biométricas
+          // await NativeBiometric.setCredentials({ username, password, server: 'kuido-login' });
         });
 
 
