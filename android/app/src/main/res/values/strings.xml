@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Kuido</string>
-    <string name="title_activity_main">Kuido</string>
-    <string name="package_name">com.kuidomobileapp</string>
-    <string name="custom_url_scheme">com.kuidomobileapp</string>
+    <string name="app_name">Festiva</string>
+    <string name="title_activity_main">Festiva</string>
+    <string name="package_name">com.festiva.app.mobile</string>
+    <string name="custom_url_scheme">com.festiva.app.mobile</string>
 </resources>

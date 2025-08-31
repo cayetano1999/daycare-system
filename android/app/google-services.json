@@ -1,48 +1,49 @@
 {
   "project_info": {
-    "project_number": "193661590436",
-    "project_id": "kuidoapp-60d43",
-    "storage_bucket": "kuidoapp-60d43.firebasestorage.app"
+    "project_number": "96276999190",
+    "firebase_url": "https://festiva-30592-default-rtdb.firebaseio.com",
+    "project_id": "festiva-30592",
+    "storage_bucket": "festiva-30592.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:193661590436:android:a5f7607c3e19330edfff31",
+        "mobilesdk_app_id": "1:96276999190:android:83aa506d91730e80931937",
         "android_client_info": {
-          "package_name": "com.kuidomobileapp"
+          "package_name": "com.festiva.app.mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "193661590436-6mbgp90lr1c6a1il9jnqgjojgefr9qhp.apps.googleusercontent.com",
+          "client_id": "96276999190-3nao5m01lkm00p157e4a417gjokdh9do.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.kuidomobileapp",
-            "certificate_hash": "2223d0426d4db713d7e26de2a63b3c6c10063258"
+            "package_name": "com.festiva.app.mobile",
+            "certificate_hash": "7727e80281711363d6e860e50bbafe16e0c81bdf"
           }
         },
         {
-          "client_id": "193661590436-pik35gum993dh1r0imj8b3debnnblbsu.apps.googleusercontent.com",
+          "client_id": "96276999190-bsdo7de2vluiui5adlm89bvhd026900a.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDs1H_15A3ar9EdATbsYH5UVmGBUgwwDrg"
+          "current_key": "AIzaSyD_nhGRHWWuF39LfS0um1FTQueB2BJtpLs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "193661590436-pik35gum993dh1r0imj8b3debnnblbsu.apps.googleusercontent.com",
+              "client_id": "96276999190-bsdo7de2vluiui5adlm89bvhd026900a.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "193661590436-lhdkoot91og17vg56v58ghghho0m2922.apps.googleusercontent.com",
+              "client_id": "96276999190-qg00v8jld73nfpduatps5gqu2jc625bv.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.kuidomobileapp"
+                "bundle_id": "com.festiva.app.mobile"
               }
             }
           ]

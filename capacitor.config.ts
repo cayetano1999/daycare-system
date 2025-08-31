@@ -2,8 +2,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-  appId: 'com.kuidomobileapp',
-  appName: 'Kuido',
+  appId: 'com.festiva.app.mobile',
+  appName: 'Festiva',
   webDir: 'www/browser',
   android: {
     allowMixedContent: true,
@@ -27,8 +27,8 @@ const config: CapacitorConfig = {
       androidSpinnerStyle: 'large',
       iosSpinnerStyle: 'small',
       spinnerColor: '#999999',
-    },
-  },
+    }
+  }
 
  
 };

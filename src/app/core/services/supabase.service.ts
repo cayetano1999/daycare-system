@@ -10,6 +10,7 @@ import {
 } from '@supabase/supabase-js'
 import { environment } from 'src/environments/environment'
 import { StorageHelper } from '../helpers/storage.helper'
+import { Capacitor } from '@capacitor/core'
 // import { StorageKeys } from '../enums/storage.keys.enum'
 
 
@@ -30,7 +31,7 @@ export class SupabaseService {
 
   constructor() {
     console.log(environment)
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.supabase = createClient('https://bwnzsvblxcorurhdapii.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bnpzdmJseGNvcnVyaGRhcGlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1NTg3NzIsImV4cCI6MjA3MjEzNDc3Mn0.94GxPaGvCJARvIDVgWAtyZXvz0qwgCSmFPuqCTarNmc');
 
     this.supabase.auth.getSession().then(({ data }) => {
       this.session = data.session;
@@ -60,8 +61,8 @@ export class SupabaseService {
 
   profile() {
     return this.supabase
-      .from('profiles')
-      .select('id,username,full_name, website,avatar_url')
+      .from('user_profiles')
+      .select('*')
       .eq('id', this.session?.user.id)
       .single()
   }
@@ -156,12 +157,28 @@ export class SupabaseService {
   }
 
   signInWithGoogle() {
+    const platform = Capacitor.getPlatform();
     return this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `kuidoappmobile://login-callback`,
+        redirectTo: `festivaappmobile://login-callback`,
         // @ts-ignore → para ignorar el error de TS
         flow: 'pkce'
+      },
+    });
+  }
+
+  //sigInWithApple 
+
+  signInWithApple() {
+    const platform = Capacitor.getPlatform();
+    return this.supabase.auth.signInWithOAuth({
+      provider: 'apple',
+      options: {
+        redirectTo: `festivaappmobile://login-callback`,
+        // @ts-ignore → para ignorar el error de TS
+        flow: 'pkce',
+        scopes: 'name email'
       },
     });
   }
@@ -177,7 +194,7 @@ export class SupabaseService {
         // metadata va al user_metadata de Auth (útil para saludar antes de tener profile)
         data: { full_name, phone },
         // si confirmación por correo está activa, Supabase redirigirá aquí
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo:  `${window.location.origin}/auth/callback`,
       },
     });
     if (error) throw error;

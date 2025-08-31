@@ -54,6 +54,8 @@ export class AppComponent implements OnInit {
     constructor() {
         this.setupRouterEvents();
         this.setupBackButton();
+        this.validateUrlWeb();
+
     }
 
 
@@ -79,39 +81,12 @@ export class AppComponent implements OnInit {
                 await this.storageHelper.setStorageKey(StorageKeys.FCM_TOKEN, token);
             }
         }
-
-        console.log("Stripe", environment.SpPk);
-        await Stripe.initialize({
-            publishableKey: environment.SpPk, // TU CLAVE PUBLICABLE DE PRUEBA
-        });
         await this.checkSession();
 
 
         App.addListener('appUrlOpen', async ({ url }) => {
-            if (url?.includes('access_token')) {
-                const fragment = url.split('#')[1];
-                const params = new URLSearchParams(fragment);
-
-                const access_token = params.get('access_token');
-                const refresh_token = params.get('refresh_token');
-
-                if (access_token && refresh_token) {
-                    const { data, error } = await this.supabase.getSupabase().auth.setSession({
-                        access_token,
-                        refresh_token,
-                    });
-                    if (error) {
-                        console.error('❌ Error al establecer sesión:', error.message);
-                        alert('Error al iniciar sesión');
-                        return;
-                    }
-                    await this.checkSession(); // Ya tienes al usuario autenticado
-                } else {
-                    alert('❌ No se encontraron tokens en el redirect');
-                }
-            }
+            await this.onGoogleAuthentication(url);
         });
-
 
     }
 
@@ -123,11 +98,18 @@ export class AppComponent implements OnInit {
 
     async checkSession() {
         const isSessionExpired = await this.supabase.isSessionExpired();
-        console.log("Session expired?", isSessionExpired);
+        const session = await this.supabase.getSession();
         if (isSessionExpired) {
-            await this.router.navigate([RoutesApp.SPLASH]);
-        } else {
-            await this.router.navigate([RoutesApp.HOME]);
+            await this.router.navigate([RoutesApp.PRE_HOME]);
+        } 
+        else {
+            const { data } = await this.supabase.profile();
+            console.log('User profile data:', data);
+            await this.storageHelper.setStorageKey(StorageKeys.SUPABASE_SESSION, session);
+            if (data) {
+                await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, data);
+            }
+            await this.router.navigate([RoutesApp.PRE_HOME]);
         }
     }
 
@@ -159,7 +141,38 @@ export class AppComponent implements OnInit {
         });
     }
 
+    private async onGoogleAuthentication(url: string) {
+        if (url?.includes('access_token')) {
+            const fragment = url.split('#')[1];
+            const params = new URLSearchParams(fragment);
+
+            const access_token = params.get('access_token');
+            const refresh_token = params.get('refresh_token');
+
+            if (access_token && refresh_token) {
+                const { data, error } = await this.supabase.getSupabase().auth.setSession({
+                    access_token,
+                    refresh_token,
+                });
+                if (error) {
+                    console.error('❌ Error al establecer sesión:', error.message);
+                    alert('Error al iniciar sesión');
+                    return;
+                }
+                await this.checkSession(); // Ya tienes al usuario autenticado
+            } else {
+                alert('❌ No se encontraron tokens en el redirect');
+            }
+        }
+    }
+
     handleItemSelected(item: any): void {
         console.log('Item selected:', item);
+    }
+
+    validateUrlWeb() {
+        if (window.location.href.includes('access_token')) {
+            this.onGoogleAuthentication(window.location.href);
+        }
     }
 }

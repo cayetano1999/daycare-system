@@ -3,13 +3,13 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyBQCq9-El1NVMof3wUNxw90hvYwbfZlxbY",
-    authDomain: "kuidoapp-60d43.firebaseapp.com",
-    projectId: "kuidoapp-60d43",
-    storageBucket: "kuidoapp-60d43.firebasestorage.app",
-    messagingSenderId: "193661590436",
-    appId: "1:193661590436:web:6f13c7352281189bdfff31",
-    measurementId: "G-9B48Z5JY85",
+    apiKey: "AIzaSyALX1dktKbImJhmUPd-mQzWnR2p5QHELgU",
+    authDomain: "festiva-30592.firebaseapp.com",
+    projectId: "festiva-30592",
+    storageBucket: "festiva-30592.firebasestorage.app",
+    messagingSenderId: "96276999190",
+    appId: "1:96276999190:web:e5a7ea20a6cd02d5931937",
+    measurementId: "G-RZ51N1PV59"
   },
   supabaseUrl: "",
   supabaseKey: "",
@@ -19,5 +19,7 @@ export const environment = {
   APP_MAINTENANCE: false,
   URL_TERMS: "",
   URL_APP_ANDROID: "",
-  SpPk:""
+  SpPk: "",
+  STORE_REVIEW: false,
+  STORE_REVIEW_VERSION: ""
 };

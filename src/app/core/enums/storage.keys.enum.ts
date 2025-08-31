@@ -12,6 +12,8 @@ export enum StorageKeys  {
     CREDIT_CARDS = 'credit_cards',
     BIOMETRIC_AUTH = 'biometric_auth',
     USER_FULL_NAME = 'user_full_name',
-    USER_DATA = 'user_data'
+    USER_DATA = 'user_data',
+    SUPABASE_SESSION = 'supabase_session',
+    PRE_HOME_ANIMATION_DONE = 'pre_home_animation_done'
 
 }

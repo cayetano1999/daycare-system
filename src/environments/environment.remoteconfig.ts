@@ -12,36 +12,51 @@ export const remoteConfig = {
         DEFAULT_ADS: ""
     },
     SCREENS: {
-       
         FORCE_UPDATE: {
             title: "",
             message: "",
             btnUpdateText: ""
         },
-     
         MAINTENANCE: {
             title: "",
             message: "",
             btnText: ""
         },
+        PRE_HOME: {
+            intro: {
+                title: "",
+                subtitle: ""
+            },
+            main_content: {
+                title: "",
+                description: "",
+                buttons: {
+                    google: "",
+                    apple: "",
+                    register: ""
+                },
+                footer: {
+                    text_part_1: "",
+                    terms_link: "",
+                    text_part_2: "",
+                    privacy_link: ""
+                }
+            },
+            images: [] as string[]
+        },
         ONBOARDING: {
             textBtnSkip: "",
             textBtnNext: "",
             textBtnStart: "",
-            slides: [
-
-            ],
+            slides: [] as any[],
             termsConditionLabel: ""
-        },
-
+        }
     },
     OPTIONS_ITEMS: {
-        options: [],
-        nextFeatures: []
+        options: [] as any[],
+        nextFeatures: [] as any[]
     },
-    VARIABLES: {
-    
-    },
+    VARIABLES: {},
     ADS: {
         android: {
             banner: "",
@@ -54,12 +69,10 @@ export const remoteConfig = {
             rewarded: ""
         }
     },
- 
     FEATURE_FLAGS: {
         FORCE_UPDATE: {
             active: false,
-            users: []
+            users: [] as any[]
         }
     }
-
 }
