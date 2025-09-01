@@ -1,5 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
+import { RoutesApp } from 'src/app/core/enums/routes.enum';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
@@ -16,16 +20,16 @@ interface FormData {
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  imports:[...StandAloneModules]
+  imports: [...StandAloneModules]
 })
 export class RegisterPage implements OnInit, OnDestroy {
   formData: FormData = {
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    country: '',
-    gender: ''
+    fullName: 'Josue Alexander',
+    email: 'josue@example.com',
+    password: 'password123A*',
+    confirmPassword: 'password123A*',
+    country: 'US',
+    gender: 'male'
   };
 
   showPassword = false;
@@ -59,11 +63,15 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   private passwordCheckTimer: any;
 
+  private alertController = inject(AlertController);
+  private navController = inject(NavController);
+  private supabaseService = inject(SupabaseService);
+  private router = inject(Router);
+  private storageHelper = inject(StorageHelper);
+
   constructor(
-    private alertController: AlertController,
-    private navController: NavController,
-    private supabaseService: SupabaseService
-  ) {}
+    
+  ) { }
 
   ngOnInit() {
     this.watchPasswordChanges();
@@ -79,7 +87,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     setInterval(() => {
       // Validate password strength
       this.isPasswordValid = this.validatePasswordStrength(this.formData.password);
-      
+
       // Check if passwords match
       if (this.formData.password && this.formData.confirmPassword) {
         this.passwordsMatch = this.formData.password === this.formData.confirmPassword;
@@ -91,12 +99,12 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   private validatePasswordStrength(password: string): boolean {
     if (!password || password.length < 6) return false;
-    
+
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumbers = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
+
     return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
   }
 
@@ -127,7 +135,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     return emailRegex.test(email);
   }
 
-  private async checkEmailExists(email: string): Promise<boolean> {
+  public async checkEmailExists(email: string): Promise<boolean> {
     try {
       const supabase = this.supabaseService.getSupabase();
       const response = await supabase.functions.invoke('check-email-exists', {
@@ -172,7 +180,8 @@ export class RegisterPage implements OnInit, OnDestroy {
     try {
       // 1. Check if email already exists
       const emailExists = await this.checkEmailExists(this.formData.email);
-      
+      console.log('Email exists:', emailExists);
+
       if (emailExists) {
         const alert = await this.alertController.create({
           header: 'Email ya registrado',
@@ -195,7 +204,7 @@ export class RegisterPage implements OnInit, OnDestroy {
         return;
       }
 
-      // 2. Create account with Supabase
+      //2. Create account with Supabase
       await this.supabaseService.signUpWithEmail({
         email: this.formData.email,
         password: this.formData.password,
@@ -209,19 +218,22 @@ export class RegisterPage implements OnInit, OnDestroy {
         message: 'Tu cuenta ha sido creada exitosamente. Bienvenido a Festiva.',
         buttons: [{
           text: 'Continuar',
-          handler: () => {
+          handler: async () => {
             // Navigate to main app or onboarding
             console.log('Navigate to main app');
+            await this.autoLoginWithEmailInSupabase();
+
+
           }
         }]
       });
       await alert.present();
-      
+
     } catch (error: any) {
       console.error('Registration error:', error);
-      
+
       let errorMessage = 'Hubo un problema al crear tu cuenta. Por favor, intenta nuevamente.';
-      
+
       if (error.message?.includes('already registered')) {
         errorMessage = 'Este correo electrónico ya está registrado.';
       } else if (error.message?.includes('invalid email')) {
@@ -229,7 +241,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       } else if (error.message?.includes('weak password')) {
         errorMessage = 'La contraseña no cumple con los requisitos de seguridad.';
       }
-      
+
       const alert = await this.alertController.create({
         header: 'Error al registrarse',
         message: errorMessage,
@@ -243,5 +255,32 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   goBack() {
     this.navController.back();
+  }
+
+  async autoLoginWithEmailInSupabase() {
+    const email = this.formData.email;
+    const password = this.formData.password;
+
+    // this.router.navigate([RoutesApp.AUTH_OTP], { state: { credentials: { email, password } } });
+
+
+    const { data, error } = await this.supabaseService.signIn(email, password);
+    if (error) {
+      console.error('Auto login error:', error);
+    } else {
+      console.log('Auto login successful');
+      console.log(data);
+      if (data?.session) {
+        this.supabaseService.getSupabase().auth.setSession(data.session);
+        await this.storageHelper.setStorageKey(StorageKeys.SESSION_DATA, data.session);
+        const profile = await this.supabaseService.profile();
+        if (profile) {
+          console.log('User profile data:', profile.data);
+          await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, profile.data);
+        }
+
+        this.router.navigate([RoutesApp.ONBOARDING]);
+      }
+    }
   }
 }

@@ -21,6 +21,7 @@ import { Stripe } from '@capacitor-community/stripe';
 import { KuidoTabComponent } from './shared/components/kuido-tab/kuido-tab.component';
 import { FingerprintService } from './core/services/fingerprint.service';
 import { App } from '@capacitor/app';
+import { Profile } from './core/interface/profile.interface';
 
 
 register(); // Register Swiper elements globally
@@ -38,7 +39,8 @@ export class AppComponent implements OnInit {
     public availableMenu = false;
     public loadingAds = false;
     public navegationHistory: string[] = [];
-
+    public isOnboardingComplete: boolean = false;
+    public profile!: Profile;
     // Services
     private readonly platform = inject(Platform);
     private readonly communicationService = inject(CommunicationService);
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
     private readonly fcm = inject(FirebaseMessagingService);
     private readonly fingerprint = inject(FingerprintService);
 
+
     constructor() {
         this.setupRouterEvents();
         this.setupBackButton();
@@ -60,6 +63,9 @@ export class AppComponent implements OnInit {
 
 
     async ngOnInit() {
+        this.isOnboardingComplete = await this.storageHelper.getStorageKey(StorageKeys.ONBOARDING_COMPLETED);
+        this.profile = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
+
         const isConnected = await Network.getStatus();
         if (!isConnected.connected) {
             this.navCtrl.navigateRoot(RoutesApp.NO_INTERNET);
@@ -97,17 +103,25 @@ export class AppComponent implements OnInit {
     }
 
     async checkSession() {
+
+
+
         const isSessionExpired = await this.supabase.isSessionExpired();
         const session = await this.supabase.getSession();
         if (isSessionExpired) {
             await this.router.navigate([RoutesApp.PRE_HOME]);
-        } 
+        }
         else {
             const { data } = await this.supabase.profile();
             console.log('User profile data:', data);
             await this.storageHelper.setStorageKey(StorageKeys.SUPABASE_SESSION, session);
             if (data) {
                 await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, data);
+            }
+
+            if (!this.isOnboardingComplete && data) {
+                this.router.navigate([RoutesApp.ONBOARDING]);
+                return;
             }
             await this.router.navigate([RoutesApp.PRE_HOME]);
         }
@@ -173,6 +187,16 @@ export class AppComponent implements OnInit {
     validateUrlWeb() {
         if (window.location.href.includes('access_token')) {
             this.onGoogleAuthentication(window.location.href);
+        }
+    }
+
+    //validate if onboarding is complete and redirect
+    private validateOnboarding() {
+
+        if (this.isOnboardingComplete) {
+            this.router.navigate([RoutesApp.HOME]);
+        } else {
+            this.router.navigate([RoutesApp.ONBOARDING]);
         }
     }
 }

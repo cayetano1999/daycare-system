@@ -24,10 +24,13 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
-@import url("./assets/css/bootstrap.min.css");
+// @import url("./assets/css/bootstrap.min.css");
 @import url("./assets/css/animations.css");
 @import "primeicons/primeicons.css";
 @import url('https://fonts.googleapis.com/css?family=Montserrat:500,700');
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------

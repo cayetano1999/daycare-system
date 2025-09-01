@@ -28,12 +28,14 @@ export class PreHomePage implements OnInit, OnDestroy {
   private imageInterval: any;
   private fadeTimer: any;
   private introTimer: any;
+  private isOnboardingComplete: boolean = false;
 
   // Placeholder para los datos de Remote Config
   pageData: any = remoteConfig.SCREENS.PRE_HOME;
 
   async ngOnInit() {
     this.showIntro = !await this.storageHelper.getStorageKey(StorageKeys.PRE_HOME_ANIMATION_DONE);
+    this.isOnboardingComplete = await this.storageHelper.getStorageKey(StorageKeys.ONBOARDING_COMPLETED);
     this.startAnimationSequence();
     // Aquí es donde deberías integrar la lógica para cargar los datos de Remote Config
     // Por ejemplo, un método como this.loadRemoteConfigData();
@@ -89,6 +91,7 @@ export class PreHomePage implements OnInit, OnDestroy {
       console.error('Error logging in with Google:', error);
     } else {
       console.log('Logged in with Google:', data);
+      // Check if onboarding is complete and navigate accordingly
     }
   }
 
@@ -99,6 +102,8 @@ export class PreHomePage implements OnInit, OnDestroy {
       console.error('Error logging in with Apple:', error);
     } else {
       console.log('Logged in with Apple:', data);
+      // Check if onboarding is complete and navigate accordingly
+      
     }
   }
 
@@ -116,4 +121,6 @@ export class PreHomePage implements OnInit, OnDestroy {
     await this.storageHelper.setStorageKey(StorageKeys.PRE_HOME_ANIMATION_DONE, true);
 
   }
+
+
 }

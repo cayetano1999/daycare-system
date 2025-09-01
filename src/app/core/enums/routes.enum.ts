@@ -25,7 +25,7 @@ export const RoutesApp = {
     LOGIN_PHONE: 'auth/login-phone',
     AUTH_REGISTER: authRoutes[0]?.path ?? '',
     AUTH_FORGOT_PASSWORD: 'auth/forgot-password',
-    AUTH_OTP: 'auth/otp',
+    AUTH_OTP: 'auth/otp-verification',
 
     //Top Up
     TOP_UP: '/top-up',

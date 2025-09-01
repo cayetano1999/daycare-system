@@ -14,12 +14,6 @@ import { Capacitor } from '@capacitor/core'
 // import { StorageKeys } from '../enums/storage.keys.enum'
 
 
-export interface Profile {
-  id?: string
-  username: string
-  website: string
-  avatar_url: string
-}
 
 @Injectable({
   providedIn: 'root',

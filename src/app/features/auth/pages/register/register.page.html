@@ -1,7 +1,7 @@
-<ion-content [fullscreen]="true" class="register-content">
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-    <!-- Floating Header -->
-    <div class="relative z-20">
+<ion-header class="ion-no-border ">
+  <ion-toolbar class="ion-no-border ion-no-padding shadow-lg">
+        <!-- Floating Header -->
+    <div class="relative z-20 animate__animated animate__fadeIn">
       <div class="bg-white/95 backdrop-blur-xl border-b border-white/20 shadow-lg">
         <div class="flex items-center px-4 py-4">
           <button 
@@ -16,13 +16,19 @@
             <h1 class="text-xl font-bold text-gray-800">Crear cuenta</h1>
             <p class="text-sm text-gray-500">Únete a la comunidad Festiva</p>
           </div>
-          
+
         </div>
       </div>
     </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="register-content">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 ">
+
 
     <!-- Main Content -->
-    <div class="relative z-10 px-6 py-8">
+    <div class="relative z-10 px-6 py-8 animate__animated animate__bounceInLeft">
       <div class="max-w-md mx-auto">
         <!-- Welcome Section -->
         <div class="text-center mb-10">
@@ -32,10 +38,10 @@
             </svg>
           </div>
           <h2 class="text-3xl font-bold text-gray-800 mb-3">
-            ¡Bienvenido!
+            ¡Bienvenid&#64;!
           </h2>
           <p class="text-gray-600 leading-relaxed">
-            Crea tu cuenta y comienza a diseñar invitaciones únicas que harán de tus eventos momentos inolvidables
+            Crea tu cuenta y comienza a administrar invitaciones únicas que harán de tus eventos momentos inolvidables
           </p>
         </div>
 
@@ -158,6 +164,7 @@
                 required
                 email
                 placeholder="tu@email.com"
+                (blur)="checkEmailExists(formData.email)"
                 class="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-2xl text-gray-800 placeholder-gray-400 transition-all duration-300 focus:outline-none focus:border-blue-600 focus:shadow-lg focus:shadow-blue-100 hover:border-gray-300"
               />
             </div>
@@ -302,11 +309,11 @@
         <!-- Footer -->
         <div class="mt-8 text-center">
           <p class="text-gray-500 text-sm leading-relaxed">
-            Al crear tu cuenta, aceptas nuestros{' '}
+            Al crear tu cuenta, aceptas nuestros {{' '}}
             <span class="text-blue-600 font-medium cursor-pointer hover:text-blue-700 transition-colors">
               Términos de Servicio
             </span>
-            {' '}y{' '}
+            y
             <span class="text-blue-600 font-medium cursor-pointer hover:text-blue-700 transition-colors">
               Política de Privacidad
             </span>
