@@ -330,4 +330,9 @@ export class DashboardPage implements OnDestroy {
     // Logic to create a new event
     this.router.navigate([RoutesApp.CREATE_EVENT]);
   }
+
+  adminEvent(event: Event) {
+    // Logic to manage the event
+    this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event } });
+  }
 }

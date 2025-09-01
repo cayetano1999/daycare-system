@@ -1,13 +1,16 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
 interface FormData {
+  id: string;
   plan_type: 'Starter' | 'Essential' | 'Premium' | 'Elite' | '';
   event_date: string;
   event_time: string;
@@ -16,6 +19,7 @@ interface FormData {
   share_text: string;
   url_media: string;
   image: string;
+  user_id: string;
 }
 
 interface Plan {
@@ -36,10 +40,11 @@ interface Plan {
   imports: [...StandAloneModules, FestivaHeaderComponent]
 })
 export class CreateEventPage implements OnInit {
-  @Input() editingEvent?: any; // For future editing functionality
+  @Input() editingEvent?: boolean; // For future editing functionality
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   formData: FormData = {
+    id: '',
     plan_type: '',
     event_date: '',
     event_time: '',
@@ -47,7 +52,8 @@ export class CreateEventPage implements OnInit {
     description: '',
     share_text: '',
     url_media: '',
-    image: ''
+    image: '',
+    user_id: ''
   };
 
   isLoading = false;
@@ -105,11 +111,39 @@ export class CreateEventPage implements OnInit {
   private alertController = inject(AlertController);
   private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
-    private storageHelper = inject(StorageHelper);
+  private storageHelper = inject(StorageHelper);
+  private router = inject(Router);
 
   constructor(
-   
-  ) {}
+
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    console.log(navigation);
+    if (navigation && navigation.extras && navigation.extras.state) {
+      const event = navigation.extras.state['event'];
+
+      if(event) {
+        this.populateFormForEditing(event);
+        this.editingEvent = true;
+      }
+    }
+  }
+
+  populateFormForEditing(event: FestivaEvent | FormData | any) {
+    this.formData = {
+      id: event.id,
+      user_id: event.user_id,
+      plan_type: event.plan_type,
+      event_date: event.event_date ? new Date(event.event_date).toISOString().split('T')[0] : '',
+      event_time: event.event_date ? new Date(event.event_date).toISOString().slice(11, 16) : '',
+      name: event.name,
+      description: event.description,
+      share_text: event.share_text,
+      url_media: event.url_media,
+      image: event.image
+    } ;
+    this.imagePreview = event.image;
+  }
 
   ngOnInit() {
     // Set minimum date to today
@@ -188,11 +222,11 @@ export class CreateEventPage implements OnInit {
       if (selector) {
         const element = document.querySelector(selector);
         if (element) {
-          element.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
           });
-          
+
           // Add shake animation
           element.classList.add('animate-shake');
           setTimeout(() => {
@@ -311,8 +345,9 @@ export class CreateEventPage implements OnInit {
     try {
       // Combine date and time into timestamp
       const eventDateTime = new Date(`${this.formData.event_date}T${this.formData.event_time}`);
-      
+
       const eventData = {
+        id: this.formData.id,
         plan_type: this.formData.plan_type,
         event_date: eventDateTime.toISOString(),
         status: 'DRAFT', // Default status for new events
@@ -322,11 +357,21 @@ export class CreateEventPage implements OnInit {
         share_text: this.formData.share_text.trim(),
         url_media: this.formData.url_media || null,
         user_id: this.user.id,
-      };
+      } as any;
 
       // Save to Supabase
-      const { data, error } = await this.supabaseService.createRecord('events', eventData);
-      
+      let data, error;
+      if (this.editingEvent) {
+        const response = await this.supabaseService.updateRecord('events', eventData.id, eventData);
+        data = response.data;
+        error = response.error;
+      } else {
+        delete eventData.id; // Remove id for new records
+        const response = await this.supabaseService.createRecord('events', eventData);
+        data = response.data;
+        error = response.error;
+      }
+
       if (error) {
         throw error;
       }
@@ -334,18 +379,18 @@ export class CreateEventPage implements OnInit {
       // Show success screen
       this.createdEvent = data;
       this.showSuccess = true;
-      
+
     } catch (error: any) {
       console.error('Error creating event:', error);
-      
+
       let errorMessage = 'Hubo un problema al crear tu evento. Por favor, intenta nuevamente.';
-      
+
       if (error.message?.includes('duplicate')) {
         errorMessage = 'Ya existe un evento con este nombre.';
       } else if (error.message?.includes('network')) {
         errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
       }
-      
+
       const alert = await this.alertController.create({
         header: 'Error al crear evento',
         message: errorMessage,

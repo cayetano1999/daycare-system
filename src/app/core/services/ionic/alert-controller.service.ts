@@ -7,6 +7,7 @@ import { TopUpSuccessComponent } from 'src/app/shared/components/top-up-success/
 import { UpdateProfileComponent } from 'src/app/shared/components/update-profile/update-profile.component';
 import { AlertMessageComponent, AlertMessageType } from 'src/app/shared/components/alert-message/alert-message.component';
 import { LanguageSelectorComponent } from 'src/app/shared/components/language-selector/language-selector.component';
+import { CustomDialogComponent } from 'src/app/shared/components/custom-dialog/custom-dialog.component';
 @Injectable({
     providedIn: 'root'
 })
@@ -231,6 +232,26 @@ export class AlertControllerService {
             buttons: ['OK']
         });
         await alert.present();
+    }
+
+    public async openFestivaAlert(type: 'success' | 'warning' | 'question' | 'danger' = 'success', title: string, message: string, showCancel: boolean = false, cancelText?: string, confirmText?: string) {
+
+        const modal = await this.modalCtrl.create({
+            component: CustomDialogComponent,
+            cssClass: 'backdrop-modal',
+            componentProps: {
+            type,
+            title,
+            message,
+            showCancel,
+            cancelText: cancelText || 'Cancel',
+            confirmText: confirmText || 'OK'
+            },
+        });
+        await modal.present();
+        const result = await modal.onDidDismiss();
+        return result.data;
+
     }
 
 }

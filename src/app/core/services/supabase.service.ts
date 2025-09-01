@@ -118,7 +118,9 @@ export class SupabaseService {
       .from(table)
       .delete()
       .eq('id', id)
-      .single();
+      .maybeSingle();
+
+    //  return  this.supabase.from(table).delete().eq('id', id);
   }
 
 

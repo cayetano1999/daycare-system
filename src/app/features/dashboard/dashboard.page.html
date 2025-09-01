@@ -101,7 +101,7 @@
           <p class="text-gray-600 mb-8 leading-relaxed max-w-sm mx-auto">
             Comienza a diseñar invitaciones digitales únicas para tus celebraciones especiales
           </p>
-          <button class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-3 mx-auto">
+          <button (click)="createNewEvent()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-3 mx-auto">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
@@ -138,7 +138,7 @@
             style="box-shadow: none;
     border: 1px solid #00000030;"
           >
-            <div class="flex">
+            <div class="flex" (click)="adminEvent(event)">
               <!-- Event Image -->
               <div class="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden">
                 <img
@@ -190,7 +190,7 @@
     <!-- White Background Container for Bottom Sections -->
     <div class="bg-white rounded-t-3xl space-y-8 pb-6">
       <!-- Example Invitations Section -->
-      <div class="px-6 pt-6">
+      <div class="px-2 pt-6">
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-2xl font-bold text-gray-800">Plantillas Destacadas</h3>
           <button class="text-blue-600 font-semibold text-sm">Ver todas</button>
@@ -233,10 +233,10 @@
       </div>
 
       <!-- Quick Actions Section -->
-      <div class="px-6 pb-6">
+      <div class="px-2 pb-6">
         <h3 class="text-2xl font-bold text-gray-800 mb-6">Acciones Rápidas</h3>
         <div [class]="'grid gap-4 ' + (events.length > 1 ? 'grid-cols-2' : 'grid-cols-1')">
-          <button class="bg-blue-600 text-white p-6 rounded-2xl text-left hover:bg-blue-700 transition-colors">
+          <button (click)="createNewEvent()" class="bg-blue-600 text-white p-6 rounded-2xl text-left hover:bg-blue-700 transition-colors">
             <svg class="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>

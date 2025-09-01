@@ -1,0 +1,55 @@
+<div class="fixed inset-0 bg-black/50 z-60 flex items-center justify-center p-6">
+  <div class="bg-white rounded-3xl p-8 max-w-md w-full animate-scale-in">
+    <div class="text-center">
+      <!-- Iconos según tipo -->
+      <div
+        class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+        [ngClass]="{
+          'bg-green-100': type === 'success',
+          'bg-yellow-100': type === 'warning',
+          'bg-blue-100': type === 'question',
+          'bg-red-100': type === 'danger'
+        }"
+      >
+        <!-- Success -->
+        <svg *ngIf="type === 'success'" class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <!-- Warning -->
+        <svg *ngIf="type === 'warning'" class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14"/>
+        </svg>
+        <!-- Question -->
+        <svg *ngIf="type === 'question'" class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10a4 4 0 118 0c0 2-4 3-4 5m0 4h.01"/>
+        </svg>
+        <!-- Danger -->
+        <svg *ngIf="type === 'danger'" class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </div>
+      <!-- Título y mensaje -->
+      <h3 class="text-xl font-bold text-gray-800 mb-2">
+        {{ title }}
+      </h3>
+      <p class="text-gray-600 mb-6">
+        {{ message }}
+      </p>
+      <div class="flex space-x-3">
+        <button *ngIf="showCancel" (click)="cancel()" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+          {{ cancelText || 'Cancelar' }}
+        </button>
+        <button (click)="confirm()" [ngClass]="{
+            'bg-green-600 hover:bg-green-700': type === 'success',
+            'bg-yellow-600 hover:bg-yellow-700': type === 'warning',
+            'bg-blue-600 hover:bg-blue-700': type === 'question',
+            'bg-red-600 hover:bg-red-700': type === 'danger'
+          }"
+          class="flex-1 px-4 py-3 text-white rounded-xl font-semibold transition-colors">
+          {{ confirmText || 'Aceptar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
