@@ -4,6 +4,7 @@ import { ForceUpgradeGuard } from "src/app/core/guards/force-update.guard";
 import { InternetConnectionGuard } from "src/app/core/guards/internet-conection.guard";
 import { RegisterPage } from "./pages/register/register.page";
 import { OtpVerificationPage } from "./pages/otp-verification/otp-verification.page";
+import { AuthModuleGuard } from "src/app/core/guards/auth-module.guard";
 
 export const authRoutes: Routes = [
 
@@ -11,12 +12,12 @@ export const authRoutes: Routes = [
   {
     path: 'auth/register',
     component: RegisterPage,
-    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard, AuthModuleGuard]
   },
   {
     path: 'auth/otp-verification',
     component: OtpVerificationPage,
-    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard, AuthModuleGuard]
   }
 
 ]

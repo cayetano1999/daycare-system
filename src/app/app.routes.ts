@@ -4,6 +4,7 @@ import { MaintenancePage } from './features/maintenance/maintenance.page';
 import { PreHomePage } from './features/pre-home/pre-home.page';
 import { OnboardingPage } from './features/onboarding/onboarding.page';
 import { authRoutes } from './features/auth/auth.routes';
+import { dashBoardRoutes } from './features/dashboard/dashboard.routes';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,7 @@ export const routes: Routes = [
   // ...profileRoutes,
   // ...creditcardRoutes,
   ...authRoutes,
+  ...dashBoardRoutes,
 
   {
     path: 'no-internet',
@@ -40,6 +42,10 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () => import('./features/auth/pages/register/register.page').then( m => m.RegisterPage)
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./features/dashboard/dashboard.page').then( m => m.DashboardPage)
   },
 ];
 

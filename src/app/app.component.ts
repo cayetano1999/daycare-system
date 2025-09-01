@@ -123,7 +123,7 @@ export class AppComponent implements OnInit {
                 this.router.navigate([RoutesApp.ONBOARDING]);
                 return;
             }
-            await this.router.navigate([RoutesApp.PRE_HOME]);
+            await this.router.navigate([RoutesApp.HOME]);
         }
     }
 

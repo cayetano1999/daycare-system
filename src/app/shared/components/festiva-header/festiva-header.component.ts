@@ -4,13 +4,13 @@ import { Capacitor } from '@capacitor/core';
 import { IonicModule, ModalController, NavController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-kuido-header',
-  templateUrl: './kuido-header.component.html',
-  styleUrls: ['./kuido-header.component.scss'],
+  selector: 'app-festiva-header',
+  templateUrl: './festiva-header.component.html',
+  styleUrls: ['./festiva-header.component.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule]
 })
-export class KuidoHeaderComponent  implements OnInit {
+export class FestivaHeaderComponent  implements OnInit {
 
   isIos: boolean = Capacitor.getPlatform() === 'ios';
   //Services

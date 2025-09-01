@@ -3,14 +3,14 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContactPayload } from '@capacitor-community/contacts';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { KuidoHeaderComponent } from '../kuido-header/kuido-header.component';
+import { FestivaHeaderComponent } from '../festiva-header/festiva-header.component';
 
 @Component({
   selector: 'app-contact-list',
   templateUrl: './contact-list.component.html',
   styleUrls: ['./contact-list.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule, KuidoHeaderComponent],
+  imports: [IonicModule, FormsModule, CommonModule, FestivaHeaderComponent],
 })
 export class ContactListComponent implements OnInit {
   //services

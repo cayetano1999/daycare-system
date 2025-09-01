@@ -1,12 +1,12 @@
 
 export const remoteConfig = {
     ENVIRONMENTS: {
-        ENABLE_ADS: false,
-        ENABLE_ADS_BANNERS: false,
+        ENABLE_ADS: "",
+        ENABLE_ADS_BANNERS: "",
         USER: "",
         PASS: "",
-        APP_MAINTENANCE: false,
-        IS_TESTING: false,
+        APP_MAINTENANCE: "",
+        IS_TESTING: "",
         URL_TERMS: "",
         URL_APP_ANDROID: "",
         DEFAULT_ADS: ""
@@ -42,15 +42,15 @@ export const remoteConfig = {
                     privacy_link: ""
                 }
             },
-            images: [] as string[]
+            images: [] as any[]
         },
         ONBOARDING: {
-            textBtnSkip: "",
-            textBtnNext: "",
-            textBtnStart: "",
-            slides: [] as any[],
-            termsConditionLabel: ""
-        }
+            steps: [] as any[],
+            buttons: {
+                start: "",
+                continue: ""
+            }
+        },
     },
     OPTIONS_ITEMS: {
         options: [] as any[],
@@ -71,7 +71,7 @@ export const remoteConfig = {
     },
     FEATURE_FLAGS: {
         FORCE_UPDATE: {
-            active: false,
+            active: "",
             users: [] as any[]
         }
     }

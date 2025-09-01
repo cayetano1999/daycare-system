@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
 interface Benefit {
   iconPath: string;
@@ -35,36 +38,15 @@ export class OnboardingPage implements OnInit, OnDestroy {
   private confettiInterval: any;
   private confettiTimer: any;
 
-  benefits: Benefit[] = [
-    { 
-      iconPath: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", 
-      text: "Administración completa de eventos" 
-    },
-    { 
-      iconPath: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z", 
-      text: "Control de invitados en tiempo real" 
-    },
-    { 
-      iconPath: "M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z", 
-      text: "Gestión de listas de regalos" 
-    },
-    { 
-      iconPath: "M13 10V3L4 14h7v7l9-11h-7z", 
-      text: "Seguimiento y estadísticas" 
-    }
-  ];
-
-  stats: Stat[] = [
-    { number: "50K+", label: "Eventos administrados" },
-    { number: "200K+", label: "Invitaciones gestionadas" },
-    { number: "98%", label: "Satisfacción" }
-  ];
+  // Placeholder para los datos de Remote Config
+  onboardingData = remoteConfig.SCREENS.ONBOARDING;
 
   particles: Particle[] = [];
   profile: Profile | null = null;
 
   private navController = inject(NavController);
   private storageHelper = inject(StorageHelper);
+  private router = inject(Router);
 
   constructor() {}
 
@@ -73,6 +55,8 @@ export class OnboardingPage implements OnInit, OnDestroy {
     this.startConfettiAnimation();
 
     this.profile = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
+    // Aquí es donde deberías integrar la lógica para cargar los datos de Remote Config
+    // Por ejemplo, un método como this.loadRemoteConfigData();
   }
 
   ngOnDestroy() {
@@ -142,7 +126,7 @@ export class OnboardingPage implements OnInit, OnDestroy {
   }
 
   nextStep() {
-    if (this.currentStep < 2) {
+    if (this.currentStep < this.onboardingData.steps.length - 1) {
       this.currentStep++;
       
       // Clear confetti when leaving first screen
@@ -172,7 +156,7 @@ export class OnboardingPage implements OnInit, OnDestroy {
     console.log('Onboarding completed');
     // this.navController.navigateRoot('/dashboard');
     await this.storageHelper.setStorageKey(StorageKeys.ONBOARDING_COMPLETED, true);
-
+    await this.router.navigate([RoutesApp.HOME]);
   }
 
   goBack() {
@@ -181,5 +165,14 @@ export class OnboardingPage implements OnInit, OnDestroy {
 
   trackByIndex(index: number): number {
     return index;
+  }
+  
+  getBackgroundClass(index: number): string {
+    const backgrounds = [
+      'bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700',
+      'bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700',
+      'bg-gradient-to-br from-rose-600 via-pink-600 to-purple-700'
+    ];
+    return backgrounds[index];
   }
 }

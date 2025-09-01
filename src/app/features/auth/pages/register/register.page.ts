@@ -261,9 +261,6 @@ export class RegisterPage implements OnInit, OnDestroy {
     const email = this.formData.email;
     const password = this.formData.password;
 
-    // this.router.navigate([RoutesApp.AUTH_OTP], { state: { credentials: { email, password } } });
-
-
     const { data, error } = await this.supabaseService.signIn(email, password);
     if (error) {
       console.error('Auto login error:', error);
@@ -278,7 +275,6 @@ export class RegisterPage implements OnInit, OnDestroy {
           console.log('User profile data:', profile.data);
           await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, profile.data);
         }
-
         this.router.navigate([RoutesApp.ONBOARDING]);
       }
     }

@@ -1,4 +1,5 @@
 import { authRoutes } from "src/app/features/auth/auth.routes";
+import { dashBoardRoutes } from "src/app/features/dashboard/dashboard.routes";
 
 export const RoutesApp = {
     ONBOARDING: '/onboarding',
@@ -16,7 +17,7 @@ export const RoutesApp = {
     NOT_FOUND: '/not-found',
     NO_INTERNET: '/no-internet',
     APP_MAINTENANCE: '/maintenance',
-    HOME: '/home',
+    HOME: dashBoardRoutes[0]?.path ?? '',
     PRE_HOME: '/pre-home',
     AUTH: '/auth',
     SPLASH: '/splash-screen',

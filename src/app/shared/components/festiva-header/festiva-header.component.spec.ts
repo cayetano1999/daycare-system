@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { KuidoHeaderComponent } from './kuido-header.component';
+import { FestivaHeaderComponent } from './festiva-header.component';
 
-describe('KuidoHeaderComponent', () => {
-  let component: KuidoHeaderComponent;
-  let fixture: ComponentFixture<KuidoHeaderComponent>;
+describe('FestivaHeaderComponent', () => {
+  let component: FestivaHeaderComponent;
+  let fixture: ComponentFixture<FestivaHeaderComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ KuidoHeaderComponent ],
+      declarations: [ FestivaHeaderComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(KuidoHeaderComponent);
+    fixture = TestBed.createComponent(FestivaHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
