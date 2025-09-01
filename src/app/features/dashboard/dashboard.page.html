@@ -4,7 +4,7 @@
 <ion-content [fullscreen]="true" class="dashboard-content">
   <div class="min-h-screen bg-gray-50 pb-20">
     <!-- Header -->
-    <div [class]="'fixed top-0 left-0 right-0 z-40 px-6 py-4 mt-9 transition-all duration-300 ' + 
+    <div [class]="'fixed top-0 left-0 right-0 z-40 px-6 py-4 mt-6 transition-all duration-300 ' + 
       (isScrolled 
         ? 'bg-black border-b border-gray-800 shadow-lg' 
         : 'bg-white border-b border-gray-100'
@@ -37,7 +37,7 @@
               ? 'hover:bg-gray-800 text-white' 
               : 'hover:bg-gray-50 text-gray-600'
             )">
-          <ion-icon  name="notifications-sharp"></ion-icon>
+          <ion-icon style="font-size: 1.5rem;"  name="notifications-sharp"></ion-icon>
           <div *ngIf="unreadNotifications > 0" class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
             <span class="text-white text-xs font-bold">{{ unreadNotifications }}</span>
           </div>
@@ -80,7 +80,7 @@
               {{ filteredEvents.length }} resultado{{ filteredEvents.length !== 1 ? 's' : '' }} para "{{ searchQuery }}"
             </p>
           </div>
-          <button class="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+          <button (click)="createNewEvent()" class="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>

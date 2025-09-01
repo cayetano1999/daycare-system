@@ -5,6 +5,7 @@ import { PreHomePage } from './features/pre-home/pre-home.page';
 import { OnboardingPage } from './features/onboarding/onboarding.page';
 import { authRoutes } from './features/auth/auth.routes';
 import { dashBoardRoutes } from './features/dashboard/dashboard.routes';
+import { eventRoutes } from './features/events/events.routes';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,7 @@ export const routes: Routes = [
   // ...creditcardRoutes,
   ...authRoutes,
   ...dashBoardRoutes,
+  ...eventRoutes,
 
   {
     path: 'no-internet',
@@ -39,14 +41,9 @@ export const routes: Routes = [
     path: 'onboarding',
     component: OnboardingPage
   },
-  {
-    path: 'register',
-    loadComponent: () => import('./features/auth/pages/register/register.page').then( m => m.RegisterPage)
-  },
-  {
-    path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.page').then( m => m.DashboardPage)
-  },
+ 
+  
+
 ];
 
 

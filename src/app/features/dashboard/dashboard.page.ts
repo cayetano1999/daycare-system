@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { Profile } from 'src/app/core/interface/profile.interface';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
@@ -165,6 +168,9 @@ export class DashboardPage implements OnDestroy {
   ];
 
   private storageHelper = inject(StorageHelper);
+  private router = inject(Router);
+  private supabase = inject(SupabaseService);
+
 
   constructor() {}
 
@@ -179,6 +185,8 @@ export class DashboardPage implements OnDestroy {
     };
 
     window.addEventListener('scroll', this.scrollListener);
+
+    await this.loadEvents();
   }
 
   ngOnDestroy() {
@@ -196,6 +204,18 @@ export class DashboardPage implements OnDestroy {
 
   get unreadNotifications(): number {
     return this.notifications.filter(n => !n.read).length;
+  }
+
+  async loadEvents() {
+    // Logic to load events
+    const { data, error } = await this.supabase.getRecords<Event[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
+    console.log('Loaded events:', data);
+    if (error) {
+      console.error('Error loading events:', error);
+      this.events = [];
+    } else {
+      this.events = data as any[];
+    }
   }
 
   clearSearch() {
@@ -304,5 +324,10 @@ export class DashboardPage implements OnDestroy {
 
   trackByNotificationId(index: number, notification: Notification): string {
     return notification.id;
+  }
+
+  createNewEvent() {
+    // Logic to create a new event
+    this.router.navigate([RoutesApp.CREATE_EVENT]);
   }
 }

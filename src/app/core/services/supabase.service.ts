@@ -84,11 +84,13 @@ export class SupabaseService {
       .single();
   }
 
-   getRecords(table: string, columns: string[], field: string, value: string) {
+   getRecords<T>(table: string, columns: string[], field: string, value: string, orderProperty: string) {
     return this.supabase
       .from(table)
       .select(columns.join(','))
-      .eq(field, value);
+      .eq(field, value)
+      .order(orderProperty, { ascending: false });
+
   }
 
   // Generic Create

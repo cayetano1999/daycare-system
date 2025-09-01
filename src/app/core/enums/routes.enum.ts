@@ -1,5 +1,6 @@
 import { authRoutes } from "src/app/features/auth/auth.routes";
 import { dashBoardRoutes } from "src/app/features/dashboard/dashboard.routes";
+import { eventRoutes } from "src/app/features/events/events.routes";
 
 export const RoutesApp = {
     ONBOARDING: '/onboarding',
@@ -27,6 +28,10 @@ export const RoutesApp = {
     AUTH_REGISTER: authRoutes[0]?.path ?? '',
     AUTH_FORGOT_PASSWORD: 'auth/forgot-password',
     AUTH_OTP: 'auth/otp-verification',
+
+    //Events
+    CREATE_EVENT: eventRoutes[0]?.path ?? '',
+    EVENT_DETAIL: '/event-detail',
 
     //Top Up
     TOP_UP: '/top-up',
