@@ -84,7 +84,7 @@ export class SupabaseService {
       .single();
   }
 
-   getRecords<T>(table: string, columns: string[], field: string, value: string, orderProperty: string) {
+  getRecords<T>(table: string, columns: string[], field: string, value: string, orderProperty: string) {
     return this.supabase
       .from(table)
       .select(columns.join(','))
@@ -121,6 +121,12 @@ export class SupabaseService {
       .maybeSingle();
 
     //  return  this.supabase.from(table).delete().eq('id', id);
+  }
+
+  async deleteTableSafely(tableId: string) {
+    const { data, error } = await this.supabase.rpc('delete_event_table_safely', { p_table_id: tableId });
+    if (error) throw error;
+    return data; // null
   }
 
 
@@ -192,13 +198,13 @@ export class SupabaseService {
         // metadata va al user_metadata de Auth (útil para saludar antes de tener profile)
         data: { full_name, phone },
         // si confirmación por correo está activa, Supabase redirigirá aquí
-        emailRedirectTo:  `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
     if (error) throw error;
 
     //update user
-    
+
 
   }
 

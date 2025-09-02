@@ -1,0 +1,94 @@
+
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Smooth transitions for all interactive elements
+button, .cursor-pointer {
+  transition: all 0.2s ease-in-out;
+}
+
+// Focus states for accessibility
+input:focus, button:focus, select:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+// Loading state improvements
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+// Ensure proper spacing and alignment
+.grid > div {
+  min-height: auto;
+}
+
+// Status badge animations
+.status-badge {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+input, select {
+    background: white;
+    color: black;
+}
+
+.scroller {
+  display: flex;
+  overflow-x: auto;    /* permite scroll horizontal */
+  overflow-y: hidden;  /* evita barra vertical */
+  -webkit-overflow-scrolling: touch; /* momentum en iOS */
+  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge antiguo */
+}
+.scroller::-webkit-scrollbar { /* Chrome/Safari/Edge (Blink/WebKit) */
+  display: none;
+}

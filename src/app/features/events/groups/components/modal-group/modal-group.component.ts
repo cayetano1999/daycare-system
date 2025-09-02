@@ -2,14 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { Group } from '../../groups.page';
+import { FestivaEvent } from 'src/app/core/interface/event.interface';
+import { Profile } from 'src/app/core/interface/profile.interface';
 
-interface Group {
-  id: string;
-  name: string;
-  color_exa: string;
-  created_at: string;
-  user_id: string;
-}
+
 
 interface GroupFormData {
   name: string;
@@ -25,6 +22,8 @@ interface GroupFormData {
 export class ModalGroupComponent implements OnInit {
   @Input() editingGroup: Group | null = null;
   @Input() existingGroups: Group[] = [];
+  @Input() user: Profile | null = null;
+  @Input() event: FestivaEvent | null = null;
 
   formData: GroupFormData = {
     name: '',
@@ -109,7 +108,8 @@ export class ModalGroupComponent implements OnInit {
     try {
       const groupData = {
         name: this.formData.name.trim(),
-        color_exa: this.formData.color_exa
+        color_exa: this.formData.color_exa,
+        event_id: this.event?.id
       };
 
       let result;
@@ -129,6 +129,7 @@ export class ModalGroupComponent implements OnInit {
         result = { action: 'update', data: { ...this.editingGroup, ...groupData } };
       } else {
         // Create new group
+        console.log('Creating group with data:', groupData);
         const { data, error } = await this.supabaseService.createRecord('groups', groupData);
 
         if (error) {

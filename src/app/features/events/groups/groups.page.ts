@@ -7,13 +7,16 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { ModalGroupComponent } from './components/modal-group/modal-group.component';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { FestivaEvent } from 'src/app/core/interface/event.interface';
+import { Router } from '@angular/router';
 
-interface Group {
+export interface Group {
   id: string;
   name: string;
   color_exa: string;
   created_at: string;
   user_id: string;
+  event_id: string;
 }
 
 interface GroupFormData {
@@ -60,8 +63,10 @@ export class GroupsPage implements OnInit {
     '#14B8A6', // Teal
     '#A855F7'  // Violet
   ];
-
   user: Profile | null = null;
+  event: FestivaEvent | null = null;
+
+  private readonly router = inject(Router);
 
   constructor(
     private alertController: AlertController,
@@ -70,7 +75,14 @@ export class GroupsPage implements OnInit {
     private supabaseService: SupabaseService,
     private storageHelper: StorageHelper,
     private alertCtrl: AlertControllerService
-  ) {}
+  ) {
+     const navigation = this.router.getCurrentNavigation();
+    console.log(navigation);
+    if (navigation && navigation.extras && navigation.extras.state) {
+      const event = navigation.extras.state['event'];
+      this.event = event;
+    }
+  }
 
   ngOnInit() {
     // Component initialization
@@ -85,8 +97,8 @@ export class GroupsPage implements OnInit {
     this.isLoadingData = true;
     
     try {
-      const { data, error } = await this.supabaseService.getRecords('groups', ['*'], 'user_id', this.user?.id || '', 'created_at');
-      
+      const { data, error } = await this.supabaseService.getRecords('groups', ['*'], 'event_id', this.event?.id || '', 'created_at');
+
       if (error) {
         throw error;
       }
@@ -127,11 +139,14 @@ export class GroupsPage implements OnInit {
 
   // Modal management
   async openCreateModal() {
+    console.log('Opening create group modal', this.event);
     const modal = await this.modalController.create({
       component: ModalGroupComponent,
       componentProps: {
         editingGroup: null,
-        existingGroups: this.groups
+        existingGroups: this.groups,
+        user: this.user,
+        event: this.event
       },
       cssClass: 'groups-modal'
     });

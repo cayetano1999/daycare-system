@@ -1,0 +1,83 @@
+
+// Custom scrollbar for modal
+.max-h-\[90vh\]::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-\[90vh\]::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.max-h-\[90vh\]::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.max-h-\[90vh\]::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+// Smooth transitions for all interactive elements
+button, .cursor-pointer, input, select {
+  transition: all 0.2s ease-in-out;
+}
+
+// Focus states for accessibility
+input:focus, button:focus, select:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+// Loading state improvements
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Input validation states
+.border-red-300 {
+  border-color: #fca5a5;
+}
+
+.border-red-300:focus {
+  ring-color: #ef4444;
+  border-color: transparent;
+}
+
+// Custom select styling
+select {
+  background-image: none;
+}
+
+// Preview section styling
+.bg-gray-50 {
+  border: 1px solid #e5e7eb;
+}
+
+// Form spacing improvements
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+// Button hover effects
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+input, select, textarea {
+    background: white;
+    color: black;
+}

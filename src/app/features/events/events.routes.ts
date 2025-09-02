@@ -4,6 +4,9 @@ import { EventManagementPage } from "./event-management/event-management.page";
 import { EventExpensesPage } from "./event-expenses/event-expenses.page";
 import { GiftListPage } from "./event-gift-list/event-gift-list.page";
 import { GroupsPage } from "./groups/groups.page";
+import { EventMembersPage } from "./event-members/event-members.page";
+import { EventTablesPage } from "./event-tables/event-tables.page";
+import { EventGuestsPage } from "./event-guests/event-guests.page";
 
 export const eventRoutes: Routes = [
   {
@@ -26,6 +29,18 @@ export const eventRoutes: Routes = [
   {
     path: 'events/groups',
     component: GroupsPage
+  },
+  {
+    path: 'events/members',
+    component: EventMembersPage
+  },
+  {
+    path: 'events/tables',
+    component: EventTablesPage
+  },
+  {
+    path: 'events/guests',
+    component: EventGuestsPage
   }
 
 ];

@@ -53,9 +53,9 @@ export class EventManagementPage implements OnInit {
       action: () => this.navigateToAdmins()
     },
     {
-      id: 'tickets',
-      title: 'Tickets del Evento',
-      description: 'Invitaciones, boletas y entradas',
+      id: 'Ticket',
+      title: 'Ticket del Evento',
+      description: 'Detalle de tu Invitación, boleta o entrada',
       iconPath: 'M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z',
       color: 'from-purple-500 to-violet-600',
       bgColor: 'bg-purple-50',
@@ -91,23 +91,34 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-orange-50',
       textColor: 'text-orange-700',
       action: () => this.navigateToGuests()
+    },
+    {
+      id: 'table',
+      title: 'Mesas',
+      description: 'Gestiona la asignación de mesas',
+      iconPath: 'M3 9h18v3H3z M7 12v7 M17 12v7',
+      color: 'from-black to-blue-600',
+      bgColor: 'bg-blue-50',
+      textColor: 'text-blue-700',
+      action: () => this.navigateToTables()
     }
+
   ];
 
-    private alertController = inject(AlertController);
-    private navController = inject(NavController);
-    private supabaseService = inject(SupabaseService);
-    private router = inject(Router);
-    private alertCtrl = inject(AlertControllerService);
+  private alertController = inject(AlertController);
+  private navController = inject(NavController);
+  private supabaseService = inject(SupabaseService);
+  private router = inject(Router);
+  private alertCtrl = inject(AlertControllerService);
 
   constructor(
-  
+
   ) {
 
     const navigation = this.router.getCurrentNavigation();
     console.log(navigation);
     if (navigation && navigation.extras && navigation.extras.state) {
-      const  event  = navigation.extras.state['event'];
+      const event = navigation.extras.state['event'];
       this.event = event;
     }
   }
@@ -202,11 +213,11 @@ export class EventManagementPage implements OnInit {
 
   async deleteEvent() {
     this.showDeleteConfirm = false;
-    
+
     try {
       // Delete event from Supabase
       const { error } = await this.supabaseService.deleteRecord('events', this.event.id || '');
-      
+
       if (error) {
         throw error;
       }
@@ -223,10 +234,10 @@ export class EventManagementPage implements OnInit {
         }]
       });
       await alerts.present();
-      
+
     } catch (error: any) {
       console.error('Error deleting event:', error);
-      
+
       const alerts = await this.alertController.create({
         header: 'Error',
         message: 'No se pudo eliminar el evento. Intenta nuevamente.',
@@ -251,6 +262,7 @@ export class EventManagementPage implements OnInit {
   navigateToAdmins() {
     console.log('Navigate to admins management');
     // this.navController.navigateForward('/event-admins');
+    this.router.navigate([RoutesApp.EVENT_MEMBERS], { state: { event: this.event } });
   }
 
   navigateToTickets() {
@@ -267,12 +279,18 @@ export class EventManagementPage implements OnInit {
   navigateToGroups() {
     console.log('Navigate to groups management');
     // this.navController.navigateForward('/event-groups');
-    this.router.navigate([RoutesApp.GROUPS]);
+    this.router.navigate([RoutesApp.GROUPS], { state: { event: this.event } });
   }
 
   navigateToGuests() {
     console.log('Navigate to guests management');
     // this.navController.navigateForward('/event-guests');
+    this.router.navigate([RoutesApp.EVENT_GUESTS], { state: { event: this.event } });
+  }
+
+  navigateToTables() {
+    console.log('Navigate to tables management');
+    this.router.navigate([RoutesApp.EVENT_TABLES], { state: { event: this.event } });
   }
 
   goBack() {

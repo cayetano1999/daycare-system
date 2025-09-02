@@ -1,0 +1,93 @@
+<div class="bg-white rounded-t-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+  <!-- Modal Header -->
+  <div class="bg-dark-900 text-dark p-6 rounded-t-2xl flex justify-between items-center">
+    <h2 class="text-xl font-semibold">{{ mode === 'edit' ? 'Editar Mesa' : 'Agregar Mesa' }}</h2>
+    <button (click)="closeModal()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="p-6">
+    <!-- Table Icon -->
+    <div class="flex justify-center mb-6">
+      <div class="bg-blue-100 rounded-2xl p-4">
+        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-6">
+      <!-- Table Name -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-3">Nombre de la Mesa *</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+          <input
+            type="text"
+            [(ngModel)]="tableName"
+            placeholder="Ej: Mesa Principal, Mesa 1, Mesa VIP..."
+            [class]="getInputClasses('name')"
+            class="w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+        <p *ngIf="errors.name" class="text-red-600 text-sm mt-2">{{ errors.name }}</p>
+      </div>
+
+      <!-- Table Capacity -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 mb-3">Capacidad *</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <input
+            type="number"
+            [(ngModel)]="tableCapacity"
+            placeholder="Número de personas"
+            min="1"
+            max="50"
+            [class]="getInputClasses('capacity')"
+            class="w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+        <p *ngIf="errors.capacity" class="text-red-600 text-sm mt-2">{{ errors.capacity }}</p>
+        <p class="text-gray-500 text-sm mt-2">Capacidad recomendada: 6-12 personas por mesa</p>
+      </div>
+
+      <!-- Capacity Suggestions -->
+      <div>
+        <p class="text-sm font-semibold text-gray-900 mb-3">Sugerencias rápidas:</p>
+        <div class="grid grid-cols-3 gap-3">
+          <button 
+            *ngFor="let suggestion of capacitySuggestions"
+            (click)="selectCapacity(suggestion.value)"
+            [class]="tableCapacity === suggestion.value ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-blue-300 text-gray-700'"
+            class="border-2 rounded-xl p-3 text-center transition-all duration-200">
+            <div class="text-lg font-bold">{{ suggestion.value }}</div>
+            <div class="text-xs">{{ suggestion.label }}</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button 
+      (click)="handleSubmit()"
+      [disabled]="isSubmitting || !isFormValid()"
+      class="w-full mt-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-4 px-6 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-3">
+      <svg *ngIf="!isSubmitting" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <div *ngIf="isSubmitting" class="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+      <span>{{ isSubmitting ? (mode === 'edit' ? 'Actualizando...' : 'Creando...') : (mode === 'edit' ? 'Actualizar Mesa' : 'Crear Mesa') }}</span>
+    </button>
+  </div>
+</div>
