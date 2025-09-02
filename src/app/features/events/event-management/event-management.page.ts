@@ -245,6 +245,7 @@ export class EventManagementPage implements OnInit {
   navigateToExpenses() {
     console.log('Navigate to expenses management');
     // this.navController.navigateForward('/event-expenses');
+    this.router.navigate([RoutesApp.EVENT_EXPENSES], { state: { event: this.event } });
   }
 
   navigateToAdmins() {
@@ -260,11 +261,13 @@ export class EventManagementPage implements OnInit {
   navigateToGifts() {
     console.log('Navigate to gifts management');
     // this.navController.navigateForward('/gift-list');
+    this.router.navigate([RoutesApp.EVENT_GIFT_LIST], { state: { event: this.event } });
   }
 
   navigateToGroups() {
     console.log('Navigate to groups management');
     // this.navController.navigateForward('/event-groups');
+    this.router.navigate([RoutesApp.GROUPS]);
   }
 
   navigateToGuests() {

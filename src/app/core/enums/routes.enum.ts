@@ -32,6 +32,9 @@ export const RoutesApp = {
     //Events
     CREATE_EVENT: eventRoutes[0]?.path ?? '',
     MANAGE_EVENT: eventRoutes[1]?.path ?? '',
+    EVENT_EXPENSES: eventRoutes[2]?.path ?? '',
+    EVENT_GIFT_LIST: eventRoutes[3]?.path ?? '',
+    GROUPS: eventRoutes[4]?.path ?? '',
     EVENT_DETAIL: '/event-detail',
 
     //Top Up

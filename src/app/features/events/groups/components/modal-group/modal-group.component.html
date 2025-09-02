@@ -1,0 +1,141 @@
+<!-- Modal Header -->
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-toolbar">
+    <div class="flex items-center justify-between p-6 border-b border-gray-100">
+      <h3 class="text-xl font-bold text-gray-800">
+        {{ editingGroup ? 'Editar Grupo' : 'Nuevo Grupo' }}
+      </h3>
+      <button
+        (click)="closeModal()"
+        class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+      >
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Modal Content -->
+<ion-content class="groups-modal-content">
+  <form (ngSubmit)="handleSubmit()" #groupForm="ngForm" class="p-6 space-y-6">
+    <!-- Group Name -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-3">
+        Nombre del grupo
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [(ngModel)]="formData.name"
+          name="name"
+          #nameField="ngModel"
+          required
+          minlength="2"
+          maxlength="30"
+          placeholder="Ej: Familia, Trabajo, Amigos"
+          class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all duration-200"
+        />
+        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
+          {{ formData.name.length }}/30
+        </div>
+      </div>
+      @if (formErrors['name']) {
+        <p class="text-red-500 text-sm mt-2">{{ formErrors['name'] }}</p>
+      }
+    </div>
+
+    <!-- Color Selection -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-3">
+        Color del grupo
+      </label>
+      
+      <!-- Color Preview -->
+      <div class="mb-4">
+        <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">
+          <div 
+            class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+            [style.background-color]="formData.color_exa"
+          >
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 font-medium">Vista previa</p>
+            <p class="text-lg font-bold text-gray-800">{{ formData.name || 'Nombre del grupo' }}</p>
+            <p class="text-xs text-gray-500 font-mono">{{ formData.color_exa }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Predefined Colors -->
+      <div class="mb-4">
+        <p class="text-xs text-gray-600 font-medium mb-3">Colores predefinidos</p>
+        <div class="grid grid-cols-6 gap-3">
+          @for (color of predefinedColors; track color) {
+            <button
+              type="button"
+              (click)="selectPredefinedColor(color)"
+              [class]="'w-10 h-10 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-2 ' + 
+                (formData.color_exa === color 
+                  ? 'border-gray-800 scale-110' 
+                  : 'border-gray-200 hover:border-gray-300'
+                )"
+              [style.background-color]="color"
+            >
+              @if (formData.color_exa === color) {
+                <svg class="w-5 h-5 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              }
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Custom Color Input -->
+      <div>
+        <p class="text-xs text-gray-600 font-medium mb-3">Color personalizado</p>
+        <div class="flex items-center space-x-3">
+          <input
+            type="color"
+            [(ngModel)]="formData.color_exa"
+            name="color_picker"
+            class="w-12 h-12 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-gray-300 transition-colors"
+          />
+          <input
+            type="text"
+            [(ngModel)]="formData.color_exa"
+            name="color_hex"
+            pattern="^#[0-9A-Fa-f]{6}$"
+            placeholder="#3B82F6"
+            class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all duration-200 font-mono text-sm"
+          />
+        </div>
+      </div>
+      @if (formErrors['color_exa']) {
+        <p class="text-red-500 text-sm mt-2">{{ formErrors['color_exa'] }}</p>
+      }
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="isLoading || !groupForm.form.valid"
+      class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-3"
+    >
+      @if (isLoading) {
+        <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <span>{{ editingGroup ? 'Actualizando...' : 'Creando...' }}</span>
+      } @else {
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span>{{ editingGroup ? 'Actualizar Grupo' : 'Crear Grupo' }}</span>
+      }
+    </button>
+  </form>
+</ion-content>
