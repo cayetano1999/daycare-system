@@ -192,15 +192,13 @@ export class GroupsPage implements OnInit {
     if (!this.groupToDelete) return;
 
     try {
-      const { error } = await this.supabaseService.deleteRecord('groupss', this.groupToDelete);
+      const { error } = await this.supabaseService.deleteRecord('groups', this.groupToDelete);
       
       if (error) {
         throw error;
       }
 
-      // Remove from local state
       this.groups = this.groups.filter(group => group.id !== this.groupToDelete);
-      
       this.showDeleteConfirm = false;
       this.groupToDelete = null;
     } catch (error: any) {
