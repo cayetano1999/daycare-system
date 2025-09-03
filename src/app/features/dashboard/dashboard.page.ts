@@ -333,6 +333,6 @@ export class DashboardPage implements OnDestroy {
 
   adminEvent(event: Event) {
     // Logic to manage the event
-    this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event } });
+    this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event, managementOptionSelected: '' } });
   }
 }

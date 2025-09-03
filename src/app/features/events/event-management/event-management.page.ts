@@ -7,6 +7,8 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { eventRoutes } from '../events.routes';
+import { EVENT_STATE, scrollToElement } from 'src/app/core/constants/constants';
 
 interface ManagementOption {
   id: string;
@@ -17,6 +19,7 @@ interface ManagementOption {
   bgColor: string;
   textColor: string;
   action: () => void;
+  url?: string;
 }
 
 @Component({
@@ -40,7 +43,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-green-500 to-emerald-600',
       bgColor: 'bg-green-50',
       textColor: 'text-green-700',
-      action: () => this.navigateToExpenses()
+      url: eventRoutes[2].path,
+      action: () => this.navigateToOption(eventRoutes[2].path || '')
     },
     {
       id: 'admins',
@@ -50,7 +54,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-blue-500 to-cyan-600',
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
-      action: () => this.navigateToAdmins()
+      url: eventRoutes[5].path,
+      action: () => this.navigateToOption(eventRoutes[5].path || '')
     },
     {
       id: 'Ticket',
@@ -60,7 +65,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-purple-500 to-violet-600',
       bgColor: 'bg-purple-50',
       textColor: 'text-purple-700',
-      action: () => this.navigateToTickets()
+      url: eventRoutes[8].path,
+      action: () => this.navigateToOption(eventRoutes[8].path || '')
     },
     {
       id: 'gifts',
@@ -70,7 +76,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-pink-500 to-rose-600',
       bgColor: 'bg-pink-50',
       textColor: 'text-pink-700',
-      action: () => this.navigateToGifts()
+      url: eventRoutes[3].path,
+      action: () => this.navigateToOption(eventRoutes[3].path || '')
     },
     {
       id: 'groups',
@@ -80,7 +87,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-indigo-500 to-blue-600',
       bgColor: 'bg-indigo-50',
       textColor: 'text-indigo-700',
-      action: () => this.navigateToGroups()
+      url: eventRoutes[4].path,
+      action: () => this.navigateToOption(eventRoutes[4].path || '')
     },
     {
       id: 'guests',
@@ -90,7 +98,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-orange-500 to-amber-600',
       bgColor: 'bg-orange-50',
       textColor: 'text-orange-700',
-      action: () => this.navigateToGuests()
+      url: eventRoutes[7].path,
+      action: () => this.navigateToOption(eventRoutes[7].path || '')
     },
     {
       id: 'table',
@@ -100,7 +109,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-black to-blue-600',
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
-      action: () => this.navigateToTables()
+      url: eventRoutes[6].path,
+      action: () => this.navigateToOption(eventRoutes[6].path || '')
     },
     {
       id: 'scanner',
@@ -110,7 +120,8 @@ export class EventManagementPage implements OnInit {
       color: 'from-violet-500 to-indigo-600',
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
-      action: () => this.navigateToScanner()
+      url: eventRoutes[9].path,
+      action: () => this.navigateToOption(eventRoutes[9].path || '')
     }
   ];
 
@@ -124,12 +135,39 @@ export class EventManagementPage implements OnInit {
 
   ) {
 
-   const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
     if (state?.event) this.event = state.event;
+    if (state?.managementOptionSelected?.length) {
+      EVENT_STATE.managementOptionSelected = state.managementOptionSelected;
+    }
   }
 
   ngOnInit() {
     // Initialize component
+  }
+
+  ionViewWillEnter() {
+    // Reset the selected management option when entering the view
+    // EVENT_STATE.managementOptionSelected = '';
+    console.log('Selected Management Option:', EVENT_STATE.managementOptionSelected);
+    if (EVENT_STATE.managementOptionSelected.length) {
+      scrollToElement(EVENT_STATE.managementOptionSelected);
+    }
+
+  }
+
+  ionViewWillLeave() {
+    // Reset the selected management option when leaving the view
+    if (!this.router.url.includes('events/'))
+      EVENT_STATE.managementOptionSelected = '';
+  }
+
+  async navigateToOption(url: string) {
+    const optionId = this.managementOptions.find(option => option.url === url)?.id;
+    if (optionId) {
+      EVENT_STATE.managementOptionSelected = optionId;
+    }
+    this.router.navigate([url], { state: { event: this.event }, replaceUrl: true });
   }
 
   formatDate(dateString: string): string {
