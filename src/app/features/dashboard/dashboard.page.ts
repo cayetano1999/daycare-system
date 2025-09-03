@@ -1,10 +1,14 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 import { NavController } from '@ionic/angular';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { Profile } from 'src/app/core/interface/profile.interface';
+import { DeviceService } from 'src/app/core/services/device/device.service';
+import { FirebaseMessagingService } from 'src/app/core/services/firebase/firebase-messaging.service';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
@@ -170,9 +174,13 @@ export class DashboardPage implements OnDestroy {
   private storageHelper = inject(StorageHelper);
   private router = inject(Router);
   private supabase = inject(SupabaseService);
+  private deviceService = inject(DeviceService);
+  private readonly fcm = inject(FirebaseMessagingService);
+  private readonly alertCtrl = inject(AlertControllerService);
 
 
-  constructor() {}
+
+  constructor() { }
 
   async ionViewWillEnter() {
     // Handle scroll effect for header
@@ -187,6 +195,8 @@ export class DashboardPage implements OnDestroy {
     window.addEventListener('scroll', this.scrollListener);
 
     await this.loadEvents();
+    await this.registerDeviceInfo();
+    await this.setPushNotification();
   }
 
   ngOnDestroy() {
@@ -303,7 +313,7 @@ export class DashboardPage implements OnDestroy {
     const date = new Date(timestamp);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) {
       return 'Hace unos minutos';
     } else if (diffInHours < 24) {
@@ -334,5 +344,55 @@ export class DashboardPage implements OnDestroy {
   adminEvent(event: Event) {
     // Logic to manage the event
     this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event, managementOptionSelected: '' } });
+  }
+
+  async registerDeviceInfo() {
+    if (this.user.device_id) return; // Already registered
+
+    const { device_id, device_name } = await this.deviceService.getDeviceInfo();
+
+    const { data, error } = await this.supabase.updateRecord('user_profiles', this.user.id, {
+      device_id,
+      device_name
+    });
+  }
+
+  async setPushNotification() {
+
+    const isWeb = !['android', 'ios'].includes(Capacitor.getPlatform());
+
+    if (isWeb) return;
+
+    const pushPermission = await this.storageHelper.getStorageKey(StorageKeys.PUSH_PERMISSIONS);
+
+    if (pushPermission === 'rejected') return; // User has denied permissions previously
+
+    if (pushPermission === 'granted' && this.user.push_token) return; // User has granted permissions and has a push token
+
+
+    if (!pushPermission) {
+      await this.alertCtrl.openModalPushNotification();
+    }
+    const permissionGranted = await this.fcm.requestPermissions();
+
+    if (permissionGranted) {
+      const token = await this.fcm.getToken();
+      if (token) {
+        const userTokenUpdated = this.user.push_token !== token;
+
+        if (userTokenUpdated) {
+          const { data, error } = await this.supabase.updateRecord('user_profiles', this.user.id, { push_token: token });
+          if (data) {
+
+            this.user.push_token = token;
+            await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, this.user);
+            await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'granted');
+          }
+        }
+      }
+    }
+    else {
+      await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'rejected');
+    }
   }
 }

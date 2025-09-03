@@ -79,14 +79,7 @@ export class AppComponent implements OnInit {
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
         this.loadFingerprint();
         await this.fcm.initializeFirebaseMessaging();
-        const permissionGranted = await this.fcm.requestPermissions();
-
-        if (permissionGranted) {
-            const token = await this.fcm.getToken();
-            if (token) {
-                await this.storageHelper.setStorageKey(StorageKeys.FCM_TOKEN, token);
-            }
-        }
+        
         await this.checkSession();
 
 

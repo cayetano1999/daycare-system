@@ -426,6 +426,9 @@
   </div>
 
   <!-- Gift Item Modal Component -->
+
+</ion-content>
+
   <app-gift-item-modal
     *ngIf="showItemModal"
     [isOpen]="showItemModal"
@@ -433,4 +436,3 @@
     (close)="closeItemModal()"
     (save)="handleItemSave($event)"
   ></app-gift-item-modal>
-</ion-content>

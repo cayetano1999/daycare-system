@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
@@ -8,6 +8,7 @@ import { Profile } from 'src/app/core/interface/profile.interface';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { ExpenseModalComponent } from './components/expense-modal/expense-modal.component';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 
 interface Expense {
   id: string;
@@ -50,11 +51,14 @@ export class EventExpensesPage implements OnInit {
   isLoading = false;
   isLoadingData = true;
 
-  alertController = inject(AlertController);
+  alertController = inject(AlertControllerService);
+  alertControllerIonic = inject(AlertController);
+
   navController = inject(NavController);
   supabaseService = inject(SupabaseService);
   router = inject(Router);
   storageHelper = inject(StorageHelper);
+  modalCtrl = inject(ModalController);
 
 
   /**
@@ -103,12 +107,7 @@ export class EventExpensesPage implements OnInit {
       }
     } catch (error: any) {
       console.error('Error loading expense data:', error);
-      
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudieron cargar los gastos del evento.',
-        buttons: ['OK']
-      });
+      const alert = await this.alertController.openFestivaAlert('danger', 'Error', 'No se pudieron cargar los gastos del evento.', true, 'Aceptar')
       await alert.present();
     } finally {
       this.isLoadingData = false;
@@ -185,14 +184,40 @@ export class EventExpensesPage implements OnInit {
   }
 
   // Modal management
-  openCreateModal() {
+  async openCreateModal() {
     this.editingExpense = null;
-    this.showModal = true;
+    const modal = await this.modalCtrl.create({
+      component: ExpenseModalComponent,
+      componentProps: {
+        isOpen: true,
+        editingExpense: this.editingExpense
+      }
+    });
+
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.handleExpenseSave(data);
+    }
   }
 
-  openEditModal(expense: Expense) {
+  async openEditModal(expense: Expense) {
     this.editingExpense = expense;
-    this.showModal = true;
+
+    // this.showModal = true;
+    const modal = await this.modalCtrl.create({
+      component: ExpenseModalComponent,
+      componentProps: {
+        isOpen: true,
+        editingExpense: this.editingExpense
+      }
+    });
+
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      this.handleExpenseSave(data);
+    }
   }
 
   closeModal() {
@@ -234,13 +259,7 @@ export class EventExpensesPage implements OnInit {
       this.closeModal();
     } catch (error: any) {
       console.error('Error saving expense:', error);
-      
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo guardar el gasto. Intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertController.openFestivaAlert('danger', 'Error', 'No se pudo guardar el gasto. Intenta nuevamente.', true, 'OK');
     } finally {
       this.isLoading = false;
     }
@@ -248,7 +267,7 @@ export class EventExpensesPage implements OnInit {
 
   // Budget editing
   async editBudget() {
-    const alert = await this.alertController.create({
+    const alert = await this.alertControllerIonic.create({
       header: 'Editar Presupuesto',
       message: 'Ingresa el nuevo presupuesto para tu evento:',
       inputs: [
@@ -286,9 +305,13 @@ export class EventExpensesPage implements OnInit {
   }
 
   // Delete management
-  confirmDelete(expenseId: string) {
+  async confirmDelete(expenseId: string) {
     this.expenseToDelete = expenseId;
-    this.showDeleteConfirm = true;
+    // this.showDeleteConfirm = true;
+    const result = await this.alertController.openFestivaAlert('danger', 'Confirmar eliminación', '¿Estás seguro de que deseas eliminar este gasto?', true, 'Cancelar', 'Eliminar');
+    if(result.action === 'confirm') {
+      await this.handleDelete();
+    }
   }
 
   cancelDelete() {
@@ -307,13 +330,7 @@ export class EventExpensesPage implements OnInit {
       this.expenseToDelete = null;
     } catch (error: any) {
       console.error('Error deleting expense:', error);
-      
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo eliminar el gasto. Intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertController.openFestivaAlert('danger', 'Error', 'No se pudo eliminar el gasto. Intenta nuevamente.', true, 'OK');
     }
   }
 

@@ -8,6 +8,7 @@ import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 
 export interface Guest {
   id: string;
@@ -79,6 +80,7 @@ export class EventGuestsPage implements OnInit {
   private readonly router = inject(Router);
   private storageHelper = inject(StorageHelper);
   private navCtrl = inject(NavController);
+  private alertController = inject(AlertControllerService);
 
 
   constructor(
@@ -163,8 +165,8 @@ export class EventGuestsPage implements OnInit {
       const { data, error } = await this.supabaseService.getRecords<Group>(
         'groups',
         ['*'],
-        'user_id',
-        this.user?.id || '', // TODO: Get current user ID
+        'event_id',
+        this.event?.id || '', // TODO: Get current user ID
         'created_at'
       );
 
@@ -361,9 +363,18 @@ export class EventGuestsPage implements OnInit {
   }
 
   // Export action
-  exportGuests() {
-    console.log('Export guests functionality - to be implemented');
-    this.showToast('Función de exportar en desarrollo', 'warning');
+  async exportGuests() {
+    await this.alertController.openModalAlert();
+    const { data, error } = await this.supabaseService.getSupabase().functions.invoke('export-guest-list', {
+      body: { items: this.guests, eventName: this.event?.name, fileName: `${this.event?.id}.pdf` },
+    } as any);
+    await this.alertController.dismiss();
+    if (error) {
+      console.error('Error al generar PDF:', error);
+    }
+    const url = data?.url as string;
+    if (url) window.open(url, '_blank');
+    return url;
   }
 
   // Navigation

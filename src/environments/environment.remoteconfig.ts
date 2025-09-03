@@ -51,6 +51,11 @@ export const remoteConfig = {
                 continue: ""
             }
         },
+        PUSH_NOTIFICATION: {
+            title: "",
+            subtitle: "",
+            options: ""
+        }
     },
     OPTIONS_ITEMS: {
         options: [] as any[],

@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <!-- <ion-title>Notificaciones <ion-icon></ion-icon></ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" class="text-center mt-1 px-3">
+        <ion-icon color="danger" style="font-size: 5rem;" name="notifications-circle-sharp"></ion-icon>
+        <ion-card-title>{{ pushNotificationScreen.title }}</ion-card-title>
+        <ion-card-subtitle>{{ pushNotificationScreen.subtitle }}</ion-card-subtitle>
+      </ion-col>
+      <ion-col size="12" class="px-3">
+
+        <ion-list class="mt-3">
+          <ion-item lines="none" *ngFor="let item of pushNotificationScreen.options">
+            <ion-icon slot="start" [color]="item.color" [name]="item.icon"></ion-icon>
+            <ion-label>
+              <b>{{ item.title }}</b>
+              <p>{{ item.description }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-row>
+      <!-- <ion-col size="6">
+        <ion-button (click)="declinePush()" color="light" expand="block" shape="round">
+           <b> {{ pushNotificationScreen.buttons.decline }}</b>
+        </ion-button>
+      </ion-col> -->
+      <ion-col size="12">
+        <ion-button (click)="activatePush()"  color="danger" expand="block" shape="round">
+           <b> {{ pushNotificationScreen.buttons.accept }}</b>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

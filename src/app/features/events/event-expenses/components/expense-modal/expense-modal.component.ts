@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
 interface Expense {
@@ -20,7 +21,7 @@ interface ExpenseFormData {
   styleUrls: ['./expense-modal.component.scss'],
   imports: [...StandAloneModules]
 })
-export class ExpenseModalComponent implements OnChanges {
+export class ExpenseModalComponent implements OnInit {
   @Input() isOpen = false;
   @Input() editingExpense: Expense | null = null;
   @Output() close = new EventEmitter<void>();
@@ -34,15 +35,17 @@ export class ExpenseModalComponent implements OnChanges {
 
   isLoading = false;
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['editingExpense'] && this.editingExpense) {
+  private modalCtrl = inject(ModalController);
+
+  ngOnInit() {
+    if (this.editingExpense) {
       // Populate form with editing data
       this.formData = {
         name: this.editingExpense.name,
         cost: this.editingExpense.cost,
         description: this.editingExpense.description
       };
-    } else if (changes['isOpen'] && this.isOpen && !this.editingExpense) {
+    } else if (this.isOpen && !this.editingExpense) {
       // Reset form for new expense
       this.resetForm();
     }
@@ -57,7 +60,7 @@ export class ExpenseModalComponent implements OnChanges {
   }
 
   closeModal() {
-    this.close.emit();
+    this.modalCtrl.dismiss();
     this.resetForm();
   }
 
@@ -73,15 +76,13 @@ export class ExpenseModalComponent implements OnChanges {
     this.isLoading = true;
 
     // Simulate loading delay
-    setTimeout(() => {
-      this.save.emit({
-        name: this.formData.name.trim(),
-        cost: this.formData.cost!,
-        description: this.formData.description.trim()
-      });
-      
-      this.isLoading = false;
-      this.resetForm();
-    }, 500);
+    this.modalCtrl.dismiss({
+      name: this.formData.name.trim(),
+      cost: this.formData.cost!,
+      description: this.formData.description.trim()
+    });
+
+    this.isLoading = false;
+    this.resetForm();
   }
 }

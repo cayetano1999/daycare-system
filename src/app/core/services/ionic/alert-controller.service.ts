@@ -8,6 +8,7 @@ import { UpdateProfileComponent } from 'src/app/shared/components/update-profile
 import { AlertMessageComponent, AlertMessageType } from 'src/app/shared/components/alert-message/alert-message.component';
 import { LanguageSelectorComponent } from 'src/app/shared/components/language-selector/language-selector.component';
 import { CustomDialogComponent } from 'src/app/shared/components/custom-dialog/custom-dialog.component';
+import { PushNotificationComponent } from 'src/app/shared/components/push-notification/push-notification.component';
 @Injectable({
     providedIn: 'root'
 })
@@ -252,6 +253,24 @@ export class AlertControllerService {
         const result = await modal.onDidDismiss();
         return result.data;
 
+    }
+
+     async openModalPushNotification() {
+        const modalPushNotification = await this.modalCtrl.create({
+            id: 'push_notification',
+            cssClass: 'full-modal',
+            component: PushNotificationComponent,
+            backdropDismiss: false,
+            initialBreakpoint: 1,
+            presentingElement: await this.modalCtrl.getTop(), // si usas iOS-style modal stack
+            breakpoints: [1],
+
+
+        });
+        //   await this.soundService.playAnswerReveal();
+        await modalPushNotification.present();
+        const result = await modalPushNotification.onDidDismiss();
+        return result;
     }
 
 }

@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { FirebaseMessaging, GetTokenResult } from '@capacitor-firebase/messaging';
 import { NavController, Platform } from '@ionic/angular';
+import { StorageHelper } from '../../helpers/storage.helper';
+import { StorageKeys } from '../../enums/storage.keys.enum';
+import { Profile } from '../../interface/profile.interface';
+import { SupabaseService } from '../supabase.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +13,8 @@ export class FirebaseMessagingService {
 
     private readonly navCtrl = inject(NavController);
     private readonly platform = inject(Platform);
+    private readonly storageHelper = inject(StorageHelper);
+    private readonly supabase = inject(SupabaseService);
 
 
     constructor() { }
@@ -36,8 +42,10 @@ export class FirebaseMessagingService {
     addListeners(): void {
         if (this.platform.is('mobileweb')) return;
 
-        FirebaseMessaging.addListener('tokenReceived', (token: GetTokenResult) => {
+        FirebaseMessaging.addListener('tokenReceived', async (token: GetTokenResult) => {
             console.log('Firebase token received:', token.token);
+            
+
         });
 
         FirebaseMessaging.addListener('notificationReceived', async (action: any) => {

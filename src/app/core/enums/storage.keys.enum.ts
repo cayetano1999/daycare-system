@@ -14,6 +14,7 @@ export enum StorageKeys  {
     USER_FULL_NAME = 'user_full_name',
     USER_DATA = 'user_data',
     SUPABASE_SESSION = 'supabase_session',
-    PRE_HOME_ANIMATION_DONE = 'pre_home_animation_done'
+    PRE_HOME_ANIMATION_DONE = 'pre_home_animation_done',
+    PUSH_PERMISSIONS = 'push_permissions'
 
 }
