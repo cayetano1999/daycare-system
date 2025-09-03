@@ -30,7 +30,7 @@ interface GiftList {
   styleUrls: ['./event-ticket.page.scss'],
   imports: [...StandAloneModules]
 })
-export class EventTicketsPage  {
+export class EventTicketsPage {
   ticket: EventTicket | null = null;
 
   isLoading: boolean = true;
@@ -39,7 +39,7 @@ export class EventTicketsPage  {
   showCreatedAnimation: boolean = false;
   event: FestivaEvent | null = null;
   qrCode: string = '';
-   private alertController = inject(AlertController);
+  private alertController = inject(AlertController);
   private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
   private router = inject(Router);
@@ -60,9 +60,8 @@ export class EventTicketsPage  {
 
   async ionViewWillEnter() {
 
-       const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
     if (state?.event) this.event = state.event;
-    console.log('From event ticket:', this.event);
     await this.loadTicket();
 
     await this.generateQRCode();
@@ -72,12 +71,12 @@ export class EventTicketsPage  {
     // Generate QR code content: eventId + ticketId (or random for new tickets)
     const ticketId = this.ticket?.id || '';
     this.qrCode = await qr.toDataURL(`${this.event?.id || ''}-${ticketId}`);
-    
+
   }
 
   async loadTicket() {
     this.isLoading = true;
-    
+
     try {
       const { data, error } = await this.supabaseService.getRecord(
         'event_ticket',
@@ -189,7 +188,7 @@ export class EventTicketsPage  {
 
       this.showToast('Ticket eliminado exitosamente', 'success');
       this.ticket = null;
-      
+
     } catch (error) {
       console.error('Error deleting ticket:', error);
       this.showToast('Error al eliminar el ticket', 'error');
@@ -200,7 +199,7 @@ export class EventTicketsPage  {
 
   shareTicket() {
     if (!this.ticket) return;
-    
+
     // TODO: Implement share functionality
     console.log('Sharing ticket:', this.ticket.url);
     this.showToast('Función de compartir en desarrollo', 'warning');
@@ -220,8 +219,8 @@ export class EventTicketsPage  {
 
   goBack() {
     // TODO: Implement navigation back
-    console.log('Navigate back');
-    this.navController.back();
+    this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
+
   }
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
@@ -234,7 +233,7 @@ export class EventTicketsPage  {
     console.log('Leaving event ticket page');
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras) {
-      navigation.extras.state = { };
+      navigation.extras.state = {};
     }
   }
 }

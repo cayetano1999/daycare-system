@@ -22,7 +22,7 @@ interface EventTable {
   selector: 'app-event-tables',
   templateUrl: './event-tables.page.html',
   styleUrls: ['./event-tables.page.scss'],
-  imports:[...StandAloneModules, AddTableModalComponent]
+  imports: [...StandAloneModules, AddTableModalComponent]
 })
 export class EventTablesPage implements OnInit {
   tables: EventTable[] = [];
@@ -46,25 +46,25 @@ export class EventTablesPage implements OnInit {
     private modalController: ModalController
   ) {
 
-    const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const event = navigation.extras.state['event'];
-      this.event = event;
-      this.eventId = event.id;
-    }
+
   }
 
   ngOnInit() {
   }
 
   async ionViewWillEnter() {
+       const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
+
+    if (this.event) {
+      this.eventId = this.event.id || '';
+    }
     await this.loadTables();
   }
 
   async loadTables() {
     this.isLoading = true;
-    
+
     try {
       const { data, error }: any = await this.supabaseService.getRecords<EventTable>(
         'event_tables',
@@ -150,7 +150,7 @@ export class EventTablesPage implements OnInit {
 
       this.showToast('Mesa eliminada exitosamente', 'success');
       await this.loadTables(); // Reload tables list
-      
+
     } catch (error) {
       console.error('Error deleting table:', error);
       this.showToast('Error al eliminar la mesa', 'error');
@@ -180,8 +180,8 @@ export class EventTablesPage implements OnInit {
 
   goBack() {
     // TODO: Implement navigation back
-    console.log('Navigate back');
-    this.navCtrl.back();
+    this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
+
   }
 
   async showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {

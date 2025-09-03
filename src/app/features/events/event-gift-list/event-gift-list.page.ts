@@ -62,7 +62,7 @@ export class GiftListPage implements OnInit {
   showDeleteConfirm = false;
   itemToDelete: number | null = null;
   showExportOptions = false;
-  
+
   isLoadingData = true;
   isImporting = false;
   isExporting = false;
@@ -76,31 +76,31 @@ export class GiftListPage implements OnInit {
   private storageHelper = inject(StorageHelper);
   private router = inject(Router);
 
-    /**
-     *
-     */
-    constructor() {
-        const navigation = this.router.getCurrentNavigation();
-      console.log(navigation);
-      if (navigation && navigation.extras && navigation.extras.state) {
-        const  event  = navigation.extras.state['event'];
-        this.event = event;
-        this.eventId = event.id;
-      }
-    }
+  /**
+   *
+   */
+  constructor() {
+
+  }
 
   ngOnInit() {
     // Component initialization
   }
 
   async ionViewWillEnter() {
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
+
+    if(this.event) {
+      this.eventId = this.event.id || '';
+    }
     this.user = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
     await this.loadGiftListData();
   }
 
   async loadGiftListData() {
     this.isLoadingData = true;
-    
+
     try {
       // Check if gift list exists for this event and user
       const { data: existingList, error: fetchError } = await this.supabaseService.getRecord(
@@ -127,7 +127,7 @@ export class GiftListPage implements OnInit {
       }
     } catch (error: any) {
       console.error('Error loading gift list data:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudo cargar la lista de regalos del evento.',
@@ -153,7 +153,7 @@ export class GiftListPage implements OnInit {
       };
 
       const { data, error } = await this.supabaseService.createRecord('gift_list', newGiftList);
-      
+
       if (error) {
         throw error;
       }
@@ -316,11 +316,11 @@ export class GiftListPage implements OnInit {
 
       // Update in Supabase
       await this.updateGiftList();
-      
+
       this.closeItemModal();
     } catch (error: any) {
       console.error('Error saving item:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudo guardar el artículo. Intenta nuevamente.',
@@ -340,7 +340,7 @@ export class GiftListPage implements OnInit {
       await this.updateGiftList();
     } catch (error: any) {
       console.error('Error updating item status:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudo actualizar el estado del artículo.',
@@ -367,15 +367,15 @@ export class GiftListPage implements OnInit {
     try {
       const updatedItems = this.giftList.items.filter((_, index) => index !== this.itemToDelete);
       this.giftList.items = updatedItems;
-      
+
       // Update in Supabase
       await this.updateGiftList();
-      
+
       this.showDeleteConfirm = false;
       this.itemToDelete = null;
     } catch (error: any) {
       console.error('Error deleting item:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudo eliminar el artículo. Intenta nuevamente.',
@@ -393,12 +393,12 @@ export class GiftListPage implements OnInit {
     }
   }
 
-   async handleExcelImport(file: File) {
+  async handleExcelImport(file: File) {
     if (!file) return;
 
     // Validate file type - Accept CSV files
     const validTypes = ['text/csv', 'application/vnd.ms-excel'];
-    
+
     if (!validTypes.includes(file.type) && !file.name.toLowerCase().endsWith('.csv')) {
       const alert = await this.alertController.create({
         header: 'Archivo inválido',
@@ -414,7 +414,7 @@ export class GiftListPage implements OnInit {
     try {
       // Parse CSV file
       const csvText = await this.readFileAsText(file);
-      
+
       const parseResult = Papa.parse(csvText, {
         header: true,
         skipEmptyLines: true,
@@ -426,7 +426,7 @@ export class GiftListPage implements OnInit {
       }
 
       const csvData = parseResult.data as any[];
-      
+
       // Validate CSV structure
       if (csvData.length === 0) {
         throw new Error('El archivo CSV está vacío');
@@ -482,7 +482,7 @@ export class GiftListPage implements OnInit {
         }
 
         // Check for duplicates in current list
-        const isDuplicate = this.giftList.items.some(existingItem => 
+        const isDuplicate = this.giftList.items.some(existingItem =>
           existingItem.article_name.toLowerCase() === articleName.toLowerCase()
         );
 
@@ -492,7 +492,7 @@ export class GiftListPage implements OnInit {
         }
 
         // Check for duplicates in imported items
-        const isDuplicateInImport = importedItems.some(importedItem => 
+        const isDuplicateInImport = importedItems.some(importedItem =>
           importedItem.article_name.toLowerCase() === articleName.toLowerCase()
         );
 
@@ -517,7 +517,7 @@ export class GiftListPage implements OnInit {
           buttons: ['OK']
         });
         await alert.present();
-        
+
         // If no valid items, stop here
         if (importedItems.length === 0) {
           return;
@@ -538,7 +538,7 @@ export class GiftListPage implements OnInit {
       await alert.present();
     } catch (error) {
       console.error('Error importing Excel:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error de importación',
         message: error instanceof Error ? error.message : 'Error al importar el archivo CSV. Verifica el formato.',
@@ -582,47 +582,47 @@ export class GiftListPage implements OnInit {
   async handleExportPDF() {
     this.isExporting = true;
     this.showExportOptions = false;
-    
+
     try {
       // Generate PDF report
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      
+
       // Header
       pdf.setFillColor(0, 0, 0);
       pdf.rect(0, 0, pageWidth, 40, 'F');
-      
+
       // Title
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(24);
       pdf.setFont('helvetica', 'bold');
       pdf.text('Lista de Regalos', 20, 25);
-      
+
       // Event name
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'normal');
       pdf.text(this.eventName, 20, 35);
-      
+
       // List info
       pdf.setTextColor(0, 0, 0);
       pdf.setFontSize(18);
       pdf.setFont('helvetica', 'bold');
       pdf.text(this.giftList.name, 20, 55);
-      
+
       if (this.giftList.description) {
         pdf.setFontSize(12);
         pdf.setFont('helvetica', 'normal');
         const splitDescription = pdf.splitTextToSize(this.giftList.description, pageWidth - 40);
         pdf.text(splitDescription, 20, 65);
       }
-      
+
       // Stats
       let yPosition = this.giftList.description ? 85 : 70;
       pdf.setFontSize(12);
       pdf.setFont('helvetica', 'bold');
       pdf.text(`Total: ${this.totalItems} artículos | Comprados: ${this.boughtItems} | Pendientes: ${this.remainingItems}`, 20, yPosition);
-      
+
       // Store names
       if (this.giftList.store_names.length > 0) {
         yPosition += 15;
@@ -632,10 +632,10 @@ export class GiftListPage implements OnInit {
         pdf.setFont('helvetica', 'normal');
         pdf.text(this.giftList.store_names.join(', '), 20, yPosition);
       }
-      
+
       // Items table
       yPosition += 20;
-      
+
       // Table header
       pdf.setFillColor(240, 240, 240);
       pdf.rect(20, yPosition - 5, pageWidth - 40, 12, 'F');
@@ -644,46 +644,46 @@ export class GiftListPage implements OnInit {
       pdf.text('Estado', 25, yPosition + 3);
       pdf.text('Código', 55, yPosition + 3);
       pdf.text('Artículo', 95, yPosition + 3);
-      
+
       yPosition += 15;
-      
+
       // Items
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
-      
+
       for (let i = 0; i < this.giftList.items.length; i++) {
         const item = this.giftList.items[i];
-        
+
         // Check if we need a new page
         if (yPosition > pageHeight - 30) {
           pdf.addPage();
           yPosition = 20;
         }
-        
+
         // Status
         pdf.setTextColor(item.bought ? 34 : 234, item.bought ? 197 : 88, item.bought ? 94 : 12);
         pdf.text(item.bought ? ' Comprado' : ' Pendiente', 25, yPosition);
-        
+
         // Code
         pdf.setTextColor(0, 0, 0);
         pdf.text(item.article_code || '-', 55, yPosition);
-        
+
         // Name (with text wrapping)
         const splitName = pdf.splitTextToSize(item.article_name, pageWidth - 115);
         pdf.text(splitName, 95, yPosition);
-        
+
         yPosition += Math.max(8, splitName.length * 5);
       }
-      
+
       // Footer
       const footerY = pageHeight - 15;
       pdf.setTextColor(128, 128, 128);
       pdf.setFontSize(8);
       pdf.text(`Generado el ${new Date().toLocaleDateString('es-ES')} - Festiva`, 20, footerY);
-      
+
       // Save PDF
       pdf.save(`${this.giftList.name.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
-      
+
       const alert = await this.alertController.create({
         header: 'Exportación exitosa',
         message: 'Lista exportada como PDF exitosamente',
@@ -692,7 +692,7 @@ export class GiftListPage implements OnInit {
       await alert.present();
     } catch (error) {
       console.error('Error exporting PDF:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error de exportación',
         message: 'Error al exportar PDF',
@@ -707,7 +707,7 @@ export class GiftListPage implements OnInit {
   async handleExportPNG() {
     this.isExporting = true;
     this.showExportOptions = false;
-    
+
     try {
       // Create a temporary HTML element for the report
       const reportElement = document.createElement('div');
@@ -720,7 +720,7 @@ export class GiftListPage implements OnInit {
         top: -9999px;
         left: -9999px;
       `;
-      
+
       reportElement.innerHTML = `
         <!-- Header -->
         <div style="background: black; color: white; padding: 30px; border-radius: 20px; margin-bottom: 30px;">
@@ -765,10 +765,10 @@ export class GiftListPage implements OnInit {
                   border-radius: 20px; 
                   font-size: 12px; 
                   font-weight: 600;
-                  ${item.bought 
-                    ? 'background: #dcfce7; color: #166534;' 
-                    : 'background: #fed7aa; color: #c2410c;'
-                  }
+                  ${item.bought
+          ? 'background: #dcfce7; color: #166534;'
+          : 'background: #fed7aa; color: #c2410c;'
+        }
                 ">
                   ${item.bought ? '✓ Comprado' : '○ Pendiente'}
                 </span>
@@ -786,9 +786,9 @@ export class GiftListPage implements OnInit {
           </p>
         </div>
       `;
-      
+
       document.body.appendChild(reportElement);
-      
+
       // Generate canvas from HTML
       const canvas = await html2canvas(reportElement, {
         backgroundColor: '#ffffff',
@@ -796,16 +796,16 @@ export class GiftListPage implements OnInit {
         useCORS: true,
         allowTaint: true
       });
-      
+
       // Remove temporary element
       document.body.removeChild(reportElement);
-      
+
       // Create download link
       const link = document.createElement('a');
       link.download = `${this.giftList.name.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
-      
+
       const alert = await this.alertController.create({
         header: 'Exportación exitosa',
         message: 'Lista exportada como imagen PNG exitosamente',
@@ -814,7 +814,7 @@ export class GiftListPage implements OnInit {
       await alert.present();
     } catch (error) {
       console.error('Error exporting PNG:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error de exportación',
         message: 'Error al exportar imagen',
@@ -828,7 +828,8 @@ export class GiftListPage implements OnInit {
 
   // Navigation
   goBack() {
-    this.navController.back();
+    this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
+
   }
 
   // Helper for template
@@ -836,34 +837,34 @@ export class GiftListPage implements OnInit {
     return index;
   }
 
-    async handleExportPDF2() {
+  async handleExportPDF2() {
     this.isExporting = true;
     this.showExportOptions = false;
-    
+
     try {
       // Generate HTML content for the report
       const htmlContent = this.generateReportHTML();
-      
+
       // Check if running on mobile device
       const deviceInfo = await Device.getInfo();
       const isNative = Capacitor.isNativePlatform();
-      
+
       if (isNative) {
         // For mobile devices, save as HTML file and share
         const fileName = `${this.giftList.name.replace(/[^a-zA-Z0-9]/g, '_')}_lista_regalos.html`;
-        
+
         await Filesystem.writeFile({
           path: fileName,
           data: htmlContent,
           directory: Directory.Cache,
           encoding: Encoding.UTF8
         });
-        
+
         const fileUri = await Filesystem.getUri({
           directory: Directory.Cache,
           path: fileName
         });
-        
+
         await Share.share({
           title: 'Lista de Regalos',
           text: `Lista de regalos para ${this.eventName}`,
@@ -880,7 +881,7 @@ export class GiftListPage implements OnInit {
         link.click();
         URL.revokeObjectURL(url);
       }
-      
+
       const alert = await this.alertController.create({
         header: 'Exportación exitosa',
         message: 'Lista exportada como PDF exitosamente',
@@ -889,7 +890,7 @@ export class GiftListPage implements OnInit {
       await alert.present();
     } catch (error) {
       console.error('Error exporting PDF:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error de exportación',
         message: 'Error al exportar PDF',
@@ -904,30 +905,30 @@ export class GiftListPage implements OnInit {
   async handleExportPNG2() {
     this.isExporting = true;
     this.showExportOptions = false;
-    
+
     try {
       // Generate CSV content for sharing
       const csvContent = this.generateCSVContent();
-      
+
       // Check if running on mobile device
       const isNative = Capacitor.isNativePlatform();
-      
+
       if (isNative) {
         // For mobile devices, save as CSV file and share
         const fileName = `${this.giftList.name.replace(/[^a-zA-Z0-9]/g, '_')}_lista_regalos.csv`;
-        
+
         await Filesystem.writeFile({
           path: fileName,
           data: csvContent,
           directory: Directory.Cache,
           encoding: Encoding.UTF8
         });
-        
+
         const fileUri = await Filesystem.getUri({
           directory: Directory.Cache,
           path: fileName
         });
-        
+
         await Share.share({
           title: 'Lista de Regalos',
           text: `Lista de regalos para ${this.eventName}`,
@@ -944,7 +945,7 @@ export class GiftListPage implements OnInit {
         link.click();
         URL.revokeObjectURL(url);
       }
-      
+
       const alert = await this.alertController.create({
         header: 'Exportación exitosa',
         message: 'Lista exportada como imagen PNG exitosamente',
@@ -953,7 +954,7 @@ export class GiftListPage implements OnInit {
       await alert.present();
     } catch (error) {
       console.error('Error exporting PNG:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error de exportación',
         message: 'Error al exportar imagen',
@@ -1150,7 +1151,7 @@ export class GiftListPage implements OnInit {
       item.article_code || '-',
       item.article_name
     ]);
-    
+
     const csvContent = [
       `# Lista de Regalos: ${this.giftList.name}`,
       `# Evento: ${this.eventName}`,
@@ -1160,7 +1161,7 @@ export class GiftListPage implements OnInit {
       headers.join(','),
       ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
-    
+
     return csvContent;
   }
 }

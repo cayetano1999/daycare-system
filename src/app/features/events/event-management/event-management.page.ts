@@ -124,12 +124,8 @@ export class EventManagementPage implements OnInit {
 
   ) {
 
-    const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const event = navigation.extras.state['event'];
-      this.event = event;
-    }
+   const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
   }
 
   ngOnInit() {

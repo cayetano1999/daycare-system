@@ -74,19 +74,21 @@ export class EventMembersPage implements OnInit {
 
   constructor(private supabaseService: SupabaseService) {
 
-    const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const  event  = navigation.extras.state['event'];
-      this.event = event;
-      this.eventId = event.id;
-    }
+    
   }
 
   ngOnInit() {
   }
 
   async ionViewWillEnter() {
+   
+     const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
+
+    if (this.event) {
+      this.eventId = this.event.id || '';
+    }
+
     this.user = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
     await this.loadMembers();
   }
@@ -368,8 +370,8 @@ export class EventMembersPage implements OnInit {
 
   goBack() {
     // TODO: Implement navigation back
-    console.log('Navigate back');
-    this.navCtrl.back();
+        this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
+
   }
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {

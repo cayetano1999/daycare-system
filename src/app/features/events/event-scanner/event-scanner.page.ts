@@ -48,8 +48,6 @@ export class EventScannerPage implements OnInit {
 
     try {
       // Check permission before scanning
-    
-
       // Hide background to show camera
       document.body.classList.add('scanner-active');
       

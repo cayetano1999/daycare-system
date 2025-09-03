@@ -28,24 +28,24 @@ interface GroupFormData {
   selector: 'app-groups',
   templateUrl: './groups.page.html',
   styleUrls: ['./groups.page.scss'],
-  imports:[...StandAloneModules, ModalGroupComponent]
+  imports: [...StandAloneModules, ModalGroupComponent]
 })
 export class GroupsPage implements OnInit {
   groups: Group[] = [];
-  
+
   showModal = false;
   editingGroup: Group | null = null;
   showDeleteConfirm = false;
   groupToDelete: string | null = null;
-  
+
   isLoading = false;
   isLoadingData = true;
-  
+
   formData: GroupFormData = {
     name: '',
     color_exa: '#3B82F6'
   };
-  
+
   formErrors: Record<string, string> = {};
 
   // Predefined colors for quick selection
@@ -76,12 +76,7 @@ export class GroupsPage implements OnInit {
     private storageHelper: StorageHelper,
     private alertCtrl: AlertControllerService
   ) {
-     const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const event = navigation.extras.state['event'];
-      this.event = event;
-    }
+
   }
 
   ngOnInit() {
@@ -89,13 +84,16 @@ export class GroupsPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
+
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA);
     await this.loadGroups();
   }
 
   async loadGroups() {
     this.isLoadingData = true;
-    
+
     try {
       const { data, error } = await this.supabaseService.getRecords('groups', ['*'], 'event_id', this.event?.id || '', 'created_at');
 
@@ -106,7 +104,7 @@ export class GroupsPage implements OnInit {
       this.groups = data as any[] || [];
     } catch (error: any) {
       console.error('Error loading groups:', error);
-      
+
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudieron cargar los grupos.',
@@ -125,11 +123,11 @@ export class GroupsPage implements OnInit {
 
   get mostRecentGroup(): string {
     if (this.groups.length === 0) return 'Ninguno';
-    
-    const sorted = [...this.groups].sort((a, b) => 
+
+    const sorted = [...this.groups].sort((a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
-    
+
     return sorted[0].name;
   }
 
@@ -175,7 +173,7 @@ export class GroupsPage implements OnInit {
     const { data } = await modal.onDidDismiss();
     if (data && data.action === 'update') {
       // Update group in local state
-      this.groups = this.groups.map(g => 
+      this.groups = this.groups.map(g =>
         g.id === group.id ? data.data : g
       );
     }
@@ -208,7 +206,7 @@ export class GroupsPage implements OnInit {
 
     try {
       const { error } = await this.supabaseService.deleteRecord('groups', this.groupToDelete);
-      
+
       if (error) {
         throw error;
       }
@@ -232,7 +230,8 @@ export class GroupsPage implements OnInit {
   }
 
   goBack() {
-    this.navController.back();
+    this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
+
   }
 
   // Helper for template

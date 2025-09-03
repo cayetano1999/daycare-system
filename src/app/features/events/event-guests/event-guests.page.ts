@@ -61,7 +61,7 @@ export class EventGuestsPage implements OnInit {
   filteredGuests: Guest[] = [];
   groups: Group[] = [];
   tables: Table[] = [];
-  
+
   eventId: string = ''; // TODO: Get from route params
   eventName: string = 'de María y José'; // TODO: Get from event data
   isLoading: boolean = true;
@@ -85,14 +85,7 @@ export class EventGuestsPage implements OnInit {
     private supabaseService: SupabaseService,
     private modalController: ModalController
   ) {
-     const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const event = navigation.extras.state['event'];
-      this.event = event;
-      this.eventId = event.id;
 
-    }
   }
 
   ngOnInit() {
@@ -100,13 +93,19 @@ export class EventGuestsPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
+
+    if (this.event) {
+      this.eventId = this.event.id || '';
+    }
     this.user = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
     await this.loadData();
   }
 
   async loadData() {
     this.isLoading = true;
-    
+
     try {
       // Load all data in parallel
       await Promise.all([
@@ -209,7 +208,7 @@ export class EventGuestsPage implements OnInit {
     // Filter by name
     if (this.searchName.trim()) {
       const searchTerm = this.searchName.toLowerCase().trim();
-      filtered = filtered.filter(guest => 
+      filtered = filtered.filter(guest =>
         guest.name.toLowerCase().includes(searchTerm)
       );
     }
@@ -234,19 +233,19 @@ export class EventGuestsPage implements OnInit {
   }
 
   getTotalCompanions(): number {
-    return this.filteredGuests.reduce((total, guest) => 
+    return this.filteredGuests.reduce((total, guest) =>
       total + (guest.companions_number || 0), 0
     );
   }
 
   getAcceptedGuests(): number {
-    return this.filteredGuests.filter(guest => 
+    return this.filteredGuests.filter(guest =>
       guest.request_status === 'ACCEPTED'
     ).length;
   }
 
   getSentInvitations(): number {
-    return this.filteredGuests.filter(guest => 
+    return this.filteredGuests.filter(guest =>
       guest.request_status === 'SENT'
     ).length;
   }
@@ -351,7 +350,7 @@ export class EventGuestsPage implements OnInit {
 
       this.showToast('Invitado eliminado exitosamente', 'success');
       this.loadGuests();
-      
+
     } catch (error) {
       console.error('Error deleting guest:', error);
       this.showToast('Error al eliminar el invitado', 'error');
@@ -370,8 +369,8 @@ export class EventGuestsPage implements OnInit {
   // Navigation
   goBack() {
     // TODO: Implement navigation back
-    console.log('Navigate back');
-    this.navCtrl.back();
+    this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
+
   }
 
   // Toast helper

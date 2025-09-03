@@ -61,12 +61,7 @@ export class EventExpensesPage implements OnInit {
    *
    */
   constructor() {
-      const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const  event  = navigation.extras.state['event'];
-      this.event = event;
-    }
+    
   }
 
   ngOnInit() {
@@ -74,6 +69,8 @@ export class EventExpensesPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+     const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.event) this.event = state.event;
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA);
     await this.loadExpenseData();
 
@@ -322,7 +319,8 @@ export class EventExpensesPage implements OnInit {
 
   // Navigation
   goBack() {
-    this.navController.back();
+    // this.navController.back();
+    this.router.navigate(['/events/management'], { state: { event: this.event }, replaceUrl: true });
   }
 
   // Helper for template
