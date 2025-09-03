@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import * as qr from 'qrcode';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 interface EventTicket {
   id: string;
@@ -28,7 +29,7 @@ interface GiftList {
   selector: 'app-event-ticket',
   templateUrl: './event-ticket.page.html',
   styleUrls: ['./event-ticket.page.scss'],
-  imports: [...StandAloneModules]
+  imports: [...StandAloneModules, RoleAccessDirective]
 })
 export class EventTicketsPage {
   ticket: EventTicket | null = null;

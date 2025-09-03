@@ -9,6 +9,7 @@ import { ModalGroupComponent } from './components/modal-group/modal-group.compon
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Router } from '@angular/router';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 export interface Group {
   id: string;
@@ -28,7 +29,7 @@ interface GroupFormData {
   selector: 'app-groups',
   templateUrl: './groups.page.html',
   styleUrls: ['./groups.page.scss'],
-  imports: [...StandAloneModules, ModalGroupComponent]
+  imports: [...StandAloneModules, RoleAccessDirective]
 })
 export class GroupsPage implements OnInit {
   groups: Group[] = [];
@@ -70,7 +71,6 @@ export class GroupsPage implements OnInit {
 
   constructor(
     private alertController: AlertController,
-    private navController: NavController,
     private modalController: ModalController,
     private supabaseService: SupabaseService,
     private storageHelper: StorageHelper,

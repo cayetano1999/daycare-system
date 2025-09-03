@@ -9,6 +9,7 @@ import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 export interface Guest {
   id: string;
@@ -55,7 +56,7 @@ interface Table {
   selector: 'app-event-guests',
   templateUrl: './event-guests.page.html',
   styleUrls: ['./event-guests.page.scss'],
-  imports: [...StandAloneModules]
+  imports: [...StandAloneModules, RoleAccessDirective]
 })
 export class EventGuestsPage implements OnInit {
   guests: Guest[] = [];
@@ -318,7 +319,8 @@ export class EventGuestsPage implements OnInit {
         eventId: this.eventId,
         guest: guest,
         groups: this.groups,
-        tables: this.tables
+        tables: this.tables,
+        event: this.event
       }
     });
 

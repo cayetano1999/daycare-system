@@ -40,5 +40,6 @@ export function scrollToElement(elementId: string) {
 }
 
 export const EVENT_STATE = {
-    managementOptionSelected: ''
+    managementOptionSelected: '',
+    eventRole: ''
 }

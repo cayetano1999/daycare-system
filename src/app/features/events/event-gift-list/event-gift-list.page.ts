@@ -15,6 +15,7 @@ import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 interface GiftItem {
   article_code?: string;
@@ -39,7 +40,7 @@ interface GiftListData {
   selector: 'app-gift-list',
   templateUrl: './event-gift-list.page.html',
   styleUrls: ['./event-gift-list.page.scss'],
-  imports: [...StandAloneModules, GiftItemModalComponent]
+  imports: [...StandAloneModules, GiftItemModalComponent, RoleAccessDirective]
 })
 export class GiftListPage implements OnInit {
   @Input() eventId: string = '';

@@ -11,4 +11,8 @@ export interface FestivaEvent {
   id?: string;
   status: string;
   location: string;
+  role?: string;
+  owner?: boolean;
 }
+
+

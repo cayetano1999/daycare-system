@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { NavController } from '@ionic/angular';
+import { EVENT_STATE } from 'src/app/core/constants/constants';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { DeviceService } from 'src/app/core/services/device/device.service';
 import { FirebaseMessagingService } from 'src/app/core/services/firebase/firebase-messaging.service';
@@ -13,15 +15,15 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
-interface Event {
-  id: string;
-  name: string;
-  description: string;
-  event_date: string;
-  status: 'ACTIVE' | 'DRAFT' | 'COMPLETED' | 'CANCELLED';
-  plan_type: 'Starter' | 'Essential' | 'Premium' | 'Elite';
-  image: string;
-}
+// interface Event {
+//   id: string;
+//   name: string;
+//   description: string;
+//   event_date: string;
+//   status: 'ACTIVE' | 'DRAFT' | 'COMPLETED' | 'CANCELLED';
+//   plan_type: 'Starter' | 'Essential' | 'Premium' | 'Elite';
+//   image: string;
+// }
 
 interface ExampleInvitation {
   id: string;
@@ -57,53 +59,10 @@ export class DashboardPage implements OnDestroy {
   user!: Profile;
 
   // Mock events data
-  events: Event[] = [
-    {
-      id: '1',
-      name: 'Boda de María y José',
-      description: 'Una celebración mágica llena de amor y alegría en un hermoso jardín',
-      event_date: '2024-06-15T18:00:00',
-      status: 'ACTIVE',
-      plan_type: 'Premium',
-      image: 'https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
-    },
-    {
-      id: '2',
-      name: 'Cumpleaños de Isabella',
-      description: 'Celebrando los 15 años de nuestra princesa con una fiesta inolvidable',
-      event_date: '2024-07-20T16:00:00',
-      status: 'DRAFT',
-      plan_type: 'Elite',
-      image: 'https://images.pexels.com/photos/1729931/pexels-photo-1729931.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
-    },
-    {
-      id: '3',
-      name: 'Bautizo de Santiago',
-      description: 'Un momento especial para dar la bienvenida a Santiago en la fe',
-      event_date: '2024-05-10T11:00:00',
-      status: 'COMPLETED',
-      plan_type: 'Essential',
-      image: 'https://images.pexels.com/photos/8923659/pexels-photo-8923659.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
-    },
-    {
-      id: '4',
-      name: 'Graduación de Carlos',
-      description: 'Celebrando el logro académico de Carlos con familia y amigos',
-      event_date: '2024-08-05T19:00:00',
-      status: 'ACTIVE',
-      plan_type: 'Starter',
-      image: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
-    },
-    {
-      id: '5',
-      name: 'Aniversario de Bodas',
-      description: 'Celebrando 25 años de amor y compañía en una cena íntima',
-      event_date: '2024-09-12T20:00:00',
-      status: 'ACTIVE',
-      plan_type: 'Premium',
-      image: 'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
-    }
+  events: FestivaEvent[] = [
   ];
+
+  eventsToManage: FestivaEvent[] = [];
 
   // Mock example invitations
   exampleInvitations: ExampleInvitation[] = [
@@ -193,10 +152,11 @@ export class DashboardPage implements OnDestroy {
     };
 
     window.addEventListener('scroll', this.scrollListener);
-
+    await this.alertCtrl.openModalAlert();
     await this.loadEvents();
     await this.registerDeviceInfo();
     await this.setPushNotification();
+    await this.alertCtrl.dismiss();
   }
 
   ngOnDestroy() {
@@ -205,10 +165,11 @@ export class DashboardPage implements OnDestroy {
     }
   }
 
-  get filteredEvents(): Event[] {
+  get filteredEvents(): FestivaEvent[] {
+
     return this.events.filter(event =>
-      event.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      event.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      event?.name?.toLowerCase().includes(this.searchQuery?.toLowerCase()) ||
+      event?.description?.toLowerCase().includes(this.searchQuery?.toLowerCase())
     );
   }
 
@@ -218,14 +179,54 @@ export class DashboardPage implements OnDestroy {
 
   async loadEvents() {
     // Logic to load events
-    const { data, error } = await this.supabase.getRecords<Event[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
+    const { data, error } = await this.supabase.getRecords<FestivaEvent[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
     console.log('Loaded events:', data);
     if (error) {
       console.error('Error loading events:', error);
       this.events = [];
     } else {
-      this.events = data as any[];
+      this.events = this.mapEventsForAdmin(data as any[]);
+    await this.loadEventsToManage();
+
     }
+  }
+
+  async loadEventsToManage() {
+    // Logic to load events
+    const { data, error }: any = await this.supabase.getRecords<FestivaEvent[]>('event_members',
+      [
+        '*',
+        'events(*)',
+      ],
+      'user_id',
+      this.user.id,
+      'created_at');
+    console.log('Loaded events for manage:', data);
+    if (error) {
+      console.error('Error loading events:', error);
+      this.events = [];
+    } else {
+      const result = this.mapEventsToManageRole(data || []);
+      console.log('Mapped events with role:', result);
+      this.events = [this.events, ...result].flat();
+    }
+  }
+
+  //metodo para hacer map de los eventos a administrar agregandole la propiedad role
+  mapEventsToManageRole(events: any[]): any[] {
+    return events.map(ev => ({
+      ...ev.events,
+      role: ev.role,
+      owner: false,
+    }));
+  }
+
+   mapEventsForAdmin(events: any[]): any[] {
+    return events.map(ev => ({
+      ...ev,
+      role: 'Admin',
+      owner: true,
+    }));
   }
 
   clearSearch() {
@@ -324,8 +325,8 @@ export class DashboardPage implements OnDestroy {
     }
   }
 
-  trackByEventId(index: number, event: Event): string {
-    return event.id;
+  trackByEventId(index: number, event: FestivaEvent): string {
+    return event.id || '';
   }
 
   trackByInvitationId(index: number, invitation: ExampleInvitation): string {
@@ -341,8 +342,9 @@ export class DashboardPage implements OnDestroy {
     this.router.navigate([RoutesApp.CREATE_EVENT]);
   }
 
-  adminEvent(event: Event) {
+  adminEvent(event: FestivaEvent) {
     // Logic to manage the event
+    EVENT_STATE.eventRole = (event as any)?.role || '';
     this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event, managementOptionSelected: '' } });
   }
 
@@ -393,6 +395,19 @@ export class DashboardPage implements OnDestroy {
     }
     else {
       await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'rejected');
+    }
+  }
+
+  getRoleColor(role: string): string {
+    switch (role) {
+      case 'Admin':
+        return 'border-red-500 bg-red-50';
+      case 'Escritura':
+        return 'border-green-500 bg-green-50';
+      case 'Lectura':
+        return 'border-blue-500 bg-blue-50';
+      default:
+        return 'border-gray-200 hover:border-gray-300';
     }
   }
 }

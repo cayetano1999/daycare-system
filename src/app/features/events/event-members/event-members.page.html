@@ -79,15 +79,13 @@
       </div>
 
       <!-- Add Member Button -->
-      @if(members.length === 0) {
-      <button (click)="openAddMemberModal()"
+      <button [appRoleAccess]="['Admin']" (click)="openAddMemberModal()"
         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-3 mb-6">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
         <span>Agregar Miembro</span>
       </button>
-      }
 
       <!-- Members Section -->
       <div class="mb-6">
@@ -102,7 +100,7 @@
           </svg>
           <h4 class="text-xl font-bold text-gray-900 mb-3">No hay miembros agregados</h4>
           <p class="text-gray-600 mb-6">Agrega miembros para que puedan ayudarte a administrar este evento</p>
-          <button [disabled]="members.length > 0" (click)="openAddMemberModal()"
+          <button [appRoleAccess]="['Admin']" [disabled]="members.length > 0" (click)="openAddMemberModal()"
             class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold transition-colors flex items-center space-x-2 mx-auto">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
@@ -144,7 +142,7 @@
 
               <!-- Action Buttons -->
               <div class="flex space-x-2">
-                <button (click)="openEditMemberModal(member)"
+                <button [appRoleAccess]="['Admin']"  (click)="openEditMemberModal(member)"
                   class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -152,7 +150,7 @@
                     </path>
                   </svg>
                 </button>
-                <button (click)="confirmDelete(member.id)"
+                <button [appRoleAccess]="['Admin']" (click)="confirmDelete(member.id)"
                   class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -117,6 +117,7 @@
           <!-- Add Group Button -->
           <div class="mb-6">
             <button
+              [appRoleAccess]="['Escritura','Admin']"
               (click)="openCreateModal()"
               class="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center space-x-3"
             >
@@ -195,6 +196,7 @@
                   <!-- Action Buttons -->
                   <div class="flex items-center space-x-3">
                     <button
+                      [appRoleAccess]="['Escritura','Admin']"
                       (click)="openEditModal(group)"
                       class="flex-1 bg-blue-50 text-blue-600 py-3 px-4 rounded-xl font-medium text-sm hover:bg-blue-100 transition-colors flex items-center justify-center space-x-2"
                     >
@@ -204,6 +206,7 @@
                       <span>Editar</span>
                     </button>
                     <button
+                    [appRoleAccess]="['Admin']"
                       (click)="confirmDelete(group.id)"
                       class="flex-1 bg-red-50 text-red-600 py-3 px-4 rounded-xl font-medium text-sm hover:bg-red-100 transition-colors flex items-center justify-center space-x-2"
                     >
@@ -238,13 +241,16 @@
               Esta acción no se puede deshacer. El grupo será eliminado permanentemente.
             </p>
             <div class="flex space-x-3">
+              
               <button
+              [appRoleAccess]="['Escritura','Admin']"
                 (click)="cancelDelete()"
                 class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
               >
                 Cancelar
               </button>
               <button
+                [appRoleAccess]="['Admin']"
                 (click)="handleDelete()"
                 class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors"
               >

@@ -119,16 +119,7 @@ export class CreateEventPage implements OnInit {
   constructor(
 
   ) {
-    const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
-    if (navigation && navigation.extras && navigation.extras.state) {
-      const event = navigation.extras.state['event'];
-
-      if(event) {
-        this.populateFormForEditing(event);
-        this.editingEvent = true;
-      }
-    }
+    
   }
 
   populateFormForEditing(event: FestivaEvent | FormData | any) {
@@ -156,6 +147,16 @@ export class CreateEventPage implements OnInit {
 
   async ionViewWillEnter() {
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
+    const navigation = this.router.getCurrentNavigation();
+    console.log(navigation);
+    if (navigation && navigation.extras && navigation.extras.state) {
+      const event = navigation.extras.state['event'];
+
+      if(event) {
+        this.populateFormForEditing(event);
+        this.editingEvent = true;
+      }
+    }
   }
 
   selectPlan(planType: 'Starter' | 'Essential' | 'Premium' | 'Elite') {
@@ -359,7 +360,7 @@ export class CreateEventPage implements OnInit {
         image: this.formData.image,
         share_text: this.formData.share_text.trim(),
         url_media: this.formData.url_media || null,
-        user_id: this.user.id,
+        user_id: this.editingEvent ? this.formData.user_id : this.user.id,
         location: this.formData.location.trim()
       } as any;
 

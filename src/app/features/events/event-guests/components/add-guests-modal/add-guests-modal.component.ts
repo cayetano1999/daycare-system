@@ -64,6 +64,7 @@ export class AddGuestModalComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    console.log('AddGuestModalComponent initialized with mode:', this.event);
     if (this.mode === 'edit' && this.guest) {
       this.guestName = this.guest.name;
       this.phoneNumber = this.guest.phone_number || '';

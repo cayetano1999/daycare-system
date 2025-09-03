@@ -9,6 +9,7 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { ExpenseModalComponent } from './components/expense-modal/expense-modal.component';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 interface Expense {
   id: string;
@@ -31,7 +32,7 @@ interface EventExpenseRecord {
   selector: 'app-event-expenses',
   templateUrl: './event-expenses.page.html',
   styleUrls: ['./event-expenses.page.scss'],
-  imports: [...StandAloneModules, ExpenseModalComponent]
+  imports: [...StandAloneModules, RoleAccessDirective]
 })
 export class EventExpensesPage implements OnInit {
   @Input() eventId: string = '';

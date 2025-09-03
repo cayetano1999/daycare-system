@@ -8,6 +8,7 @@ import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { ToastControllerService } from 'src/app/core/services/ionic/toast-controller.service';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 interface EventTable {
   id: string;
@@ -22,7 +23,7 @@ interface EventTable {
   selector: 'app-event-tables',
   templateUrl: './event-tables.page.html',
   styleUrls: ['./event-tables.page.scss'],
-  imports: [...StandAloneModules, AddTableModalComponent]
+  imports: [...StandAloneModules, RoleAccessDirective]
 })
 export class EventTablesPage implements OnInit {
   tables: EventTable[] = [];

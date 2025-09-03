@@ -9,6 +9,7 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { AddMemberModalComponent } from './add-member-modal/add-member-modal.component';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 interface EventMember {
   id: string;
@@ -28,12 +29,12 @@ interface EventMember {
   selector: 'app-event-members',
   templateUrl: './event-members.page.html',
   styleUrls: ['./event-members.page.scss'],
-  imports:[...StandAloneModules]
+  imports:[...StandAloneModules, RoleAccessDirective]
 })
 export class EventMembersPage implements OnInit {
   members: EventMember[] = [];
-  eventId: string = 'event-1'; // TODO: Get from route params
-  eventName: string = 'de María y José'; // TODO: Get from event data
+  eventId: string = ''; // TODO: Get from route params
+  eventName: string = ''; // TODO: Get from event data
   isLoading: boolean = true;
   defaultAvatar: string = 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2';
 

@@ -179,6 +179,11 @@
                   <span [class]="'px-3 py-1 rounded-full text-xs font-semibold border ' + getPlanTypeColor(event.plan_type)">
                     {{ event.plan_type }}
                   </span>
+
+                  <span [class]="'px-3 py-1 rounded-full text-xs font-semibold border ' + getRoleColor(event.role || '')">
+                    {{ event.role }}
+                  </span>
+
                 </div>
               </div>
             </div>

@@ -9,6 +9,7 @@ import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { eventRoutes } from '../events.routes';
 import { EVENT_STATE, scrollToElement } from 'src/app/core/constants/constants';
+import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
 interface ManagementOption {
   id: string;
@@ -26,13 +27,14 @@ interface ManagementOption {
   selector: 'app-event-management',
   templateUrl: './event-management.page.html',
   styleUrls: ['./event-management.page.scss'],
-  imports: [...StandAloneModules, FestivaHeaderComponent]
+  imports: [...StandAloneModules, RoleAccessDirective]
 })
 export class EventManagementPage implements OnInit {
   @Input() event!: FestivaEvent;
 
   showMoreOptions = false;
   showDeleteConfirm = false;
+  eventRole = EVENT_STATE.eventRole;
 
   managementOptions: ManagementOption[] = [
     {
