@@ -85,8 +85,8 @@ export class AddTableModalComponent implements OnInit {
           this.errors.capacity = 'La capacidad es requerida';
         } else if (this.tableCapacity < 1) {
           this.errors.capacity = 'La capacidad mínima es 1 persona';
-        } else if (this.tableCapacity > 50) {
-          this.errors.capacity = 'La capacidad máxima es 50 personas';
+        } else if (this.tableCapacity > 100) {
+          this.errors.capacity = 'La capacidad máxima es 100 personas';
         } else {
           delete this.errors.capacity;
         }
