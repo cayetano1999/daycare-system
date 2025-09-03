@@ -101,8 +101,17 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
       action: () => this.navigateToTables()
+    },
+    {
+      id: 'scanner',
+      title: 'Escáner de Código',
+      description: 'Escanea códigos QR y de barras',
+      iconPath: 'M4 7V5a2 2 0 012-2h2M16 3h2a2 2 0 012 2v2M20 17v2a2 2 0 01-2 2h-2M8 21H6a2 2 0 01-2-2v-2M7 12h10',
+      color: 'from-violet-500 to-indigo-600',
+      bgColor: 'bg-blue-50',
+      textColor: 'text-blue-700',
+      action: () => this.navigateToScanner()
     }
-
   ];
 
   private alertController = inject(AlertController);
@@ -256,41 +265,46 @@ export class EventManagementPage implements OnInit {
   navigateToExpenses() {
     console.log('Navigate to expenses management');
     // this.navController.navigateForward('/event-expenses');
-    this.router.navigate([RoutesApp.EVENT_EXPENSES], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.EVENT_EXPENSES], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToAdmins() {
     console.log('Navigate to admins management');
     // this.navController.navigateForward('/event-admins');
-    this.router.navigate([RoutesApp.EVENT_MEMBERS], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.EVENT_MEMBERS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToTickets() {
     console.log('Navigate to tickets management');
     // this.navController.navigateForward('/event-tickets');
+    this.router.navigate([RoutesApp.EVENT_TICKETS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToGifts() {
     console.log('Navigate to gifts management');
     // this.navController.navigateForward('/gift-list');
-    this.router.navigate([RoutesApp.EVENT_GIFT_LIST], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.EVENT_GIFT_LIST], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToGroups() {
     console.log('Navigate to groups management');
     // this.navController.navigateForward('/event-groups');
-    this.router.navigate([RoutesApp.GROUPS], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.GROUPS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToGuests() {
     console.log('Navigate to guests management');
     // this.navController.navigateForward('/event-guests');
-    this.router.navigate([RoutesApp.EVENT_GUESTS], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.EVENT_GUESTS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToTables() {
     console.log('Navigate to tables management');
-    this.router.navigate([RoutesApp.EVENT_TABLES], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.EVENT_TABLES], { state: { event: this.event }, replaceUrl: true });
+  }
+  navigateToScanner() {
+    console.log('Navigate to scanner');
+    this.router.navigate([RoutesApp.EVENT_SCANNER], { state: { event: this.event }, replaceUrl: true });
   }
 
   goBack() {

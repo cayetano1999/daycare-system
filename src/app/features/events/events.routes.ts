@@ -7,6 +7,8 @@ import { GroupsPage } from "./groups/groups.page";
 import { EventMembersPage } from "./event-members/event-members.page";
 import { EventTablesPage } from "./event-tables/event-tables.page";
 import { EventGuestsPage } from "./event-guests/event-guests.page";
+import { EventTicketsPage } from "./event-ticket/event-ticket.page";
+import { EventScannerPage } from "./event-scanner/event-scanner.page";
 
 export const eventRoutes: Routes = [
   {
@@ -41,6 +43,15 @@ export const eventRoutes: Routes = [
   {
     path: 'events/guests',
     component: EventGuestsPage
+  },
+  {
+    path: 'events/tickets',
+    component: EventTicketsPage
+  },
+
+  {
+    path: 'events/scanner',
+    component: EventScannerPage
   }
 
 ];

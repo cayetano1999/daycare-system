@@ -1,0 +1,306 @@
+
+// Scanner active state - hide background when camera is active
+:global(body.scanner-active) {
+  background: transparent !important;
+}
+
+:global(body.scanner-active .scanner-background) {
+  opacity: 0;
+}
+
+// Scanner button animations
+.scanner-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanner-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.scanner-button:hover::before {
+  left: 100%;
+}
+
+// Scanner icon animation
+.scanner-icon {
+  animation: scannerPulse 2s ease-in-out infinite;
+}
+
+@keyframes scannerPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+// Scanning state animation
+.scanning-active {
+  animation: scanningGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes scanningGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
+// Success animation
+.scan-success {
+  animation: successBounce 0.6s ease-out forwards;
+}
+
+@keyframes successBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.8);
+  }
+  60% {
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Error animation
+.scan-error {
+  animation: errorShake 0.6s ease-out forwards;
+}
+
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-8px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(8px);
+  }
+}
+
+// Loading spinner
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Button states
+button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+// Focus states for accessibility
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+// Scanner icon container
+.scanner-icon-container {
+  position: relative;
+}
+
+.scanner-icon-container::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
+  border-radius: 2rem;
+  opacity: 0;
+  animation: iconGlow 3s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(1.1);
+  }
+}
+
+// Result cards styling
+.result-card {
+  backdrop-filter: blur(10px);
+  animation: resultSlideIn 0.5s ease-out forwards;
+}
+
+@keyframes resultSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Event name gradient
+.event-name {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s ease-in-out infinite;
+}
+
+@keyframes textShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Floating animation for the main container
+.scanner-container {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .scanner-icon-container svg {
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  .scanner-button {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .event-name {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .scanner-icon-container svg {
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .scanner-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+// Subtle background pattern
+.bg-white {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(147, 51, 234, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.02) 0%, transparent 50%);
+}
+
+// Scanner overlay effects
+.scanner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scanner-frame-border {
+  width: 250px;
+  height: 250px;
+  border: 2px solid #3b82f6;
+  border-radius: 1rem;
+  position: relative;
+  animation: scannerFrame 2s ease-in-out infinite;
+}
+
+@keyframes scannerFrame {
+  0%, 100% {
+    border-color: #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+  }
+}
+
+// Corner markers for scanner frame
+.scanner-frame-border::before,
+.scanner-frame-border::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #3b82f6;
+}
+
+.scanner-frame-border::before {
+  top: -3px;
+  left: -3px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.scanner-frame-border::after {
+  bottom: -3px;
+  right: -3px;
+  border-left: none;
+  border-top: none;
+}

@@ -20,6 +20,7 @@ interface FormData {
   url_media: string;
   image: string;
   user_id: string;
+  location: string;
 }
 
 interface Plan {
@@ -53,7 +54,8 @@ export class CreateEventPage implements OnInit {
     share_text: '',
     url_media: '',
     image: '',
-    user_id: ''
+    user_id: '',
+    location: ''
   };
 
   isLoading = false;
@@ -140,8 +142,9 @@ export class CreateEventPage implements OnInit {
       description: event.description,
       share_text: event.share_text,
       url_media: event.url_media,
-      image: event.image
-    } ;
+      image: event.image,
+      location: event.location
+    };
     this.imagePreview = event.image;
   }
 
@@ -357,6 +360,7 @@ export class CreateEventPage implements OnInit {
         share_text: this.formData.share_text.trim(),
         url_media: this.formData.url_media || null,
         user_id: this.user.id,
+        location: this.formData.location.trim()
       } as any;
 
       // Save to Supabase

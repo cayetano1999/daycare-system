@@ -38,6 +38,8 @@ export const RoutesApp = {
     EVENT_MEMBERS: eventRoutes[5]?.path ?? '',
     EVENT_TABLES: eventRoutes[6]?.path ?? '',
     EVENT_GUESTS: eventRoutes[7]?.path ?? '',
+    EVENT_TICKETS: eventRoutes[8]?.path ?? '',
+    EVENT_SCANNER: eventRoutes[9]?.path ?? '',
     EVENT_DETAIL: '/event-detail',
 
     //Top Up

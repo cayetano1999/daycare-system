@@ -1,0 +1,247 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+// Ticket Card Animations
+.ticket-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  opacity: 0;
+}
+
+.ticket-card:hover::before {
+  animation: shimmer 1.5s ease-in-out;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+// Ticket Creation Animation
+.ticket-created {
+  animation: ticketAppear 1s ease-out forwards;
+}
+
+@keyframes ticketAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// QR Code Pattern
+.qr-pattern {
+  width: 100%;
+  height: 100%;
+  background-image: 
+    /* Main grid pattern */
+    linear-gradient(90deg, #000 2px, transparent 2px),
+    linear-gradient(#000 2px, transparent 2px),
+    /* Corner squares */
+    radial-gradient(circle at 15% 15%, #000 25%, transparent 25%),
+    radial-gradient(circle at 85% 15%, #000 25%, transparent 25%),
+    radial-gradient(circle at 15% 85%, #000 25%, transparent 25%),
+    /* Random pattern overlay */
+    linear-gradient(45deg, #000 25%, transparent 25%),
+    linear-gradient(-45deg, #000 25%, transparent 25%);
+  background-size: 
+    6px 6px,
+    6px 6px,
+    20px 20px,
+    20px 20px,
+    20px 20px,
+    3px 3px,
+    3px 3px;
+  background-position: 
+    0 0,
+    3px 3px,
+    0 0,
+    calc(100% - 20px) 0,
+    0 calc(100% - 20px),
+    1px 1px,
+    2px 2px;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* QR Corner markers */
+.qr-pattern::before,
+.qr-pattern::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border: 2px solid #000;
+}
+
+.qr-pattern::before {
+  top: 2px;
+  left: 2px;
+  background: 
+    linear-gradient(#000 0%, #000 100%),
+    linear-gradient(90deg, #000 33%, transparent 33%, transparent 66%, #000 66%),
+    linear-gradient(#000 33%, transparent 33%, transparent 66%, #000 66%);
+}
+
+.qr-pattern::after {
+  bottom: 2px;
+  right: 2px;
+  background: 
+    linear-gradient(#000 0%, #000 100%),
+    linear-gradient(90deg, #000 33%, transparent 33%, transparent 66%, #000 66%),
+    linear-gradient(#000 33%, transparent 33%, transparent 66%, #000 66%);
+}
+
+// Success Animation
+.success-checkmark {
+  animation: successPulse 0.8s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Smooth transitions for all interactive elements
+button, .cursor-pointer {
+  transition: all 0.2s ease-in-out;
+}
+
+// Focus states for accessibility
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+// Loading state improvements
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Gradient text effect
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Ticket perforations effect
+.ticket-card::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 45%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 8px,
+    #f3f4f6 8px,
+    #f3f4f6 16px
+  );
+  z-index: 10;
+}
+
+// Floating animation for create button
+.create-ticket-btn {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Confetti animation overlay
+.confetti-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #f39c12;
+  animation: confetti-fall 3s linear infinite;
+}
+
+.confetti:nth-child(odd) {
+  background: #e74c3c;
+  animation-delay: -0.5s;
+}
+
+.confetti:nth-child(even) {
+  background: #3498db;
+  animation-delay: -1s;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}

@@ -10,4 +10,5 @@ export interface FestivaEvent {
   image: string;
   id?: string;
   status: string;
+  location: string;
 }

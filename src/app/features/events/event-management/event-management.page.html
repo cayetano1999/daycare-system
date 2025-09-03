@@ -2,14 +2,12 @@
 
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-no-border ion-no-padding ">
-     <div class="pt-4 top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
+    <div class="pt-4 top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
       <div class="flex items-center justify-between px-4 py-4">
         <div class="flex items-center">
-          <button 
-            (click)="goBack()"
-            class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group"
-          >
-            <svg class="w-6 h-6 text-white group-hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
+            <svg class="w-6 h-6 text-white group-hover:text-gray-300 transition-colors" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
           </button>
@@ -20,14 +18,12 @@
         </div>
 
         <!-- More Options -->
-        <button
-            (click)="toggleMoreOptions()"
-            class="p-2 rounded-full hover:bg-gray-800 transition-all duration-200"
-          >
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-            </svg>
-          </button>
+        <button (click)="toggleMoreOptions()" class="p-2 rounded-full hover:bg-gray-800 transition-all duration-200">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+          </svg>
+        </button>
       </div>
     </div>
   </ion-toolbar>
@@ -36,32 +32,30 @@
 <ion-content [fullscreen]="true" class="event-management-content">
   <div class="min-h-screen bg-gray-50 animate-slide-in-right">
     <!-- Fixed Header -->
-   <div class="relative">
-          
+    <div class="relative">
 
-          @if (showMoreOptions) {
-            <div class="absolute right-0 top-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-60">
-              <button
-                (click)="editEvent()"
-                class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center space-x-3"
-              >
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-                <span class="text-gray-700">Editar Evento</span>
-              </button>
-              <button
-                (click)="confirmDelete()"
-                class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center space-x-3"
-              >
-                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-                <span class="text-gray-700">Eliminar Evento</span>
-              </button>
-            </div>
-          }
-        </div>
+
+      @if (showMoreOptions) {
+      <div class="absolute right-0 top-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-60">
+        <button (click)="editEvent()"
+          class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center space-x-3">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span class="text-gray-700">Editar Evento</span>
+        </button>
+        <button (click)="confirmDelete()"
+          class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center space-x-3">
+          <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          <span class="text-gray-700">Eliminar Evento</span>
+        </button>
+      </div>
+      }
+    </div>
 
     <!-- Main Content -->
     <div class="pt-0 pb-8">
@@ -70,21 +64,19 @@
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in">
           <!-- Event Image -->
           <div class="relative h-48 overflow-hidden">
-            <img
-              [src]="event.image"
-              [alt]="event.name"
-              class="w-full h-full object-cover"
-            />
+            <img [src]="event.image" [alt]="event.name" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             <div class="absolute bottom-4 left-4 right-4">
               <h2 class="text-2xl font-bold text-white mb-2">
                 {{ event.name }}
               </h2>
               <div class="flex items-center space-x-2">
-                <span [class]="'px-3 py-1 rounded-full text-sm font-semibold border bg-white/90 ' + getPlanColor(event.plan_type)">
+                <span
+                  [class]="'px-3 py-1 rounded-full text-sm font-semibold border bg-white/90 ' + getPlanColor(event.plan_type)">
                   Plan {{ event.plan_type }}
                 </span>
-                <span [class]="'px-3 py-1 rounded-full text-sm font-semibold bg-white/90 ' + getStatusColor(event.status)">
+                <span
+                  [class]="'px-3 py-1 rounded-full text-sm font-semibold bg-white/90 ' + getStatusColor(event.status)">
                   {{ getStatusText(event.status) }}
                 </span>
               </div>
@@ -104,7 +96,8 @@
             <div class="flex items-center space-x-3 p-4 bg-blue-50 rounded-2xl">
               <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
               <div>
@@ -116,35 +109,36 @@
             </div>
 
             <!-- Share Text -->
-            <div class="flex items-start space-x-3 p-4 bg-purple-50 rounded-2xl">
-              <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
-                </svg>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500 font-medium mb-1">Mensaje para compartir</p>
-                <p class="text-gray-700 text-sm leading-relaxed">
-                  "{{ event.share_text }}"
-                </p>
+            <div class="animate-slide-up animate-delay-500">
+              <div class="flex items-start space-x-3 p-4 bg-purple-50 rounded-2xl">
+                <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <ion-icon style="font-size: 1.5rem; color: white;" name="home-outline"></ion-icon>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 font-medium mb-1">Lugar del evento</p>
+                  <p class="text-gray-700 text-sm leading-relaxed">
+                    {{ event.location }}
+                  </p>
+                </div>
               </div>
             </div>
 
             <!-- URL Media (if exists) -->
             @if (event.url_media) {
-              <div class="flex items-center space-x-3 p-4 bg-green-50 rounded-2xl">
-                <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-500 font-medium">Sitio de fotos</p>
-                  <p class="text-green-600 font-semibold text-sm truncate">
-                    {{ event.url_media }}
-                  </p>
-                </div>
+            <div class="flex items-center space-x-3 p-4 bg-green-50 rounded-2xl">
+              <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
               </div>
+              <div>
+                <p class="text-sm text-gray-500 font-medium">Sitio de fotos</p>
+                <p class="text-green-600 font-semibold text-sm truncate">
+                  {{ event.url_media }}
+                </p>
+              </div>
+            </div>
             }
           </div>
         </div>
@@ -155,34 +149,32 @@
         <h3 class="text-2xl font-bold text-gray-800 mb-6">Administración</h3>
         <div class="grid grid-cols-1 gap-4">
           @for (option of managementOptions; track option.id; let i = $index) {
-            <button
-              (click)="option.action()"
-              class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 text-left group transform hover:scale-[1.02] animate-slide-up"
-              [style.animation-delay]="(i * 100) + 'ms'"
-              style="box-shadow: none;
-    border: 1px solid #d8d8d8;"
-            >
-              <div class="flex items-start space-x-4">
-                <div [class]="'w-14 h-14 rounded-xl bg-gradient-to-r ' + option.color + ' flex items-center justify-center text-white shadow-lg'">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path [attr.d]="option.iconPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  </svg>
-                </div>
-                <div class="flex-1">
-                  <h4 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-gray-900">
-                    {{ option.title }}
-                  </h4>
-                  <p class="text-gray-600 text-sm leading-relaxed">
-                    {{ option.description }}
-                  </p>
-                </div>
-                <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <svg class="w-5 h-5 text-gray-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                  </svg>
-                </div>
+          <button (click)="option.action()"
+            class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 text-left group transform hover:scale-[1.02] animate-slide-up"
+            [style.animation-delay]="(i * 100) + 'ms'" style="box-shadow: none;
+    border: 1px solid #d8d8d8;">
+            <div class="flex items-start space-x-4">
+              <div
+                [class]="'w-14 h-14 rounded-xl bg-gradient-to-r ' + option.color + ' flex items-center justify-center text-white shadow-lg'">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path [attr.d]="option.iconPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                </svg>
               </div>
-            </button>
+              <div class="flex-1">
+                <h4 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-gray-900">
+                  {{ option.title }}
+                </h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {{ option.description }}
+                </p>
+              </div>
+              <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <svg class="w-5 h-5 text-gray-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </div>
+            </div>
+          </button>
           }
         </div>
       </div>
@@ -191,23 +183,22 @@
       <div class="px-6 mt-8">
         <h3 class="text-2xl font-bold text-gray-800 mb-6">Acciones Rápidas</h3>
         <div class="grid grid-cols-2 gap-4">
-          <button
-            (click)="editEvent()"
-            class="bg-blue-600 text-white p-6 rounded-2xl hover:bg-blue-700 transition-colors text-left"
-          >
+          <button (click)="editEvent()"
+            class="bg-blue-600 text-white p-6 rounded-2xl hover:bg-blue-700 transition-colors text-left">
             <svg class="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
             <h4 class="font-bold text-lg mb-1">Editar Evento</h4>
             <p class="text-blue-100 text-sm">Modifica detalles del evento</p>
           </button>
-          <button 
-            (click)="previewEvent()"
-            class="bg-green-600 text-white p-6 rounded-2xl hover:bg-green-700 transition-colors text-left"
-          >
+          <button (click)="previewEvent()"
+            class="bg-green-600 text-white p-6 rounded-2xl hover:bg-green-700 transition-colors text-left">
             <svg class="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
             <h4 class="font-bold text-lg mb-1">Vista Previa</h4>
             <p class="text-green-100 text-sm">Ve cómo se ve la invitación</p>
@@ -218,45 +209,39 @@
 
     <!-- Delete Confirmation Modal -->
     @if (showDeleteConfirm) {
-      <div class="fixed inset-0 bg-black/50 z-60 flex items-center justify-center p-6">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full animate-scale-in">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">
-              ¿Eliminar evento?
-            </h3>
-            <p class="text-gray-600 mb-6">
-              Esta acción no se puede deshacer. Se eliminarán todos los datos relacionados con el evento.
-            </p>
-            <div class="flex space-x-3">
-              <button
-                (click)="cancelDelete()"
-                class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                (click)="deleteEvent()"
-                class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors"
-              >
-                Eliminar
-              </button>
-            </div>
+    <div class="fixed inset-0 bg-black/50 z-60 flex items-center justify-center p-6">
+      <div class="bg-white rounded-3xl p-8 max-w-md w-full animate-scale-in">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">
+            ¿Eliminar evento?
+          </h3>
+          <p class="text-gray-600 mb-6">
+            Esta acción no se puede deshacer. Se eliminarán todos los datos relacionados con el evento.
+          </p>
+          <div class="flex space-x-3">
+            <button (click)="cancelDelete()"
+              class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+              Cancelar
+            </button>
+            <button (click)="deleteEvent()"
+              class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors">
+              Eliminar
+            </button>
           </div>
         </div>
       </div>
+    </div>
     }
 
     <!-- Overlay for dropdown -->
     @if (showMoreOptions) {
-      <div 
-        class="fixed inset-0 z-40" 
-        (click)="closeMoreOptions()"
-      ></div>
+    <div class="fixed inset-0 z-40" (click)="closeMoreOptions()"></div>
     }
   </div>
 </ion-content>
