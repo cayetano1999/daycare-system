@@ -24,7 +24,6 @@ export class SupabaseService {
   session: AuthSession | null = null
 
   constructor() {
-    alert(JSON.stringify(environment))
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
 
     this.supabase.auth.getSession().then(({ data }) => {

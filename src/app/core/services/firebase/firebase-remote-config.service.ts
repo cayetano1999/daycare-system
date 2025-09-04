@@ -29,7 +29,6 @@ export class FirebaseRemoteConfigService {
     }
 
     async getAllValues() {
-
         const remoteConfig = firebase.remoteConfig();
         remoteConfig.settings.fetchTimeoutMillis = 0;
         remoteConfig.settings.minimumFetchIntervalMillis = 0;

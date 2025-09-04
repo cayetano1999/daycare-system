@@ -97,8 +97,6 @@ export class AppComponent implements OnInit {
 
     async checkSession() {
 
-
-
         const isSessionExpired = await this.supabase.isSessionExpired();
         const session = await this.supabase.getSession();
         if (isSessionExpired) {

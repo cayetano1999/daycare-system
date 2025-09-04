@@ -1,7 +1,7 @@
 // main.ts
 import { CommonModule, registerLocaleData } from '@angular/common';
 import * as es from '@angular/common/locales/es';
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -21,10 +21,9 @@ import { AuthInterceptor } from './app/core/interceptors/default.interceptor';
 
 // Pipes
 import { PipesModule } from './app/shared/pipes/pipes.module';
-import { APP_INITIALIZER, LOCALE_ID } from '@angular/core';
+import { LOCALE_ID } from '@angular/core';
 import { environment } from './environments/environment';
 import { routes } from './app/app.routes';
-
 
 if (environment.production) {
   enableProdMode();
@@ -55,22 +54,22 @@ bootstrapApplication(AppComponent, {
     { provide: LOCALE_ID, useValue: 'es' },
     provideAnimationsAsync(),
     providePrimeNG({
-      theme: {
-        preset: Aura
-      }
+      theme: { preset: Aura }
     }),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (remoteConfig: FirebaseRemoteConfigService, firebase: FirebaseAppService) => {
-        return async () => {
-          await firebase.initializeFirebaseApp(); // Inicializar Firebase
-          await remoteConfig.loadConfig(); // Cargar Remote Config
-        };
-      },
-      deps: [FirebaseRemoteConfigService, FirebaseAppService],
-      multi: true
-    }
+
+    // ✅ Reemplazo de APP_INITIALIZER por provideAppInitializer
+    provideAppInitializer(async () => {
+      const firebase = inject(FirebaseAppService);
+      const remoteConfig = inject(FirebaseRemoteConfigService);
+
+      console.log('[AppInit] Iniciando inicialización…');
+      await firebase.initializeFirebaseApp();   // Inicializar Firebase
+      console.log('[AppInit] Firebase listo');
+
+      await remoteConfig.loadConfig();          // Cargar Remote Config
+      console.log('[AppInit] Remote Config cargado');
+    }),
   ]
 })
-.then(() => defineCustomElements(window))
-.catch(err => console.error(err));
+  .then(() => defineCustomElements(window))
+  .catch(err => console.error(err));
