@@ -74,7 +74,6 @@ export class FirebaseRemoteConfigService {
 
 
 
-
         if (environment.STORE_REVIEW && environment.APP_VERSION === environment.STORE_REVIEW_VERSION) {
             // Mostrar la funcionalidad de reseñas en la app
 

@@ -21,6 +21,7 @@ interface FormData {
   image: string;
   user_id: string;
   location: string;
+  status: string;
 }
 
 interface Plan {
@@ -55,7 +56,8 @@ export class CreateEventPage implements OnInit {
     url_media: '',
     image: '',
     user_id: '',
-    location: ''
+    location: '',
+    status: '' // 'ACTIVE' | 'DRAFT' | 'CANCELLED' (for future use)
   };
 
   isLoading = false;
@@ -115,11 +117,22 @@ export class CreateEventPage implements OnInit {
   private supabaseService = inject(SupabaseService);
   private storageHelper = inject(StorageHelper);
   private router = inject(Router);
+  event: FestivaEvent | null = null;
 
   constructor(
 
   ) {
-    
+    const navigation = this.router.getCurrentNavigation();
+    console.log(navigation);
+    if (navigation && navigation.extras && navigation.extras.state) {
+      const event = navigation.extras.state['event'];
+
+      if (event) {
+        this.populateFormForEditing(event);
+        this.editingEvent = true;
+        this.event = event;
+      }
+    }
   }
 
   populateFormForEditing(event: FestivaEvent | FormData | any) {
@@ -134,7 +147,8 @@ export class CreateEventPage implements OnInit {
       share_text: event.share_text,
       url_media: event.url_media,
       image: event.image,
-      location: event.location
+      location: event.location,
+      status: event.status,
     };
     this.imagePreview = event.image;
   }
@@ -152,7 +166,7 @@ export class CreateEventPage implements OnInit {
     if (navigation && navigation.extras && navigation.extras.state) {
       const event = navigation.extras.state['event'];
 
-      if(event) {
+      if (event) {
         this.populateFormForEditing(event);
         this.editingEvent = true;
       }
@@ -354,14 +368,14 @@ export class CreateEventPage implements OnInit {
         id: this.formData.id,
         plan_type: this.formData.plan_type,
         event_date: eventDateTime.toISOString(),
-        status: 'DRAFT', // Default status for new events
+        status: this.editingEvent ? this.formData.status : 'ACTIVE', // Default status for new events
         name: this.formData.name.trim(),
         description: this.formData.description.trim(),
         image: this.formData.image,
         share_text: this.formData.share_text.trim(),
         url_media: this.formData.url_media || null,
         user_id: this.editingEvent ? this.formData.user_id : this.user.id,
-        location: this.formData.location.trim()
+        location: this.formData.location.trim(),
       } as any;
 
       // Save to Supabase

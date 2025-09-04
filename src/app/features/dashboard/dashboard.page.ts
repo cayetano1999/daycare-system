@@ -159,6 +159,20 @@ export class DashboardPage implements OnDestroy {
     await this.alertCtrl.dismiss();
   }
 
+  async testingPush() {
+    const { data, error } = await this.supabase.getSupabase().functions.invoke('send-push_notification', {
+      body: {
+        token: 'dsxvv9FMTLqeG5KHBAOtec:APA91bFZLeVUaIt5WWgX_o0ozJOWyeseX9hPKsWgLpkWHKDGjg8KNKEzxjUDZAHTLfQHrF0GQ6JDNBGBMuXAsfyWfAVlcGpvx2S-gy33w7iWjFpreAsXE8U',
+        title: '🎊 Festiva',
+        body: 'Tu invitación fue actualizada. Toca para ver los detalles.',
+        image: 'https://tus-assets/festiva.png',
+        data: { screen: 'invite-details', inviteId: 'abc-123' },
+        priority: 'high',
+      }
+    });
+    console.log({ data, error });
+  }
+
   ngOnDestroy() {
     if (this.scrollListener) {
       window.removeEventListener('scroll', this.scrollListener);
@@ -186,29 +200,35 @@ export class DashboardPage implements OnDestroy {
       this.events = [];
     } else {
       this.events = this.mapEventsForAdmin(data as any[]);
-    await this.loadEventsToManage();
+      await this.loadEventsToManage();
 
     }
   }
 
   async loadEventsToManage() {
     // Logic to load events
-    const { data, error }: any = await this.supabase.getRecords<FestivaEvent[]>('event_members',
+    const { data, error }: any = await this.supabase.getRecords<any>(
+      'event_members',
       [
         '*',
         'events(*)',
+        'member:user_profiles!user_id(*)',     // perfil del miembro (event_members.user_id)
+        'owner:user_profiles!created_by(*)',   // perfil del dueño  (event_members.created_by)
       ],
       'user_id',
       this.user.id,
-      'created_at');
+      'created_at'
+    );
+
     console.log('Loaded events for manage:', data);
     if (error) {
       console.error('Error loading events:', error);
-      this.events = [];
+      // this.events = [];
     } else {
       const result = this.mapEventsToManageRole(data || []);
       console.log('Mapped events with role:', result);
       this.events = [this.events, ...result].flat();
+      console.log('All events:', this.events);
     }
   }
 
@@ -218,14 +238,16 @@ export class DashboardPage implements OnDestroy {
       ...ev.events,
       role: ev.role,
       owner: false,
+      user: ev.owner
     }));
   }
 
-   mapEventsForAdmin(events: any[]): any[] {
+  mapEventsForAdmin(events: any[]): any[] {
     return events.map(ev => ({
       ...ev,
       role: 'Admin',
       owner: true,
+      user: null
     }));
   }
 

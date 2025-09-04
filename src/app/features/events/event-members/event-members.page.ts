@@ -70,7 +70,7 @@ export class EventMembersPage implements OnInit {
       // Get members with user profile data
       const { data, error } = await this.supabaseService.getRecords<EventMember>(
         'event_members',
-        ['*', 'user_profiles(*)'],
+        ['*',  'member:user_profiles!user_id(*)',],
         'event_id',
         this.eventId,
         'created_at'
@@ -86,7 +86,7 @@ export class EventMembersPage implements OnInit {
       // Transform data to match our interface
       this.members = (data || []).map((member: any) => ({
         ...member,
-        user: member.user_profiles
+        user: member.member
       }));
       console.log('Transformed members:', this.members);
 
@@ -99,7 +99,7 @@ export class EventMembersPage implements OnInit {
   }
 
   async openAddMemberModal() {
-    if(this.members.length > 0){
+    if(this.members.length > 4){
       this.alertCtrl.openFestivaAlert("warning", "Ya hay miembros en este evento", 'No se puede registrar más miembros', false, 'Entendido');
       return;
     }
@@ -110,7 +110,8 @@ export class EventMembersPage implements OnInit {
         modalMode: 'create',
         eventId: this.eventId,
         members: this.members,
-        userId: this.user?.id
+        userId: this.user?.id,
+        event: this.event
       },
       cssClass: 'modal-fullscreen'
     });
@@ -135,7 +136,8 @@ export class EventMembersPage implements OnInit {
         eventId: this.eventId,
         editingMember: member,
         members: this.members,
-        userId: this.user?.id
+        userId: this.user?.id,
+        event: this.event
       },
       cssClass: 'modal-fullscreen'
     });
@@ -232,4 +234,6 @@ export class EventMembersPage implements OnInit {
     // TODO: Implement toast notification
     console.log(`${type.toUpperCase()}: ${message}`);
   }
+
+
 }

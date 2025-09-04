@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { FestivaEvent } from 'src/app/core/interface/event.interface';
+import { Profile } from 'src/app/core/interface/profile.interface';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
@@ -9,20 +11,10 @@ interface EventMember {
   user_id: string;
   event_id: string;
   role: 'Lectura' | 'Escritura' | 'Admin';
-  user?: {
-    id: string;
-    full_name: string;
-    avatar_url: string;
-    email?: string;
-  };
+  user?: Profile;
 }
 
-interface UserProfile {
-  id: string;
-  full_name: string;
-  avatar_url: string;
-  email?: string;
-}
+
 
 @Component({
   selector: 'app-add-member-modal',
@@ -36,23 +28,24 @@ export class AddMemberModalComponent implements OnInit {
   @Input() editingMember?: EventMember;
   @Input() members: EventMember[] = [];
   @Input() userId?: string;
+  @Input() event?: FestivaEvent;
 
   // Search state
   searchEmail: string = '';
-  searchResults: UserProfile[] = [];
-  selectedUser: UserProfile | null = null;
+  searchResults: any[] = [];
+  selectedUser: any | null = null;
   selectedRole: 'Lectura' | 'Escritura' | 'Admin' = 'Lectura';
-  
+
   // Loading states
   isSearching: boolean = false;
   isSubmitting: boolean = false;
-  
+
   // Error handling
   searchError: string = '';
 
   private modalController = inject(ModalController);
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private supabaseService: SupabaseService) { }
 
   ngOnInit() {
     if (this.modalMode === 'edit' && this.editingMember) {
@@ -118,7 +111,7 @@ export class AddMemberModalComponent implements OnInit {
     }
   }
 
-  selectUser(user: UserProfile) {
+  selectUser(user: Profile) {
     this.selectedUser = user;
     this.searchResults = [];
     this.searchEmail = '';
@@ -169,7 +162,7 @@ export class AddMemberModalComponent implements OnInit {
           member: { ...this.editingMember, role: this.selectedRole },
           message: 'Miembro actualizado exitosamente'
         };
-        
+
       } else {
         // Create new member
         const memberData = {
@@ -201,6 +194,8 @@ export class AddMemberModalComponent implements OnInit {
         };
       }
 
+      this.sendNotification(`${this.selectedUser?.full_name} has sido ${this.modalMode === 'edit' ? 'actualizado' : 'agregado'} al evento "${this.event?.name || ''} como ${this.selectedRole}"`);
+
       this.modalController.dismiss(result);
 
     } catch (error) {
@@ -225,5 +220,20 @@ export class AddMemberModalComponent implements OnInit {
     if (error) return null;
     console.log('usuario encontrado', data);
     return data;
+  }
+
+  async sendNotification(message: string) {
+    console.log('Sending notification to owner:', this.event);
+
+
+    if(!this.selectedUser?.push_token?.length) return;
+
+    const { data, error } = await this.supabaseService.sendPushNotification(
+      this.selectedUser?.push_token || '',
+      this.event?.name || 'Tu evento',
+      message,
+      '',
+      { screen: 'invite-details', inviteId: 'abc-123' }
+    );
   }
 }

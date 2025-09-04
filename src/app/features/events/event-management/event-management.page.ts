@@ -240,7 +240,7 @@ export class EventManagementPage implements OnInit {
   editEvent() {
     this.showMoreOptions = false;
     console.log('Navigate to edit event');
-    this.router.navigate([RoutesApp.CREATE_EVENT], { state: { event: this.event } });
+    this.router.navigate([RoutesApp.CREATE_EVENT], { state: { event: this.event }, replaceUrl: true });
     // Navigate to edit event screen
   }
 

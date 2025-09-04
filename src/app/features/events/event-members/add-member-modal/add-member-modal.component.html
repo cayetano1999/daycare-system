@@ -57,7 +57,7 @@
               <img [src]="user.avatar_url" [alt]="user.full_name" class="w-12 h-12 rounded-xl object-cover">
               <div>
                 <h4 class="font-semibold text-gray-900">{{ user.full_name }}</h4>
-                <p class="text-gray-600 text-sm">{{ user.email }}</p>
+                <p class="text-gray-600 text-sm">{{ user?.email }}</p>
               </div>
             </div>
           </div>

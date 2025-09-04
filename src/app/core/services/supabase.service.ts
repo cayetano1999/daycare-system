@@ -24,8 +24,8 @@ export class SupabaseService {
   session: AuthSession | null = null
 
   constructor() {
-    console.log(environment)
-    this.supabase = createClient('https://bwnzsvblxcorurhdapii.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bnpzdmJseGNvcnVyaGRhcGlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1NTg3NzIsImV4cCI6MjA3MjEzNDc3Mn0.94GxPaGvCJARvIDVgWAtyZXvz0qwgCSmFPuqCTarNmc');
+    alert(JSON.stringify(environment))
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
 
     this.supabase.auth.getSession().then(({ data }) => {
       this.session = data.session;
@@ -213,5 +213,20 @@ export class SupabaseService {
       email,
     });
   }
+
+  sendPushNotification(token: string, title: string, body: string, image?: string, data?: any) {
+    return this.supabase.functions.invoke('send-push_notification', {
+      body: {
+        token,
+        title,
+        body,
+        image,
+        data,
+        priority: 'high',
+      }
+    });
+  }
+
+
 
 }

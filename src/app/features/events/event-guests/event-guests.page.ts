@@ -151,7 +151,9 @@ export class EventGuestsPage implements OnInit {
         group: guest.groups,
         table: guest.event_tables,
         invited_by_user: guest.user_profiles
-      }));
+      })).sort((a, b) => a.name.localeCompare(b.name)); //
+
+      //ordenar los invitados por nombre de la A a la Z
 
       this.filterGuests();
 

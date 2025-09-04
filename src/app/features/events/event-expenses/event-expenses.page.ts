@@ -43,12 +43,12 @@ export class EventExpensesPage implements OnInit {
   expenses: Expense[] = [];
   budget: number = 40000;
   expenseRecord: EventExpenseRecord | null = null;
-  
+
   showModal = false;
   editingExpense: Expense | null = null;
   showDeleteConfirm = false;
   expenseToDelete: string | null = null;
-  
+
   isLoading = false;
   isLoadingData = true;
 
@@ -66,7 +66,7 @@ export class EventExpensesPage implements OnInit {
    *
    */
   constructor() {
-    
+
   }
 
   ngOnInit() {
@@ -74,7 +74,7 @@ export class EventExpensesPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-     const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
     if (state?.event) this.event = state.event;
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA);
     await this.loadExpenseData();
@@ -83,7 +83,7 @@ export class EventExpensesPage implements OnInit {
 
   async loadExpenseData() {
     this.isLoadingData = true;
-    
+
     try {
       // Check if expense record exists for this event and user
       const { data: existingRecord, error: fetchError } = await this.supabaseService.getRecord(
@@ -160,6 +160,7 @@ export class EventExpensesPage implements OnInit {
       }
 
       this.expenseRecord = { ...this.expenseRecord, ...updateData };
+
     } catch (error) {
       console.error('Error updating expense record:', error);
       throw error;
@@ -239,9 +240,11 @@ export class EventExpensesPage implements OnInit {
           description: expenseData.description
         };
 
-        this.expenses = this.expenses.map(exp => 
+        this.expenses = this.expenses.map(exp =>
           exp.id === this.editingExpense!.id ? updatedExpense : exp
         );
+         this.sendNotificationForOwner(`${this.user?.full_name || 'Alguien'} actualizó el gasto: ${updatedExpense?.name || ''}`);
+
       } else {
         // Create new expense
         const newExpense: Expense = {
@@ -252,11 +255,13 @@ export class EventExpensesPage implements OnInit {
         };
 
         this.expenses = [...this.expenses, newExpense];
+         this.sendNotificationForOwner(`${this.user?.full_name || 'Alguien'} registró el gasto: ${newExpense?.name || ''}`);
+
       }
 
       // Update record in Supabase
       await this.updateExpenseRecord();
-      
+
       this.closeModal();
     } catch (error: any) {
       console.error('Error saving expense:', error);
@@ -310,7 +315,7 @@ export class EventExpensesPage implements OnInit {
     this.expenseToDelete = expenseId;
     // this.showDeleteConfirm = true;
     const result = await this.alertController.openFestivaAlert('danger', 'Confirmar eliminación', '¿Estás seguro de que deseas eliminar este gasto?', true, 'Cancelar', 'Eliminar');
-    if(result.action === 'confirm') {
+    if (result.action === 'confirm') {
       await this.handleDelete();
     }
   }
@@ -324,9 +329,10 @@ export class EventExpensesPage implements OnInit {
     if (!this.expenseToDelete) return;
 
     try {
+      this.sendNotificationForOwner(`${this.user?.full_name || 'Alguien'} eliminó el gasto: ${this.expenses.find(exp => exp.id === this.expenseToDelete)?.name || ''}`);
       this.expenses = this.expenses.filter(exp => exp.id !== this.expenseToDelete);
       await this.updateExpenseRecord();
-      
+
       this.showDeleteConfirm = false;
       this.expenseToDelete = null;
     } catch (error: any) {
@@ -348,4 +354,19 @@ export class EventExpensesPage implements OnInit {
 
   // Helper for template
   Math = Math;
+
+  async sendNotificationForOwner(message: string) {
+    console.log('Sending notification to owner:', this.event);
+    if (this.event?.user?.id === this.user?.id) return; // No need to notify if user is the owner
+
+    if (!this.event?.user?.push_token) return;
+
+    const { data, error } = await this.supabaseService.sendPushNotification(
+      this.event.user.push_token,
+      this.event.name || 'Tu evento',
+      message,
+      '',
+      { screen: 'invite-details', inviteId: 'abc-123' }
+    );
+  }
 }

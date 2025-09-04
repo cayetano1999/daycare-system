@@ -1,3 +1,5 @@
+import { Profile } from "./profile.interface";
+
 export interface FestivaEvent {
   user_id?: string;
   plan_type: 'Starter' | 'Essential' | 'Premium' | 'Elite' | '';
@@ -13,6 +15,7 @@ export interface FestivaEvent {
   location: string;
   role?: string;
   owner?: boolean;
+  user?: Profile;
 }
 
 

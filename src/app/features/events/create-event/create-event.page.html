@@ -227,6 +227,8 @@
 
         <!-- Form -->
         <form (ngSubmit)="onSubmit()" #createEventForm="ngForm" class="space-y-8">
+
+          @if(event?.owner){
           <!-- Plan Selection -->
           <div data-field="plan_type">
             <label class="block text-lg font-bold text-gray-800 mb-4">
@@ -277,6 +279,7 @@
             <p class="text-red-500 text-sm mt-2">{{ errors['plan_type'] }}</p>
             }
           </div>
+        }
 
           <!-- Date and Time -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
