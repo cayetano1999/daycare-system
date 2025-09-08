@@ -14,7 +14,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12">
+        <div class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
     
     <!-- Hero Section -->
     <div class="relative overflow-hidden bg-black text-white">
@@ -264,4 +267,8 @@
       </div>
     </div>
   </div>
+      </ion-col>
+      
+    </ion-row>
+  </ion-grid>
 </ion-content>

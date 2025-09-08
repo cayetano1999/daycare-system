@@ -427,7 +427,7 @@ export class DashboardPage implements OnDestroy {
     if (pushPermission === 'granted' && this.user.push_token) return; // User has granted permissions and has a push token
 
 
-    if (!pushPermission) {
+    if (!pushPermission && !this.user.push_token) {
       await this.alertCtrl.openModalPushNotification();
     }
     const permissionGranted = await this.fcm.requestPermissions();

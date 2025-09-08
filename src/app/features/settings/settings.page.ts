@@ -337,6 +337,7 @@ Saludos,
 
   async clearAndRedirect() {
     await this.supabaseService.signOut();
+    await this.storageHelper.setStorageKey(StorageKeys.ONBOARDING_COMPLETED, false);
     await this.storageHelper.clear();
     this.router.navigate([RoutesApp.PRE_HOME]);
   }

@@ -1,6 +1,4 @@
-.event-management-content {
-  --background: transparent;
-}
+
 
 // Import Tailwind utilities for this component
 
@@ -991,4 +989,8 @@ button:focus {
 // Cursor utilities
 .cursor-pointer {
   cursor: pointer;
+}
+
+ion-content {
+  --background: #F9FAFB;
 }

@@ -3,7 +3,9 @@
 .hero-animation {
   animation: heroFloat 6s ease-in-out infinite;
 }
-
+ion-content {
+  --background: #F9FAFB;
+}
 @keyframes heroFloat {
   0%, 100% {
     transform: translateY(0px);

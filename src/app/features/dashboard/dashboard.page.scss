@@ -1,11 +1,7 @@
 .dashboard-content {
-  --background: transparent;
 }
 
-// Import Tailwind utilities for this component
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+
 
 // Ensure Tailwind classes work properly in Ionic
 * {
@@ -917,4 +913,8 @@ button:focus {
 // Cursor utilities
 .cursor-pointer {
   cursor: pointer;
+}
+
+ion-content {
+  --background: #F9FAFB;
 }

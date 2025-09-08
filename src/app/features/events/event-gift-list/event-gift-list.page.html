@@ -33,7 +33,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="gift-list-content">
-  <div class="min-h-screen bg-gray-50 animate-slide-in-right">
+<ion-grid fixed class="ion-no-border">
+  <ion-row>
+    <ion-col size="12">
+        <div class="min-h-screen bg-gray-50 animate-slide-in-right">
     <!-- Fixed Header -->
     @if (showExportOptions) {
     <div class="absolute right-0 top-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-60">
@@ -387,6 +390,10 @@
     <div class="fixed inset-0 z-40" (click)="closeExportOptions()"></div>
     }
   </div>
+    </ion-col>
+    
+  </ion-row>
+</ion-grid>
 
   <!-- Gift Item Modal Component -->
 
