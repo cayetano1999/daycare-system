@@ -8,8 +8,12 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { eventRoutes } from '../events.routes';
-import { EVENT_STATE, scrollToElement } from 'src/app/core/constants/constants';
+import { EVENT_STATE, isAdminUser, scrollToElement } from 'src/app/core/constants/constants';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Profile } from 'src/app/core/interface/profile.interface';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { EventTicket } from '../event-ticket/event-ticket.page';
 
 interface ManagementOption {
   id: string;
@@ -21,6 +25,7 @@ interface ManagementOption {
   textColor: string;
   action: () => void;
   url?: string;
+  isEnabled?: boolean;
 }
 
 @Component({
@@ -46,7 +51,8 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-green-50',
       textColor: 'text-green-700',
       url: eventRoutes[2].path,
-      action: () => this.navigateToOption(eventRoutes[2].path || '')
+      action: () => this.navigateToOption(eventRoutes[2].path || ''),
+      isEnabled: true
     },
     {
       id: 'admins',
@@ -57,10 +63,11 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
       url: eventRoutes[5].path,
-      action: () => this.navigateToOption(eventRoutes[5].path || '')
+      action: () => this.navigateToOption(eventRoutes[5].path || ''),
+      isEnabled: true
     },
     {
-      id: 'Ticket',
+      id: 'ticket',
       title: 'Ticket del Evento',
       description: 'Detalle de tu Invitación, boleta o entrada',
       iconPath: 'M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z',
@@ -68,7 +75,8 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-purple-50',
       textColor: 'text-purple-700',
       url: eventRoutes[8].path,
-      action: () => this.navigateToOption(eventRoutes[8].path || '')
+      action: () => this.navigateToOption(eventRoutes[8].path || ''),
+      isEnabled: true // Only event creator or admin users can access
     },
     {
       id: 'gifts',
@@ -79,7 +87,8 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-pink-50',
       textColor: 'text-pink-700',
       url: eventRoutes[3].path,
-      action: () => this.navigateToOption(eventRoutes[3].path || '')
+      action: () => this.navigateToOption(eventRoutes[3].path || ''),
+      isEnabled: true
     },
     {
       id: 'groups',
@@ -90,7 +99,8 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-indigo-50',
       textColor: 'text-indigo-700',
       url: eventRoutes[4].path,
-      action: () => this.navigateToOption(eventRoutes[4].path || '')
+      action: () => this.navigateToOption(eventRoutes[4].path || ''),
+      isEnabled: true
     },
     {
       id: 'guests',
@@ -101,7 +111,8 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-orange-50',
       textColor: 'text-orange-700',
       url: eventRoutes[7].path,
-      action: () => this.navigateToOption(eventRoutes[7].path || '')
+      action: () => this.navigateToOption(eventRoutes[7].path || ''),
+      isEnabled: true
     },
     {
       id: 'table',
@@ -112,7 +123,8 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
       url: eventRoutes[6].path,
-      action: () => this.navigateToOption(eventRoutes[6].path || '')
+      action: () => this.navigateToOption(eventRoutes[6].path || ''),
+       isEnabled: true
     },
     {
       id: 'scanner',
@@ -123,15 +135,18 @@ export class EventManagementPage implements OnInit {
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
       url: eventRoutes[9].path,
-      action: () => this.navigateToOption(eventRoutes[9].path || '')
+      action: () => this.navigateToOption(eventRoutes[9].path || ''),
+        isEnabled: true
     }
   ];
+  user!: Profile;
 
   private alertController = inject(AlertController);
   private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
   private router = inject(Router);
   private alertCtrl = inject(AlertControllerService);
+  private storageHelper = inject(StorageHelper);
 
   constructor(
 
@@ -148,10 +163,16 @@ export class EventManagementPage implements OnInit {
     // Initialize component
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     // Reset the selected management option when entering the view
     // EVENT_STATE.managementOptionSelected = '';
+    this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
+
+    this.managementOptions.find(opt => opt.id === 'ticket')!.isEnabled = (isAdminUser(this.user.id));
+
+
     console.log('Selected Management Option:', EVENT_STATE.managementOptionSelected);
+
     if (EVENT_STATE.managementOptionSelected.length) {
       scrollToElement(EVENT_STATE.managementOptionSelected);
     }
@@ -292,8 +313,29 @@ export class EventManagementPage implements OnInit {
     }
   }
 
-  previewEvent() {
-    console.log('Navigate to event preview');
+  async previewEvent() {
+
+    const {data, error} = await this.supabaseService.getRecord('event_ticket', ['*'], 'event_id', this.event.id || '');
+
+    if (error) {
+      console.error('Error fetching tickets:', error);
+      this.alertCtrl.openFestivaAlert('danger', 'Error', 'No se pudo obtener la información de los tickets. Intenta nuevamente.');
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      this.alertCtrl.openFestivaAlert('warning', 'Sin Tickets', 'Este evento no tiene tickets asociados. Por favor, crea al menos un ticket para poder previsualizar el evento.');
+      return;
+    }
+
+    const result = data as any;
+    const url = result.url as string;
+    if(!url || url.length === 0) {
+      this.alertCtrl.openFestivaAlert('warning', 'Sin URL de Ticket', 'El ticket asociado a este evento no tiene una URL válida. Por favor, edita el ticket para agregar una URL y poder previsualizar el evento.');
+      return;
+    }
+    // this.router.navigate([`events/preview/${this.event.id}`], { state: { event: this.event }, replaceUrl: true });
+    window.open(`${url.replace('invitacion.html', 'preview.html')}`, '_system');
     // Navigate to event preview screen
   }
 

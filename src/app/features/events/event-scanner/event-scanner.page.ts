@@ -16,12 +16,12 @@ interface ScanResult {
   selector: 'app-event-scanner',
   templateUrl: './event-scanner.page.html',
   styleUrls: ['./event-scanner.page.scss'],
-  imports:[...StandAloneModules]
+  imports: [...StandAloneModules]
 })
 export class EventScannerPage implements OnInit {
   eventId: string = 'event-1'; // TODO: Get from route params
   eventName: string = 'Boda de María y José'; // TODO: Get from event data
-  
+
   isScanning: boolean = false;
   scanResult: string = '';
   errorMessage: string = '';
@@ -30,7 +30,7 @@ export class EventScannerPage implements OnInit {
   private router = inject(Router);
   private navController = inject(NavController);
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private supabaseService: SupabaseService) { }
 
   ngOnInit() {
   }
@@ -50,12 +50,12 @@ export class EventScannerPage implements OnInit {
       // Check permission before scanning
       // Hide background to show camera
       document.body.classList.add('scanner-active');
-      
+
       // Start scanning
       const result = await CapacitorBarcodeScanner.scanBarcode({
         hint: 0,
         scanInstructions: 'Escanea el código QR de la boleta',
-        scanButton: true,
+        scanButton: false,
         scanText: 'Escanear',
         cameraDirection: 1,
         scanOrientation: 1,
@@ -66,6 +66,7 @@ export class EventScannerPage implements OnInit {
           showCameraSelection: true,
           scannerFPS: 30,
         },
+
       });
 
       // Show background again
@@ -81,7 +82,7 @@ export class EventScannerPage implements OnInit {
     } catch (error) {
       console.error('Error during scan:', error);
       this.errorMessage = 'Error al escanear el código QR';
-      
+
       // Make sure to show background again
       document.body.classList.remove('scanner-active');
     } finally {
@@ -92,26 +93,26 @@ export class EventScannerPage implements OnInit {
   async processScanResult(content: string) {
     try {
       console.log('Scanned QR content:', content);
-      
+
       // Process the QR content
-      // Expected format: eventId-ticketId
-      const parts = content.split('-');
-      
+      // Expected format: eventId&ticketId
+      const parts = content.split('&');
+
       if (parts.length >= 2) {
         const scannedEventId = parts[0];
         const ticketId = parts[1];
-        
+
         // Verify if this QR belongs to the current event
-        if (scannedEventId === this.eventId) {
-          // Valid QR for this event
-          this.showToast('Código QR válido para este evento', 'success');
-          
-          // TODO: Process ticket validation, mark as scanned, etc.
-          console.log('Valid ticket ID:', ticketId);
-          
-        } else {
-          this.errorMessage = 'Este código QR no pertenece a este evento';
-        }
+        // if (scannedEventId === this.eventId) {
+        // Valid QR for this event
+        this.showToast('Código QR válido para este evento', 'success');
+
+        // TODO: Process ticket validation, mark as scanned, etc.
+        this.router.navigate([`events/guest-verification/${this.event?.id}/${ticketId}`], { replaceUrl: true, state: { event: this.event } });
+
+        // } else {
+        //   this.errorMessage = 'Este código QR no pertenece a este evento';
+        // }
       } else {
         this.errorMessage = 'Código QR inválido';
       }
@@ -151,6 +152,6 @@ export class EventScannerPage implements OnInit {
 
   goBack() {
     this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event: this.event }, replaceUrl: true });
-  
+
   }
 }

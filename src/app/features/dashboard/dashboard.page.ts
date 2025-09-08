@@ -13,6 +13,7 @@ import { FirebaseMessagingService } from 'src/app/core/services/firebase/firebas
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
+import { AdminAppDirective } from 'src/app/shared/directives/admin-app.directive';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
 // interface Event {
@@ -45,7 +46,7 @@ interface Notification {
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
-  imports: [...StandAloneModules, FestivaHeaderComponent],
+  imports: [...StandAloneModules, FestivaHeaderComponent, AdminAppDirective],
 })
 export class DashboardPage implements OnDestroy {
   activeTab = 'home';
@@ -143,6 +144,7 @@ export class DashboardPage implements OnDestroy {
 
   async ionViewWillEnter() {
     // Handle scroll effect for header
+    this.setActiveTab('home');
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
     this.user.full_name = this.user.full_name.split(' ').slice(0, 2).join(' '); // Get first and second name only
     this.isScrolled = true;
@@ -195,7 +197,7 @@ export class DashboardPage implements OnDestroy {
     event.target.src = 'assets/img/shared/avatar-default.png'; // Ruta a la imagen por defecto
   }
 
-  async loadEvents() {
+  async loadEvents(event?: any) {
     // Logic to load events
     const { data, error } = await this.supabase.getRecords<FestivaEvent[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
     console.log('Loaded events:', data);
@@ -203,6 +205,9 @@ export class DashboardPage implements OnDestroy {
       console.error('Error loading events:', error);
       this.events = [];
     } else {
+      //stop refresh if exists
+      event?.target?.complete();
+      //map events to add role property as Admin
       this.events = this.mapEventsForAdmin(data as any[]);
       await this.loadEventsToManage();
 
@@ -259,13 +264,28 @@ export class DashboardPage implements OnDestroy {
     this.searchQuery = '';
   }
 
+  requestAdminEvents() {
+    window.open('https://wa.me/18099560999?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20la%20administraci%C3%B3n%20de%20eventos', '_system');
+  }
+
   setActiveTab(tab: string) {
     this.activeTab = tab;
 
     switch (tab) {
       case 'request':
         window.open('https://wa.me/18099560999?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20las%20invitaciones', '_system');
+        this.activeTab = 'home';
         break;
+        case 'info':
+          this.router.navigate([RoutesApp.INFORMATION]);
+          break;
+      case 'settings':
+        this.router.navigate([RoutesApp.SETTINGS]);
+        break;
+      case 'profile':
+        this.router.navigate([RoutesApp.AUTH_REGISTER], { state: { fromProfile: true, profile: this.user } });
+        break;
+      
       default:
         console.log('Tab no manejada:', tab);
         break;

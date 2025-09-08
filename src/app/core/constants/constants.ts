@@ -1,3 +1,5 @@
+import { remoteConfig } from "src/environments/environment.remoteconfig"
+
 export const COLORS = {
     primary: '#309A41',
     green: '#77AD40',
@@ -54,4 +56,8 @@ export function removeSpecialCharsAndEmojis(text: string): string {
 
   // Elimina caracteres especiales y deja solo letras, números y espacios
   return withoutEmojis.replace(/[^a-zA-Z0-9ÁÉÍÓÚáéíóúÑñ ]/g, '').trim();
+}
+
+export function isAdminUser(userId: string): boolean {
+    return remoteConfig.ADMINS_USERS.some(r => r === userId);
 }

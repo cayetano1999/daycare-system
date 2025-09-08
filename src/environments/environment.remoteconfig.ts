@@ -79,5 +79,6 @@ export const remoteConfig = {
             active: "",
             users: [] as any[]
         }
-    }
+    },
+    ADMINS_USERS: [] as string[]
 }

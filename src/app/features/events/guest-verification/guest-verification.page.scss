@@ -1,0 +1,298 @@
+
+// Loading Spinner Animation
+.verification-spinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinner-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 3px solid transparent;
+  border-top: 3px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Success Animation
+.success-animation {
+  animation: successBounce 0.8s ease-out;
+}
+
+.success-circle {
+  width: 120px;
+  height: 120px;
+  border: 4px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.success-circle::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes successBounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+// Error Animation
+.error-animation {
+  animation: errorShake 0.6s ease-out;
+}
+
+.error-circle {
+  width: 120px;
+  height: 120px;
+  border: 4px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  position: relative;
+}
+
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-10px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(10px);
+  }
+}
+
+// Not Found Animation
+.not-found-animation {
+  animation: notFoundPulse 1s ease-in-out infinite;
+}
+
+.not-found-circle {
+  width: 120px;
+  height: 120px;
+  border: 4px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+@keyframes notFoundPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+// Confetti Animation (Bonus)
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #000;
+  top: -10px;
+  animation: confettiFall 3s linear infinite;
+}
+
+.confetti:nth-child(odd) {
+  background: #666;
+  width: 6px;
+  height: 6px;
+}
+
+.confetti:nth-child(even) {
+  background: #333;
+  width: 10px;
+  height: 4px;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+// Status Badge Styles
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-viewed {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-accepted {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-sent {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+// Card Hover Effects
+.guest-info-card {
+  transition: all 0.3s ease;
+}
+
+.guest-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+// Button Animations
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+// Responsive Design
+@media (max-width: 640px) {
+  .success-circle,
+  .error-circle,
+  .not-found-circle {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .success-circle svg,
+  .error-circle svg,
+  .not-found-circle svg {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .verification-spinner {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .spinner-ring {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .spinner-center {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+// Smooth transitions for all elements
+* {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+// Focus states for accessibility
+button:focus,
+.interactive:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+// Print styles (bonus)
+@media print {
+  .confetti-container {
+    display: none;
+  }
+  
+  button {
+    display: none;
+  }
+  
+  .bg-black {
+    background-color: #000 !important;
+    -webkit-print-color-adjust: exact;
+  }
+}

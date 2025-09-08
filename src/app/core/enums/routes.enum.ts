@@ -1,6 +1,8 @@
 import { authRoutes } from "src/app/features/auth/auth.routes";
 import { dashBoardRoutes } from "src/app/features/dashboard/dashboard.routes";
 import { eventRoutes } from "src/app/features/events/events.routes";
+import { informationRoutes } from "src/app/features/information/information.routes";
+import { settingsRoutes } from "src/app/features/settings/settings.routes";
 
 export const RoutesApp = {
     ONBOARDING: '/onboarding',
@@ -40,7 +42,14 @@ export const RoutesApp = {
     EVENT_GUESTS: eventRoutes[7]?.path ?? '',
     EVENT_TICKETS: eventRoutes[8]?.path ?? '',
     EVENT_SCANNER: eventRoutes[9]?.path ?? '',
+    EVENT_GUEST_VERIFICATION: eventRoutes[10]?.path ?? '',
     EVENT_DETAIL: '/event-detail',
+
+    //Information
+    INFORMATION: informationRoutes[0]?.path ?? '',
+
+    //Settings
+    SETTINGS: settingsRoutes[0]?.path ?? '',
 
     //Top Up
     TOP_UP: '/top-up',

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
-import { removeSpecialCharsAndEmojis } from 'src/app/core/constants/constants';
+import { isAdminUser, removeSpecialCharsAndEmojis } from 'src/app/core/constants/constants';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
@@ -166,6 +166,13 @@ export class CreateEventPage implements OnInit {
 
   async ionViewWillEnter() {
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
+
+    if(!isAdminUser(this.user.id)) {
+      await this.alertCtrl.openFestivaAlert('warning', 'Acceso denegado', 'No tienes permisos para crear eventos.', true);
+      return;
+    }
+
+
     const navigation = this.router.getCurrentNavigation();
     console.log(navigation);
     if (navigation && navigation.extras && navigation.extras.state) {

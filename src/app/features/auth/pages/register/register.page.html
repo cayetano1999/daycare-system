@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border ">
-  <ion-toolbar class="ion-no-border ion-no-padding shadow-lg">
+  <ion-toolbar class="ion-no-border ion-no-padding shadow-lg ">
         <!-- Floating Header -->
-    <div class="relative z-20 animate__animated animate__fadeIn">
+    <div class="relative z-20 animate__animated animate__fadeIn pt-4">
       <div class="bg-white/95 backdrop-blur-xl border-b border-white/20 shadow-lg">
         <div class="flex items-center px-4 py-4">
           <button 
@@ -13,8 +13,8 @@
             </svg>
           </button>
           <div class="ml-3">
-            <h1 class="text-xl font-bold text-gray-800">Crear cuenta</h1>
-            <p class="text-sm text-gray-500">Únete a la comunidad Festiva</p>
+            <h1 class="text-xl font-bold text-gray-800">{{isFromProfile ? 'Actualizar perfil' : 'Crear cuenta'}}</h1>
+            <p class="text-sm text-gray-500">{{isFromProfile ? 'Actualiza tu información personal' : 'Únete a la comunidad Festiva'}}</p>
           </div>
 
         </div>
@@ -38,10 +38,10 @@
             </svg>
           </div>
           <h2 class="text-3xl font-bold text-gray-800 mb-3">
-            ¡Bienvenid&#64;!
+            {{isFromProfile ? 'Actualiza tu perfil' : '¡Bienvenido a Festiva!'}}
           </h2>
           <p class="text-gray-600 leading-relaxed">
-            Crea tu cuenta y comienza a administrar invitaciones únicas que harán de tus eventos momentos inolvidables
+            {{isFromProfile ? 'Modifica tu información personal y mantén tu perfil actualizado.' : 'Crea tu cuenta para descubrir eventos increíbles cerca de ti.'}}
           </p>
         </div>
 
@@ -146,7 +146,7 @@
               </button>
             </div>
           </div>
-
+  @if(!isFromProfile){
           <!-- Email -->
           <div class="group">
             <label class="block text-sm font-semibold text-gray-700 mb-3">
@@ -157,6 +157,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
               <input
+                [disabled]="isFromProfile"
                 type="email"
                 [(ngModel)]="formData.email"
                 name="email"
@@ -180,6 +181,7 @@
             }
           </div>
 
+        
           <!-- Password -->
           <div class="group">
             <label class="block text-sm font-semibold text-gray-700 mb-3">
@@ -287,6 +289,7 @@
               </div>
             }
           </div>
+        }
 
           <!-- Submit Button -->
           <button 
@@ -295,13 +298,13 @@
             class="w-full bg-gradient-to-r from-gray-900 to-black text-white py-5 px-6 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-3 mt-10"
           >
             @if (!isLoading) {
-              <span>Crear mi cuenta</span>
+              <span>{{ isFromProfile ? 'Actualizar perfil' : 'Crear mi cuenta' }}</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
             } @else {
               <div class="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <span>Creando tu cuenta...</span>
+              <span>{{ isFromProfile ? 'Actualizando perfil...' : 'Creando tu cuenta...' }}</span>
             }
           </button>
         </form>

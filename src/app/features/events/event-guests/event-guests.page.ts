@@ -447,7 +447,7 @@ export class EventGuestsPage implements OnInit {
   async exportGuests() {
     await this.alertController.openModalAlert();
     const { data, error } = await this.supabaseService.getSupabase().functions.invoke('export-guest-list', {
-      body: { items: this.guests, eventName: this.event?.name, fileName: `${this.event?.id}.pdf` },
+      body: { items: this.filteredGuests, eventName: this.event?.name, fileName: `${this.event?.id}.pdf` },
     } as any);
     await this.alertController.dismiss();
     if (error) {
@@ -494,7 +494,7 @@ export class EventGuestsPage implements OnInit {
       dialogTitle: this.event?.name
     });
 
-    if (result.activityType || result.activityType === undefined) {
+    if ((result.activityType || result.activityType === undefined) && guest.request_status !== 'CONFIRMED') {
       // Successfully shared
       await this.supabaseService.updateRecord('guests', guest.id, { request_status: 'SENT' });
       this.showToast('Invitación enviada exitosamente', 'success');

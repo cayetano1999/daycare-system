@@ -4,6 +4,8 @@ import { AlertController, NavController } from '@ionic/angular';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { Profile } from 'src/app/core/interface/profile.interface';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
@@ -24,12 +26,12 @@ interface FormData {
 })
 export class RegisterPage implements OnInit, OnDestroy {
   formData: FormData = {
-    fullName: 'Josue Alexander',
-    email: 'josue@example.com',
-    password: 'password123A*',
-    confirmPassword: 'password123A*',
-    country: 'US',
-    gender: 'male'
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    country: '',
+    gender: ''
   };
 
   showPassword = false;
@@ -62,19 +64,48 @@ export class RegisterPage implements OnInit, OnDestroy {
   ];
 
   private passwordCheckTimer: any;
+  user: Profile | null = null;
 
-  private alertController = inject(AlertController);
+  private alertController = inject(AlertControllerService);
   private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
   private router = inject(Router);
   private storageHelper = inject(StorageHelper);
+  isFromProfile: boolean = false;;
 
   constructor(
-    
+
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.watchPasswordChanges();
+
+
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    if (state?.fromProfile) this.isFromProfile = state.fromProfile;
+
+    if(state?.profile) {
+      this.user = state.profile;
+      this.mapFormToProfile();
+    }
+
+    console.log('isFromProfile:', this.isFromProfile);
+
+  }
+
+
+
+  mapFormToProfile() {
+    this.formData = {
+      id: this.user?.id || '',
+      fullName: this.user?.full_name.toUpperCase(),
+      email:  '',
+      country: this.user?.country || '',
+      gender: this.user?.gender || ''
+    } as any;
   }
 
   ngOnDestroy() {
@@ -121,6 +152,15 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   isFormValid(): boolean {
+
+    if (this.isFromProfile) {
+      // If updating profile, only fullName and email are required
+      return !!(
+        this.formData.fullName.trim()
+      );
+    }
+
+    // If creating account, all fields are required
     return !!(
       this.formData.fullName.trim() &&
       this.formData.email.trim() &&
@@ -156,26 +196,44 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   async onSubmit() {
     if (!this.isFormValid()) {
-      const alert = await this.alertController.create({
-        header: 'Formulario incompleto',
-        message: 'Por favor, completa todos los campos requeridos correctamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertController.openFestivaAlert('warning', 'Formulario incompleto', 'Por favor, completa todos los campos requeridos correctamente.');
       return;
     }
 
     if (this.passwordsMatch === false) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertController.openFestivaAlert('warning', 'Error en contraseña', 'Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
       return;
     }
 
     this.isLoading = true;
+
+
+    if(this.isFromProfile) {
+      // Update profile logic here
+      try {
+        const updates: any = {
+          full_name: this.formData.fullName.toUpperCase(),
+          country: this.formData.country,
+          gender: this.formData.gender
+        }
+
+       const {data, error} = await this.supabaseService.updateRecord('user_profiles', this.user?.id || '', updates );
+        if(error) {
+          await this.alertController.openFestivaAlert('danger', 'Error', 'Hubo un problema al actualizar tu perfil. Por favor, intenta nuevamente.');
+          return;
+        }
+        if(data) {
+          await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, data);
+        }
+        await this.alertController.openFestivaAlert('success', 'Perfil actualizado', 'Tu perfil ha sido actualizado exitosamente.');
+        this.navController.back();
+      } catch (error) {
+        await this.alertController.openFestivaAlert('danger', 'Error', 'Hubo un problema al actualizar tu perfil. Por favor, intenta nuevamente.');
+      } finally {
+        this.isLoading = false;
+      }
+      return;
+    }
 
     try {
       // 1. Check if email already exists
@@ -183,24 +241,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       console.log('Email exists:', emailExists);
 
       if (emailExists) {
-        const alert = await this.alertController.create({
-          header: 'Email ya registrado',
-          message: 'Este correo electrónico ya está registrado. ¿Quieres iniciar sesión en su lugar?',
-          buttons: [
-            {
-              text: 'Cancelar',
-              role: 'cancel'
-            },
-            {
-              text: 'Iniciar sesión',
-              handler: () => {
-                // Navigate to login screen
-                console.log('Navigate to login');
-              }
-            }
-          ]
-        });
-        await alert.present();
+        await this.alertController.openFestivaAlert('warning', 'Correo ya registrado', 'El correo electrónico que ingresaste ya está registrado. Por favor, utiliza otro correo o inicia sesión.');
         return;
       }
 
@@ -213,23 +254,14 @@ export class RegisterPage implements OnInit, OnDestroy {
       });
 
       // 3. Success
-      const alert = await this.alertController.create({
-        header: '¡Cuenta creada!',
-        message: 'Tu cuenta ha sido creada exitosamente. Bienvenido a Festiva.',
-        buttons: [{
-          text: 'Continuar',
-          handler: async () => {
-            // Navigate to main app or onboarding
-            console.log('Navigate to main app');
-            await this.autoLoginWithEmailInSupabase();
+      await this.alertController.openFestivaAlert('success', 'Cuenta creada', 'Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.');
 
+      // 4. Auto login
+      await this.autoLoginWithEmailInSupabase();
 
-          }
-        }]
-      });
-      await alert.present();
-
-    } catch (error: any) {
+    } 
+    
+    catch (error: any) {
       console.error('Registration error:', error);
 
       let errorMessage = 'Hubo un problema al crear tu cuenta. Por favor, intenta nuevamente.';
@@ -242,12 +274,7 @@ export class RegisterPage implements OnInit, OnDestroy {
         errorMessage = 'La contraseña no cumple con los requisitos de seguridad.';
       }
 
-      const alert = await this.alertController.create({
-        header: 'Error al registrarse',
-        message: errorMessage,
-        buttons: ['OK']
-      });
-      await alert.present();
+     await this.alertController.openFestivaAlert('danger', 'Error de registro', errorMessage);
     } finally {
       this.isLoading = false;
     }

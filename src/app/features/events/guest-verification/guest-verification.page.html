@@ -1,0 +1,195 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border ion-no-padding">
+    <div class="bg-black text-white px-0 pb-4 pt-5 flex items-center justify-between">
+      <div class="flex items-center space-x-1 pt-4">
+        <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-xl font-semibold">Verificación de Invitado</h1>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="min-h-screen bg-white flex flex-col">
+    
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex-1 flex flex-col items-center justify-center">
+      <div class="verification-spinner mb-6">
+        <div class="spinner-ring"></div>
+        <div class="spinner-center">
+          <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+      </div>
+      <h2 class="text-2xl font-bold text-black mb-2">Verificando invitado...</h2>
+      <p class="text-gray-600 text-center max-w-md">
+        Estamos validando la información del invitado en nuestro sistema
+      </p>
+    </div>
+
+    <!-- Success State -->
+    <div *ngIf="!isLoading && verificationResult === 'success'" class="flex-1 flex flex-col items-center justify-center p-6">
+      <div class="success-animation mb-8">
+        <div class="success-circle">
+          <svg class="w-16 h-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold text-black mb-4 text-center">¡Invitado Verificado!</h2>
+      <p class="text-gray-600 text-center mb-8 max-w-md">
+        El invitado está correctamente registrado para este evento
+      </p>
+
+      <!-- Guest Info Card -->
+      <div class="bg-gray-50 border-2 border-black rounded-2xl p-6 w-full max-w-md mb-8">
+        <div class="flex items-center space-x-4 mb-4">
+          <div class="bg-black rounded-full p-3">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-xl font-bold text-black">{{ guest?.name }}</h3>
+            <p class="text-gray-600" *ngIf="guest?.phone_number">{{ guest?.phone_number }}</p>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-300 pt-4 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Estado:</span>
+            <span [ngClass]="getStatusClasses(guest?.request_status || '')" class="px-3 py-1 rounded-full text-sm font-semibold">
+              {{ getStatusText(guest?.request_status || '') }}
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center" *ngIf="guest?.companions_number">
+            <span class="text-gray-600">Acompañantes:</span>
+            <span class="text-black font-semibold">{{ guest?.companions_number }}</span>
+          </div>
+
+          <div class="flex justify-between items-center" *ngIf="guest?.group">
+            <span class="text-gray-600">Grupo:</span>
+            <span class="px-2 py-1 rounded-lg text-sm font-semibold text-white" [style.background-color]="guest?.group?.color_exa">
+              {{ guest?.group?.name }}
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center" *ngIf="guest?.table">
+            <span class="text-gray-600">Mesa:</span>
+            <span class="text-black font-semibold">{{ guest?.table?.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Info -->
+      <div class="text-center mb-8">
+        <h4 class="text-lg font-semibold text-black mb-2">{{ event?.name }}</h4>
+        <p class="text-gray-600 mb-1">{{ formatEventDate(event?.event_date) }}</p>
+        <p class="text-gray-600">{{ event?.location }}</p>
+      </div>
+
+      <!-- Bonus: Confetti Animation -->
+      <div class="confetti-container" *ngIf="showConfetti">
+        <div class="confetti" *ngFor="let i of confettiArray" [style.left.%]="getRandomPosition()" [style.animation-delay.s]="getRandomDelay()"></div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!isLoading && verificationResult === 'error'" class="flex-1 flex flex-col items-center justify-center p-6">
+      <div class="error-animation mb-8">
+        <div class="error-circle">
+          <svg class="w-16 h-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold text-black mb-4 text-center">Invitado No Verificado</h2>
+      <p class="text-gray-600 text-center mb-8 max-w-md">
+        {{ errorMessage }}
+      </p>
+
+      <!-- Error Details -->
+      <div class="bg-gray-50 border-2 border-black rounded-2xl p-6 w-full max-w-md mb-8">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="bg-black rounded-full p-2">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-black">Detalles del Error</h3>
+        </div>
+
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-600">ID del Invitado:</span>
+            <span class="text-black font-mono">{{ guestId }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">ID del Evento:</span>
+            <span class="text-black font-mono">{{ eventId }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Timestamp:</span>
+            <span class="text-black">{{ getCurrentTimestamp() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retry Button -->
+      <button 
+        (click)="retryVerification()"
+        class="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 flex items-center space-x-3">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        <span>Intentar Nuevamente</span>
+      </button>
+    </div>
+
+    <!-- Not Found State -->
+    <div *ngIf="!isLoading && verificationResult === 'not_found'" class="flex-1 flex flex-col items-center justify-center p-6">
+      <div class="not-found-animation mb-8">
+        <div class="not-found-circle">
+          <svg class="w-16 h-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold text-black mb-4 text-center">Invitado No Encontrado</h2>
+      <p class="text-gray-600 text-center mb-8 max-w-md">
+        No se encontró ningún invitado con la información proporcionada
+      </p>
+
+      <div class="bg-gray-50 border-2 border-black rounded-2xl p-6 w-full max-w-md">
+        <h3 class="text-lg font-bold text-black mb-4">Posibles causas:</h3>
+        <ul class="space-y-2 text-gray-600">
+          <li class="flex items-start space-x-2">
+            <span class="text-black">•</span>
+            <span>El código QR no es válido</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-black">•</span>
+            <span>El invitado no está registrado</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-black">•</span>
+            <span>El evento no existe</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-black">•</span>
+            <span>Error en la información del QR</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</ion-content>

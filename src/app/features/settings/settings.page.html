@@ -1,0 +1,313 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border ion-no-padding">
+    <div class="bg-black text-white px-6 pb-4 pt-5 flex items-center justify-between">
+      <div class="flex items-center space-x-4 pt-4">
+        <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-xl font-semibold">Configuración</h1>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid fixed class="ion-no-padding">
+    <ion-row>
+      <ion-col size="12">
+        <div class="min-h-screen bg-white">
+
+          <!-- Logo Section -->
+          <div class="text-center pt-4 bg-white border-b border-gray-200">
+            <div class="logo-container mb-6">
+              <img src="https://cayetano1999.github.io/festiva-app-host/festiva-logo.png" alt="Festiva Logo"
+                class="w-24 h-24 mx-auto object-contain logo-animation">
+            </div>
+           
+          </div>
+
+          <div class="px-6 pt-4">
+
+            <!-- Legal Section -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold text-black mb-6 flex items-center space-x-3">
+                <div class="bg-black rounded-xl p-2">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                    </path>
+                  </svg>
+                </div>
+                <span>Legal</span>
+              </h3>
+
+              <div class="space-y-4">
+                <!-- Privacy Policy -->
+                <div (click)="openPrivacyPolicy()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">Política de Privacidad</h4>
+                        <p class="text-gray-600 text-sm">Conoce cómo protegemos tu información personal</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div (click)="openTermsAndConditions()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">Términos y Condiciones</h4>
+                        <p class="text-gray-600 text-sm">Lee nuestros términos de uso y servicio</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Share App -->
+                <div (click)="shareApp()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">Compartir la App</h4>
+                        <p class="text-gray-600 text-sm">Comparte Festiva con tus amigos y familiares</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Support Section -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold text-black mb-6 flex items-center space-x-3">
+                <div class="bg-black rounded-xl p-2">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                  </svg>
+                </div>
+                <span>Apoyo</span>
+              </h3>
+
+              <div class="space-y-4">
+                <!-- Leave Feedback -->
+                <div (click)="leaveFeedback()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">Déjanos tu Opinión</h4>
+                        <p class="text-gray-600 text-sm">Comparte tus comentarios y sugerencias</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Rate in Store -->
+                <div (click)="rateInStore()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">Califícanos en la Tienda</h4>
+                        <p class="text-gray-600 text-sm">Ayúdanos con una calificación de 5 estrellas</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Report Bug -->
+                <div (click)="reportBug()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">Reportar un Error</h4>
+                        <p class="text-gray-600 text-sm">Informa sobre problemas técnicos</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="mb-8">
+              <h3 class="text-xl font-bold text-black mb-6 flex items-center space-x-3">
+                <div class="bg-black rounded-xl p-2">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                    </path>
+                  </svg>
+                </div>
+                <span>Contacto</span>
+              </h3>
+
+              <div class="space-y-4">
+                <!-- WhatsApp -->
+                <div (click)="openWhatsApp()"
+                  class="settings-item bg-white border-2 border-black rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-black">WhatsApp</h4>
+                        <p class="text-gray-600 text-sm">Contáctanos directamente por WhatsApp</p>
+                        <p class="text-black font-semibold text-sm">809-371-6874</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="mb-8">
+              <h3 class="text-xl font-bold text-black mb-6 flex items-center space-x-3">
+                <div class="bg-black rounded-xl p-2">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.21.805 5.879 2.146M15 11a3 3 0 11-6 0 3 3 0 016 0zM12 21a9 9 0 100-18 9 9 0 000 18z"></path>
+                  </svg>
+                </div>
+                <span>Cuenta</span>
+              </h3>
+
+              <div class="space-y-4">
+                <!-- Log Out -->
+               <div (click)="logOut()" style="border: 1px solid rgba(96, 3, 3, 0.538);"
+                  class="settings-item bg-white border-2 border-red-900 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-red-900">Cerrar Sesión</h4>
+                        <p class="text-gray-600 text-sm">Saldrás de tu cuenta. Recuerda que puedes volver a acceder con tu cuenta de Google o Apple</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                 <div (click)="deleteAccount()" style="border: 1px solid rgba(96, 3, 3, 0.538);"
+                  class="settings-item bg-white border-2 border-red-900 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:shadow-lg transform hover:scale-[1.02]">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="bg-gray-100 rounded-xl p-3">
+                        <svg class="w-6 h-6 text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-7 0h10" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="text-lg font-bold text-red-900">Eliminar Cuenta</h4>
+                        <p class="text-gray-600 text-sm">Al eliminar tu cuenta, se perderán todos tus datos y no podrás recuperarlos.</p>
+                      </div>
+                    </div>
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- App Version -->
+            <div class="text-center py-8 border-t border-gray-200">
+              <p class="text-gray-500 text-sm mb-2">Versión 1.0.0</p>
+              <p class="text-gray-400 text-xs">© 2024 Festiva. Todos los derechos reservados.</p>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-content>

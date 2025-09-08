@@ -80,7 +80,7 @@ export class SupabaseService {
       .from(table)
       .select(columns.join(','))
       .eq(field, value)
-      .single();
+      .maybeSingle();
   }
 
   getRecords<T>(table: string, columns: string[], field: string, value: string, orderProperty: string) {
@@ -99,6 +99,12 @@ export class SupabaseService {
       .insert([data])
       .select()
       .single();
+  }
+
+  createRecordWithoutSelect<T>(table: string, data: T[]) {
+    return this.supabase
+      .from(table)
+      .insert(data);
   }
 
   // Generic Update
