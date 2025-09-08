@@ -9,7 +9,7 @@ import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import * as qr from 'qrcode';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 
-interface EventTicket {
+export interface EventTicket {
   id: string;
   created_at: string;
   event_id: string;

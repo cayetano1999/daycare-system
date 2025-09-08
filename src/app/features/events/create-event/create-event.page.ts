@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, NavController } from '@ionic/angular';
+import { removeSpecialCharsAndEmojis } from 'src/app/core/constants/constants';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Profile } from 'src/app/core/interface/profile.interface';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
@@ -113,9 +116,11 @@ export class CreateEventPage implements OnInit {
   user!: Profile;
 
   private alertController = inject(AlertController);
+  private alertCtrl = inject(AlertControllerService)
   private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
   private storageHelper = inject(StorageHelper);
+  private supabaseStorage = inject(SupabaseStorageService);
   private router = inject(Router);
   event: FestivaEvent | null = null;
 
@@ -295,27 +300,56 @@ export class CreateEventPage implements OnInit {
   async handleImageSelect(file: File) {
     if (!file) return;
 
+    await this.alertCtrl.openModalAlert();
     // Validate file type
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
     if (!validTypes.includes(file.type)) {
       this.errors['image'] = 'Solo se permiten archivos PNG, JPEG y JPG';
+      this.alertCtrl.dismiss();
       return;
     }
 
     // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
       this.errors['image'] = 'La imagen no puede ser mayor a 5MB';
+      this.alertCtrl.dismiss();
       return;
     }
 
+    const compressedImage = await this.compressImage(file);
+
     try {
-      const compressedImage = await this.compressImage(file);
-      this.formData.image = compressedImage;
-      this.imagePreview = compressedImage;
+      if(this.editingEvent || this.event) {
+        // Elimina la imagen anterior si existe
+        await this.supabaseStorage.removeImage(this.event?.image.split('public/festiva/')[1] || '', 'festiva');
+      }
+      const { url, path } = await this.supabaseStorage.uploadBase64(compressedImage, {
+        userId: this.editingEvent ? this.formData.user_id : this.user.id,
+        folder: `events_images/${this.formData.name.replace(/\s+/g, '_').toLowerCase()}`,      // o 'events', 'banners', etc.
+        toWebp: true,           // pesa menos
+        maxWidthOrHeight: 800,
+        maxSizeMB: 0.6,
+        bucket: 'festiva',
+        filename: `${this.formData.name.replace(/\s+/g, '_').toLowerCase()}` // nombre personalizado
+      });
+      // Guarda la URL (y opcionalmente el path) en tu formulario/DB
+      this.imagePreview = url;
+      this.formData.image = url; // o guarda 'path' si prefieres
       delete this.errors['image'];
-    } catch (error) {
+      this.alertCtrl.dismiss();
+
+
+    } catch (e) {
+      this.alertCtrl.dismiss();
+      console.error(e);
+      // this.showErrorAlert('Error al subir la imagen');
       this.errors['image'] = 'Error al procesar la imagen';
+
+    } finally {
+      // this.processingImage = false;
     }
+
+   
   }
 
   handleFileSelect(event: any) {
@@ -353,6 +387,7 @@ export class CreateEventPage implements OnInit {
   }
 
   async onSubmit() {
+    
     if (!this.validateForm()) {
       this.scrollToError(this.errors);
       return;
@@ -380,6 +415,7 @@ export class CreateEventPage implements OnInit {
 
       // Save to Supabase
       let data, error;
+      eventData.name = removeSpecialCharsAndEmojis(eventData.name);
       if (this.editingEvent) {
         const response = await this.supabaseService.updateRecord('events', eventData.id, eventData);
         data = response.data;
@@ -392,6 +428,7 @@ export class CreateEventPage implements OnInit {
       }
 
       if (error) {
+        console.error('Supabase error:', error);
         throw error;
       }
 

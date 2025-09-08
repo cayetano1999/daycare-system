@@ -12,7 +12,7 @@
       <div class="flex items-center justify-between">
         <!-- User Info -->
         <div class="flex items-center space-x-3">
-          <img [src]="user?.avatar_url" [alt]="user?.full_name" class="w-12 h-12 rounded-full object-cover" />
+          <img (error)="onImageError($event)" [src]="user?.avatar_url" [alt]="user?.full_name" class="w-12 h-12 rounded-full object-cover" />
           <div>
             <p [class]="'text-base font-medium mb-1 transition-colors duration-300 ' + 
               (isScrolled ? 'text-gray-300' : 'text-gray-400')">
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Notifications -->
-        <button (click)="setShowNotifications(true)" [class]="'relative p-2 rounded-full transition-all duration-300 ' + 
+        <!-- <button (click)="setShowNotifications(true)" [class]="'relative p-2 rounded-full transition-all duration-300 ' + 
             (isScrolled 
               ? 'hover:bg-gray-800 text-white' 
               : 'hover:bg-gray-50 text-gray-600'
@@ -36,7 +36,7 @@
             class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
             <span class="text-white text-xs font-bold">{{ unreadNotifications }}</span>
           </div>
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -65,11 +65,18 @@
       <div class="px-3 pt-0 pb-6">
         <div class="flex items-center justify-between mb-6">
           <div>
-            <h3 class="text-2xl font-bold text-gray-800">Mis Eventos</h3>
+            <h3 class="text-2xl font-bold text-gray-800">Eventos</h3>
             <p *ngIf="searchQuery" class="text-sm text-gray-500 mt-1">
               {{ filteredEvents.length }} resultado{{ filteredEvents.length !== 1 ? 's' : '' }} para "{{ searchQuery }}"
             </p>
           </div>
+
+          <button (click)="ionViewWillEnter()"
+            class="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center space-x-1">
+            <ion-icon style="font-size: 1.3rem;" name="sync-circle-sharp"></ion-icon>
+            <span></span>
+          </button>
+
           <button (click)="createNewEvent()"
             class="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,6 +84,8 @@
             </svg>
             <span>Nuevo</span>
           </button>
+
+          
         </div>
 
         <!-- Empty State - No Events -->
@@ -366,13 +375,10 @@
           <span class="text-xs font-medium">Home</span>
         </button>
 
-        <button (click)="setActiveTab('cart')" [class]="'flex flex-col items-center space-y-1 p-3 rounded-lg transition-colors relative min-w-0 flex-1 ' + 
-            (activeTab === 'cart' ? 'text-blue-600 bg-blue-50' : 'text-gray-600')">
-          <ion-icon style="font-size: 1.6rem;" name="cart-outline"></ion-icon>
-          <span class="text-xs font-medium">Carrito</span>
-          <div class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-xs font-bold">2</span>
-          </div>
+        <button (click)="setActiveTab('profile')" [class]="'flex flex-col items-center space-y-1 p-3 rounded-lg transition-colors relative min-w-0 flex-1 ' + 
+            (activeTab === 'profile' ? 'text-blue-600 bg-blue-50' : 'text-gray-600')">
+          <ion-icon style="font-size: 1.6rem;" name="person-outline"></ion-icon>
+          <span class="text-xs font-medium">Perfil</span>
         </button>
 
         <button (click)="setActiveTab('settings')" [class]="'flex flex-col items-center space-y-1 p-3 rounded-lg transition-colors min-w-0 flex-1 ' + 

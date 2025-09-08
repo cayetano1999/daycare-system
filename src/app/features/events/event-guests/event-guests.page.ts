@@ -10,6 +10,9 @@ import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Share } from '@capacitor/share';
+import { EventTicket } from '../event-ticket/event-ticket.page';
+import { SegmentSelectorComponent } from './components/segment-selector/segment-selector.component';
 
 export interface Guest {
   id: string;
@@ -23,7 +26,7 @@ export interface Guest {
   status: string;
   added_from_contact: boolean;
   table_id?: string;
-  request_status: 'PENDING' | 'VIEWED' | 'ACCEPTED' | 'REJECTED' | 'SENT';
+  request_status: 'PENDING' | 'VIEWED' | 'CONFIRMED' | 'REJECTED' | 'SENT';
   group?: {
     id: string;
     name: string;
@@ -56,13 +59,20 @@ interface Table {
   selector: 'app-event-guests',
   templateUrl: './event-guests.page.html',
   styleUrls: ['./event-guests.page.scss'],
-  imports: [...StandAloneModules, RoleAccessDirective]
+  imports: [...StandAloneModules, RoleAccessDirective, SegmentSelectorComponent]
 })
 export class EventGuestsPage implements OnInit {
   guests: Guest[] = [];
   filteredGuests: Guest[] = [];
   groups: Group[] = [];
   tables: Table[] = [];
+  segments = [
+    { label: '📋 Todos' },
+    { label: '✅ Confirmados' },
+    { label: '👁️ Vistas' },
+    { label: '✉️ Sin enviar' },
+    { label: '📤 Enviadas' }
+  ]
 
   eventId: string = ''; // TODO: Get from route params
   eventName: string = 'de María y José'; // TODO: Get from event data
@@ -71,12 +81,16 @@ export class EventGuestsPage implements OnInit {
   // Filters
   searchName: string = '';
   selectedGroupId: string = '';
+  selectedTableId: string = '';
+  showFilterSection: boolean = false;
 
   // Delete confirmation
   showDeleteConfirm: boolean = false;
   guestToDelete: string | null = null;
   event: FestivaEvent | null = null;
   user: Profile | null = null;
+  ticket: EventTicket | null = null;
+  segmentSelected: string = '📋 Todos';
 
   private readonly router = inject(Router);
   private storageHelper = inject(StorageHelper);
@@ -93,6 +107,35 @@ export class EventGuestsPage implements OnInit {
 
   ngOnInit() {
     // this.loadData();
+  }
+
+  changeToogle() {
+    this.showFilterSection = !this.showFilterSection;
+  }
+
+  onSegmentChanged(event: any) {
+    this.segmentSelected = event;
+    console.log('Segment changed to', event);
+    switch (event) {
+      case '📋 Todos':
+        this.filteredGuests = this.guests;
+        break;
+      case '✅ Confirmados':
+        this.filteredGuests = this.guests.filter(guest => guest.request_status === 'CONFIRMED');
+        break;
+      case '👁️ Vistas':
+        this.filteredGuests = this.guests.filter(guest => guest.request_status === 'VIEWED');
+        break;
+      case '✉️ Sin enviar':
+        this.filteredGuests = this.guests.filter(guest => guest.request_status === 'PENDING');
+        break;
+      case '📤 Enviadas':
+        this.filteredGuests = this.guests.filter(guest => guest.request_status === 'SENT');
+        break;
+      default:
+        this.filteredGuests = this.guests;
+        break;
+    }
   }
 
   async ionViewWillEnter() {
@@ -112,13 +155,41 @@ export class EventGuestsPage implements OnInit {
     try {
       // Load all data in parallel
       await Promise.all([
+        this.loadTicket(),
         this.loadGuests(),
         this.loadGroups(),
-        this.loadTables()
+        this.loadTables(),
       ]);
     } catch (error) {
       console.error('Error loading data:', error);
       this.showToast('Error al cargar los datos', 'error');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+    async loadTicket() {
+    this.isLoading = true;
+
+    try {
+      const { data, error } = await this.supabaseService.getRecord(
+        'event_ticket',
+        ['*'],
+        'event_id',
+        this.event?.id || ''
+      ) as any;
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('Error loading ticket:', error);
+        this.showToast('Error al cargar el ticket', 'error');
+        return;
+      }
+
+      this.ticket = data || null;
+
+    } catch (error) {
+      console.error('Error loading ticket:', error);
+      this.showToast('Error al cargar el ticket', 'error');
     } finally {
       this.isLoading = false;
     }
@@ -222,6 +293,11 @@ export class EventGuestsPage implements OnInit {
     if (this.selectedGroupId) {
       filtered = filtered.filter(guest => guest.group_id === this.selectedGroupId);
     }
+     
+    // Filter by table
+    if (this.selectedTableId) {
+      filtered = filtered.filter(guest => guest.table_id === this.selectedTableId);
+    }
 
     this.filteredGuests = filtered;
   }
@@ -229,6 +305,7 @@ export class EventGuestsPage implements OnInit {
   clearFilters() {
     this.searchName = '';
     this.selectedGroupId = '';
+    this.selectedTableId = '';
     this.filterGuests();
   }
 
@@ -245,7 +322,7 @@ export class EventGuestsPage implements OnInit {
 
   getAcceptedGuests(): number {
     return this.filteredGuests.filter(guest =>
-      guest.request_status === 'ACCEPTED'
+      guest.request_status === 'CONFIRMED'
     ).length;
   }
 
@@ -262,7 +339,7 @@ export class EventGuestsPage implements OnInit {
         return 'bg-yellow-100 text-yellow-700';
       case 'VIEWED':
         return 'bg-blue-100 text-blue-700';
-      case 'ACCEPTED':
+      case 'CONFIRMED':
         return 'bg-green-100 text-green-700';
       case 'REJECTED':
         return 'bg-red-100 text-red-700';
@@ -276,15 +353,15 @@ export class EventGuestsPage implements OnInit {
   getStatusText(status: string): string {
     switch (status) {
       case 'PENDING':
-        return 'Pendiente';
+        return '⏳ Sin enviar';
       case 'VIEWED':
-        return 'Visto';
-      case 'ACCEPTED':
-        return 'Aceptado';
+        return '👀 Visto';
+      case 'CONFIRMED':
+        return '✅ Confirmado';
       case 'REJECTED':
-        return 'Rechazado';
+        return '❌ Rechazado';
       case 'SENT':
-        return 'Enviado';
+        return '📨 Enviado';
       default:
         return 'Desconocido';
     }
@@ -402,6 +479,40 @@ export class EventGuestsPage implements OnInit {
   sendReminder(guest: Guest) {
     // TODO: Implement send reminder functionality
     console.log('Send reminder to guest:', guest);
+  }
+
+  async sendInvitation(guest: Guest) {
+    const eventDetails = [
+      `🏳️ Evento: ${this.event?.name}`,
+      `🗓️ Fecha: ${this.event?.event_date ? this.formatEventDate(this.event.event_date) : 'Por definir'}`,
+      `📍 Lugar: ${this.event?.location}`
+    ].filter(Boolean).join('\n\n');
+
+    const result = await Share.share({
+      title: `${this.ticket?.url}${guest.id}`,
+      text: ` ${this.ticket?.url}${guest.id} \n\n\n ${guest.name.toUpperCase()},  \n\n ${this.event?.share_text}\n\n • Detalles del Evento: \n\n${eventDetails}`,
+      dialogTitle: this.event?.name
+    });
+
+    if (result.activityType || result.activityType === undefined) {
+      // Successfully shared
+      await this.supabaseService.updateRecord('guests', guest.id, { request_status: 'SENT' });
+      this.showToast('Invitación enviada exitosamente', 'success');
+      guest.request_status = 'SENT';
+      // await this.loadGuests();
+    }
+  }
+
+  formatEventDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
 

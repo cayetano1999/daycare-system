@@ -92,3 +92,7 @@ input, select {
 .scroller::-webkit-scrollbar { /* Chrome/Safari/Edge (Blink/WebKit) */
   display: none;
 }
+
+ion-content {
+  --background: #F9FAFB;
+} 

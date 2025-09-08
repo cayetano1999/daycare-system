@@ -69,7 +69,7 @@ export class DashboardPage implements OnDestroy {
     {
       id: '1',
       name: 'Boda Elegante',
-      image: 'https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=2',
+      image: 'https://cayetano1999.github.io/festiva-app-host/festiva-files/invitacion-yarely-josue.gif',
       type: 'Boda'
     },
     {
@@ -191,6 +191,10 @@ export class DashboardPage implements OnDestroy {
     return this.notifications.filter(n => !n.read).length;
   }
 
+  onImageError(event: any) {
+    event.target.src = 'assets/img/shared/avatar-default.png'; // Ruta a la imagen por defecto
+  }
+
   async loadEvents() {
     // Logic to load events
     const { data, error } = await this.supabase.getRecords<FestivaEvent[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
@@ -257,6 +261,15 @@ export class DashboardPage implements OnDestroy {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+
+    switch (tab) {
+      case 'request':
+        window.open('https://wa.me/18099560999?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20las%20invitaciones', '_system');
+        break;
+      default:
+        console.log('Tab no manejada:', tab);
+        break;
+    }
   }
 
   setShowNotifications(show: boolean) {

@@ -43,3 +43,15 @@ export const EVENT_STATE = {
     managementOptionSelected: '',
     eventRole: ''
 }
+
+export function removeSpecialCharsAndEmojis(text: string): string {
+  // Elimina emojis y caracteres fuera del rango básico
+  const withoutEmojis = text.replace(/[\u{1F600}-\u{1F64F}]/gu, '')  // emoticonos
+                            .replace(/[\u{1F300}-\u{1F5FF}]/gu, '')  // símbolos y pictogramas
+                            .replace(/[\u{1F680}-\u{1F6FF}]/gu, '')  // transporte y mapas
+                            .replace(/[\u{2600}-\u{26FF}]/gu, '')    // misceláneos
+                            .replace(/[\u{2700}-\u{27BF}]/gu, '');   // símbolos dingbats
+
+  // Elimina caracteres especiales y deja solo letras, números y espacios
+  return withoutEmojis.replace(/[^a-zA-Z0-9ÁÉÍÓÚáéíóúÑñ ]/g, '').trim();
+}

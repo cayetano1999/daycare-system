@@ -1,0 +1,10 @@
+<ion-toolbar class="py-2 ion-toolbar-3">
+  <ion-segment [scrollable]="true" [value]="selectedSegment()" class="custom-segment">
+    <ion-segment-button *ngFor="let segment of segments" [value]="segment.label" (click)="selectSegment(segment.label)"
+      class="custom-segment-button">
+      <ion-label>
+        {{ segment.label }} 
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
