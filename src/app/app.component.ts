@@ -72,9 +72,9 @@ export class AppComponent implements OnInit {
             return;
         }
 
-        if (!this.platform.is('mobileweb')) {
-            await ScreenOrientation.lock({ orientation: 'portrait' });
-        }
+        // if (!this.platform.is('mobileweb')) {
+        //     await ScreenOrientation.lock({ orientation: 'portrait' });
+        // }
 
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
         this.loadFingerprint();

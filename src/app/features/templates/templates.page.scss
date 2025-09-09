@@ -1,0 +1,123 @@
+// Estilos adicionales específicos para el template
+// Tailwind CSS maneja la mayoría de los estilos
+
+.template-container {
+  // Asegurar que el contenido ocupe toda la altura
+  min-height: 100vh;
+}
+
+// Estilos para mejorar la experiencia en dispositivos móviles
+ion-content {
+  --background: white;
+  
+  // Scroll suave
+  scroll-behavior: smooth;
+}
+
+ion-header {
+  // Asegurar que el header sea transparente para el backdrop-blur
+  --background: transparent;
+  
+  .toolbar-background {
+    background: transparent;
+  }
+}
+
+// Optimizaciones para las imágenes
+img {
+  // Mejorar la carga de imágenes
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+// Animaciones suaves para las cards horizontales
+.group {
+  will-change: transform;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Asegurar que los SVG se rendericen correctamente
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// Mejoras para la accesibilidad
+button {
+  &:focus {
+    outline: 2px solid #646cff;
+    outline-offset: 2px;
+  }
+}
+
+// Optimizaciones específicas para el layout horizontal
+.flex {
+  // Asegurar que el flex funcione correctamente en todos los navegadores
+  display: flex;
+  
+  &.h-full {
+    height: 100%;
+  }
+}
+
+// Optimizaciones para tablets y móviles
+@media (max-width: 768px) {
+  .grid {
+    gap: 1rem;
+  }
+  
+  // Ajustar el ancho de la imagen en móviles
+  .w-32 {
+    width: 7rem; // Reducir ligeramente en móviles
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    gap: 0.75rem;
+  }
+  
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  // Ajustar aún más en pantallas muy pequeñas
+  .w-32 {
+    width: 6rem;
+  }
+}
+
+// Asegurar que las transiciones sean suaves en todos los dispositivos
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Mejoras para el rendimiento de las cards horizontales
+.group img {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// Optimización del gradiente overlay
+.bg-gradient-to-l {
+  background: linear-gradient(to left, transparent, transparent, rgba(0, 0, 0, 0.2));
+}
+
+// Asegurar que el contenido no se desborde
+.overflow-hidden {
+  overflow: hidden;
+}
+
+// Mejoras para el texto en cards pequeñas
+.leading-tight {
+  line-height: 1.25;
+}
+
+.leading-relaxed {
+  line-height: 1.625;
+}

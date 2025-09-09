@@ -3,6 +3,7 @@ import { dashBoardRoutes } from "src/app/features/dashboard/dashboard.routes";
 import { eventRoutes } from "src/app/features/events/events.routes";
 import { informationRoutes } from "src/app/features/information/information.routes";
 import { settingsRoutes } from "src/app/features/settings/settings.routes";
+import { templateRoutes } from "src/app/features/templates/templates.routes";
 
 export const RoutesApp = {
     ONBOARDING: '/onboarding',
@@ -50,6 +51,10 @@ export const RoutesApp = {
 
     //Settings
     SETTINGS: settingsRoutes[0]?.path ?? '',
+
+
+    //Templates
+    TEMPLATES:  templateRoutes[0]?.path ?? '',
 
     //Top Up
     TOP_UP: '/top-up',

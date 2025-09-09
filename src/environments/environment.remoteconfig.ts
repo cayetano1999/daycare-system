@@ -1,3 +1,4 @@
+import { ExampleInvitation } from "src/app/features/dashboard/dashboard.page";
 
 export const remoteConfig = {
     ENVIRONMENTS: {
@@ -80,5 +81,6 @@ export const remoteConfig = {
             users: [] as any[]
         }
     },
-    ADMINS_USERS: [] as string[]
+    ADMINS_USERS: [] as string[],
+    TICKET_TEMPLATES: [] as ExampleInvitation[]
 }

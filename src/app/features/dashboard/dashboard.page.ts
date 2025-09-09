@@ -15,6 +15,7 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { AdminAppDirective } from 'src/app/shared/directives/admin-app.directive';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
 // interface Event {
 //   id: string;
@@ -26,7 +27,7 @@ import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 //   image: string;
 // }
 
-interface ExampleInvitation {
+export interface ExampleInvitation {
   id: string;
   name: string;
   image: string;
@@ -66,26 +67,7 @@ export class DashboardPage implements OnDestroy {
   eventsToManage: FestivaEvent[] = [];
 
   // Mock example invitations
-  exampleInvitations: ExampleInvitation[] = [
-    {
-      id: '1',
-      name: 'Boda Elegante',
-      image: 'https://cayetano1999.github.io/festiva-app-host/festiva-files/invitacion-yarely-josue.gif',
-      type: 'Boda'
-    },
-    {
-      id: '2',
-      name: 'Quinceañera Dorada',
-      image: 'https://images.pexels.com/photos/1729931/pexels-photo-1729931.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=2',
-      type: 'Cumpleaños'
-    },
-    {
-      id: '3',
-      name: 'Bautizo Celestial',
-      image: 'https://images.pexels.com/photos/8923659/pexels-photo-8923659.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&dpr=2',
-      type: 'Bautizo'
-    }
-  ];
+  exampleInvitations: ExampleInvitation[] = remoteConfig.TICKET_TEMPLATES;
 
   // Mock notifications data
   notifications: Notification[] = [
@@ -426,8 +408,10 @@ export class DashboardPage implements OnDestroy {
 
     if (pushPermission === 'granted' && this.user.push_token) return; // User has granted permissions and has a push token
 
+    const modalPushShown = await this.storageHelper.getStorageKey<boolean>(StorageKeys.MODAL_PUSH_SHOWN);
 
-    if (!pushPermission && !this.user.push_token) {
+    if (!pushPermission && !this.user.push_token && !modalPushShown) {
+      await this.storageHelper.setStorageKey(StorageKeys.MODAL_PUSH_SHOWN, true);
       await this.alertCtrl.openModalPushNotification();
     }
     const permissionGranted = await this.fcm.requestPermissions();
@@ -464,5 +448,9 @@ export class DashboardPage implements OnDestroy {
       default:
         return 'border-gray-200 hover:border-gray-300';
     }
+  }
+
+  goToTemplates() {
+    this.router.navigate([RoutesApp.TEMPLATES]);
   }
 }

@@ -8,6 +8,7 @@ import { dashBoardRoutes } from './features/dashboard/dashboard.routes';
 import { eventRoutes } from './features/events/events.routes';
 import { informationRoutes } from './features/information/information.routes';
 import { settingsRoutes } from './features/settings/settings.routes';
+import { templateRoutes } from './features/templates/templates.routes';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
   ...eventRoutes,
   ...informationRoutes,
   ...settingsRoutes,
+  ...templateRoutes,
 
   {
     path: 'no-internet',
@@ -52,6 +54,10 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadComponent: () => import('./features/settings/settings.page').then( m => m.SettingsPage)
+  },
+  {
+    path: 'templates',
+    loadComponent: () => import('./features/templates/templates.page').then( m => m.TemplatesPage)
   }
  
   
