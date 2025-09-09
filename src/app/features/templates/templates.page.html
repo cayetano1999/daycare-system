@@ -1,19 +1,19 @@
 <ion-header [translucent]="true" class="ion-no-border">
-<ion-toolbar class="ion-no-border" style="--background: #fff;">
+  <ion-toolbar class="ion-no-border" style="--background: #fff;">
 
-  <ion-icon (click)="back()" style="font-size: 2rem;" color="dark" slot="start" name="chevron-back"></ion-icon>
+    <ion-icon (click)="back()" style="font-size: 2rem;" color="dark" slot="start" name="chevron-back"></ion-icon>
 
     <div class="bg-white sticky top-0 z-10 border-b border-black/10 backdrop-blur-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-      <div class="flex items-center justify-between">
-        <h1 class="text-black font-black text-2xl sm:text-3xl md:text-4xl">
-          Invitaciones
-        </h1>
-      
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
+        <div class="flex items-center justify-between">
+          <h1 class="text-black font-black text-2xl sm:text-3xl md:text-4xl">
+            Invitaciones
+          </h1>
+
+        </div>
       </div>
     </div>
-  </div>
-</ion-toolbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="bg-white">
@@ -26,7 +26,9 @@
           <div [ngSwitch]="grupo.key" class="text-black w-6 h-6 sm:w-8 sm:h-8 mr-3">
             <!-- Icono Boda (Heart) -->
             <svg *ngSwitchCase="'Boda'" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+              </path>
             </svg>
             <!-- Icono Cumpleaños (Gift) -->
             <svg *ngSwitchCase="'Cumpleaños'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,11 +37,14 @@
               <line x1="12" y1="22" x2="12" y2="7"></line>
               <path d="m5,7 10,0"></path>
               <path d="m19,7-10,0"></path>
-              <path d="M7.5,8a2.5,2.5 0 0,1 0,-5A3.1,3.1 0 0,1 12,6.5a3.1,3.1 0 0,1 4.5,-3.5A2.5,2.5 0 0,1 16.5,8"></path>
+              <path d="M7.5,8a2.5,2.5 0 0,1 0,-5A3.1,3.1 0 0,1 12,6.5a3.1,3.1 0 0,1 4.5,-3.5A2.5,2.5 0 0,1 16.5,8">
+              </path>
             </svg>
             <!-- Icono Bautizo (Sparkles) -->
             <svg *ngSwitchCase="'Bautizo'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+              <path
+                d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z">
+              </path>
               <path d="M5 3v4"></path>
               <path d="M19 17v4"></path>
               <path d="M3 5h4"></path>
@@ -58,11 +63,11 @@
           </h2>
           <div class="flex-1 ml-4 h-px bg-gradient-to-r from-black/20 to-transparent"></div>
         </div>
-        
+
         <!-- Grid de Cards Horizontales -->
         <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          <div *ngFor="let invitacion of grupo.value" 
-               class="bg-black rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] group h-32 sm:h-36 md:h-40">
+          <div *ngFor="let invitacion of grupo.value"
+            class="bg-black rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] group h-32 sm:h-36 md:h-40">
             <div class="flex h-full">
               <!-- Contenido izquierdo - Detalles -->
               <div class="flex-1 p-4 sm:p-5 md:p-6 flex flex-col justify-between">
@@ -74,7 +79,9 @@
                     <div [ngSwitch]="invitacion.type" class="text-white/80 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0">
                       <!-- Icono Boda (Heart) -->
                       <svg *ngSwitchCase="'Boda'" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        <path
+                          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
                       </svg>
                       <!-- Icono Cumpleaños (Gift) -->
                       <svg *ngSwitchCase="'Cumpleaños'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,11 +90,15 @@
                         <line x1="12" y1="22" x2="12" y2="7"></line>
                         <path d="m5,7 10,0"></path>
                         <path d="m19,7-10,0"></path>
-                        <path d="M7.5,8a2.5,2.5 0 0,1 0,-5A3.1,3.1 0 0,1 12,6.5a3.1,3.1 0 0,1 4.5,-3.5A2.5,2.5 0 0,1 16.5,8"></path>
+                        <path
+                          d="M7.5,8a2.5,2.5 0 0,1 0,-5A3.1,3.1 0 0,1 12,6.5a3.1,3.1 0 0,1 4.5,-3.5A2.5,2.5 0 0,1 16.5,8">
+                        </path>
                       </svg>
                       <!-- Icono Bautizo (Sparkles) -->
                       <svg *ngSwitchCase="'Bautizo'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                        <path
+                          d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z">
+                        </path>
                         <path d="M5 3v4"></path>
                         <path d="M19 17v4"></path>
                         <path d="M3 5h4"></path>
@@ -102,36 +113,33 @@
                       </svg>
                     </div>
                   </div>
-                  
+
                   <p class="text-white/70 text-xs sm:text-sm mb-3 leading-relaxed">
-                    {{ getDescripcionTipo(invitacion.type) }}
+                    {{invitacion.description }}
                   </p>
                 </div>
-                
+
                 <div class="flex items-center justify-between">
-                  <span class="bg-white/10 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium border border-white/20">
-                    {{ invitacion.type }}
+                  <span (click)="goToTemplate(invitacion)"
+                    class="bg-white/10 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium border border-white/20">
+                    Vista previa
                   </span>
-                  
-                  <button (click)="verMas(invitacion)" 
-                          class="bg-white text-black px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-white/90 transition-colors duration-200 hover:scale-105 transform">
+
+                  <button (click)="verMas(invitacion)"
+                    class="bg-white text-black px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-white/90 transition-colors duration-200 hover:scale-105 transform">
                     Conocer más
                   </button>
                 </div>
               </div>
-              
+
               <!-- Contenido derecho - Imagen/GIF -->
               <div class="w-32 sm:w-36 md:w-40 relative overflow-hidden" (click)="showModal(invitacion.image)">
-                <img 
-                  [src]="invitacion.image" 
-                  [alt]="invitacion.name"
+                <img [src]="invitacion.image" [alt]="invitacion.name"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                  (error)="onImageError($event)"
-                  (load)="onImageLoad($event)"
-                  
-                />
-                <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  loading="lazy" (error)="onImageError($event)" (load)="onImageLoad($event)" />
+                <div
+                  class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                </div>
               </div>
             </div>
           </div>

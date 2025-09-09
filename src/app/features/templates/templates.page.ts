@@ -5,12 +5,6 @@ import { remoteConfig } from 'src/environments/environment.remoteconfig';
 import { ModalController, NavController } from '@ionic/angular';
 import { ModalGifTemplateComponent } from 'src/app/shared/components/modal-gif-template/modal-gif-template.component';
 
-interface Invitacion {
-  id: string;
-  name: string;
-  image: string;
-  type: string;
-}
 
 @Component({
   selector: 'app-templates',
@@ -24,10 +18,10 @@ export class TemplatesPage implements OnInit {
   // Datos de invitaciones
   invitaciones: ExampleInvitation[] = remoteConfig.TICKET_TEMPLATES;
  // Invitaciones agrupadas por tipo
-  invitacionesAgrupadas: { [key: string]: Invitacion[] } = {};
+  invitacionesAgrupadas: { [key: string]: ExampleInvitation[] } = {};
   
   // Invitaciones agrupadas y ordenadas (Boda primero)
-  invitacionesAgrupadasOrdenadas: { key: string, value: Invitacion[] }[] = [];
+  invitacionesAgrupadasOrdenadas: { key: string, value: ExampleInvitation[] }[] = [];
 
   private readonly modalCtrl = inject(ModalController);
   private readonly navCtrl = inject(NavController);
@@ -68,7 +62,7 @@ export class TemplatesPage implements OnInit {
       }
       acc[tipo].push(invitacion);
       return acc;
-    }, {} as { [key: string]: Invitacion[] });
+    }, {} as { [key: string]: ExampleInvitation[] });
   }
 
   /**
@@ -99,11 +93,15 @@ export class TemplatesPage implements OnInit {
     return descripciones[tipo] || 'Diseño elegante y moderno para tu evento';
   }
 
+  goToTemplate(template: ExampleInvitation) {
+    window.open(template.url, '_system');
+  }
+
   /**
    * Maneja el evento de "Conocer más" de una invitación
    * @param invitacion - La invitación seleccionada
    */
-  verMas(invitacion: Invitacion): void {
+  verMas(invitacion: ExampleInvitation): void {
     console.log('Conocer más de:', invitacion);
     //REDIRIGIR A WS PIDIENDO INFORMACION SOBRE EL EMPLATE SELECCIONADO, USANDO WINDOW.OPEN _SYSTEM
 

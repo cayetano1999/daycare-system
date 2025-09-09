@@ -16,6 +16,7 @@ export enum StorageKeys  {
     SUPABASE_SESSION = 'supabase_session',
     PRE_HOME_ANIMATION_DONE = 'pre_home_animation_done',
     PUSH_PERMISSIONS = 'push_permissions',
-    MODAL_PUSH_SHOWN = 'modal_push_shown'
+    MODAL_PUSH_SHOWN = 'modal_push_shown',
+    USER_EVENTS = 'user_events'
 
 }

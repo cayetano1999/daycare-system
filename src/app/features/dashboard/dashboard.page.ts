@@ -32,6 +32,9 @@ export interface ExampleInvitation {
   name: string;
   image: string;
   type: string;
+  description: string;
+  short_description: string;
+  url: string;
 }
 
 interface Notification {
@@ -67,7 +70,7 @@ export class DashboardPage implements OnDestroy {
   eventsToManage: FestivaEvent[] = [];
 
   // Mock example invitations
-  exampleInvitations: ExampleInvitation[] = remoteConfig.TICKET_TEMPLATES;
+  exampleInvitations: ExampleInvitation[] = remoteConfig.TICKET_TEMPLATES.slice(0, 3); // Show only first 3 as examples
 
   // Mock notifications data
   notifications: Notification[] = [
@@ -179,20 +182,31 @@ export class DashboardPage implements OnDestroy {
     event.target.src = 'assets/img/shared/avatar-default.png'; // Ruta a la imagen por defecto
   }
 
-  async loadEvents(event?: any) {
+  async loadEvents(event?: any, force?: boolean) {
     // Logic to load events
+
+
+    const eventStorage = await this.storageHelper.getStorageKey<FestivaEvent[]>(StorageKeys.USER_EVENTS);
+    if ((!event || !force) && eventStorage && eventStorage.length > 0) {
+      this.events = eventStorage || [];
+      return;
+    }
+
+      event?.target?.complete();
+
+    await this.alertCtrl.openModalAlert();
     const { data, error } = await this.supabase.getRecords<FestivaEvent[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
-    console.log('Loaded events:', data);
     if (error) {
       console.error('Error loading events:', error);
       this.events = [];
+      this.alertCtrl.dismiss();
     } else {
       //stop refresh if exists
-      event?.target?.complete();
       //map events to add role property as Admin
       this.events = this.mapEventsForAdmin(data as any[]);
       await this.loadEventsToManage();
-
+      await this.storageHelper.setStorageKey(StorageKeys.USER_EVENTS, this.events);
+      this.alertCtrl.dismiss();
     }
   }
 
@@ -258,16 +272,16 @@ export class DashboardPage implements OnDestroy {
         window.open('https://wa.me/18099560999?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20las%20invitaciones', '_system');
         this.activeTab = 'home';
         break;
-        case 'info':
-          this.router.navigate([RoutesApp.INFORMATION]);
-          break;
+      case 'info':
+        this.router.navigate([RoutesApp.INFORMATION]);
+        break;
       case 'settings':
         this.router.navigate([RoutesApp.SETTINGS]);
         break;
       case 'profile':
         this.router.navigate([RoutesApp.AUTH_REGISTER], { state: { fromProfile: true, profile: this.user } });
         break;
-      
+
       default:
         console.log('Tab no manejada:', tab);
         break;

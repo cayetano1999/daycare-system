@@ -1,58 +1,52 @@
-<app-festiva-header></app-festiva-header>
+<!-- <app-festiva-header></app-festiva-header> -->
 
-
-<ion-content [fullscreen]="true" class="dashboard-content">
-  <ion-refresher (ionRefresh)="loadEvents($event)">
-    <ion-refresher-content pullingIcon="chevron-down" refreshingSpinner="bubbles">
-
-    </ion-refresher-content>
-  </ion-refresher>
-  <ion-grid fixed class="ion-no-padding">
-    <ion-row>
-      <ion-col size="12">
-        <div class="min-h-screen bg-gray-50 pb-20">
-          <!-- Header -->
-          <div [class]="'fixed top-0 left-0 right-0 z-40 px-6 py-4 mt-6 transition-all duration-300 ' + 
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="--background: #000;">
+    <div [class]="' top-0 left-0 right-0 z-40 px-6 py-4 mt-6 transition-all duration-300 ' + 
       (isScrolled 
         ? 'bg-black border-b border-gray-800 shadow-lg' 
         : 'bg-white border-b border-gray-100'
       )">
-            <div class="flex items-center justify-between">
-              <!-- User Info -->
-              <div class="flex items-center space-x-3">
-                <img (error)="onImageError($event)" [src]="user?.avatar_url" [alt]="user?.full_name"
-                  class="w-12 h-12 rounded-full object-cover" />
-                <div>
-                  <p [class]="'text-base font-medium mb-1 transition-colors duration-300 ' + 
+      <div class="flex items-center justify-between">
+        <!-- User Info -->
+        <div class="flex items-center space-x-3">
+          <img (error)="onImageError($event)" [src]="user?.avatar_url" [alt]="user?.full_name"
+            class="w-12 h-12 rounded-full object-cover" />
+          <div>
+            <p [class]="'text-base font-medium mb-1 transition-colors duration-300 ' + 
               (isScrolled ? 'text-gray-300' : 'text-gray-400')">
-                    Saludos,
-                  </p>
-                  <h2 [class]="'font-bold text-xl transition-colors duration-300 ' + 
+              Saludos,
+            </p>
+            <h2 [class]="'font-bold text-xl transition-colors duration-300 ' + 
               (isScrolled ? 'text-white' : 'text-gray-900')">
-                    {{user?.full_name}} 👋
-                  </h2>
-                </div>
-              </div>
+              {{user?.full_name}} 👋
+            </h2>
+          </div>
+        </div>
 
-              <!-- Notifications -->
-              <!-- <button (click)="setShowNotifications(true)" [class]="'relative p-2 rounded-full transition-all duration-300 ' + 
-            (isScrolled 
-              ? 'hover:bg-gray-800 text-white' 
-              : 'hover:bg-gray-50 text-gray-600'
-            )">
-          <ion-icon style="font-size: 1.5rem;" name="notifications-sharp"></ion-icon>
-          <div *ngIf="unreadNotifications > 0"
-            class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-xs font-bold">{{ unreadNotifications }}</span>
-          </div>
-        </button> -->
-            </div>
-          </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="loadEvents($event, true)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing..."></ion-refresher-content>
+  </ion-refresher>
+  <ion-grid fixed class="ion-no-padding dashboard-content">
+    <ion-row>
+      <ion-col size="12">
+        <div class="min-h-screen bg-gray-50 pb-20">
+          <!-- Header -->
+
 
 
 
           <!-- Main Content -->
-          <div class="pt-20 space-y-8">
+          <div class="pt-2 space-y-8">
             <!-- Search Bar -->
             <div class="px-6 pt-6">
               <div class="relative">
@@ -75,7 +69,11 @@
             <!-- Events Section -->
             <div class="px-3 pt-0 pb-6">
 
+              <!-- <ion-refresher (ionRefresh)="loadEvents($event, true)">
+                <ion-refresher-content pullingIcon="chevron-down" refreshingSpinner="bubbles">
 
+                </ion-refresher-content>
+              </ion-refresher> -->
 
               <div class="flex items-center justify-between mb-6">
                 <div>
@@ -218,7 +216,7 @@
                   </div>
                 </div>
               </div>
-            }
+              }
             </div>
           </div>
 
