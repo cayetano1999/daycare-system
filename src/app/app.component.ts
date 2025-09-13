@@ -22,6 +22,7 @@ import { KuidoTabComponent } from './shared/components/kuido-tab/kuido-tab.compo
 import { FingerprintService } from './core/services/fingerprint.service';
 import { App } from '@capacitor/app';
 import { Profile } from './core/interface/profile.interface';
+import { USER_SINGLE } from './core/constants/constants';
 
 
 register(); // Register Swiper elements globally
@@ -108,6 +109,8 @@ export class AppComponent implements OnInit {
             await this.storageHelper.setStorageKey(StorageKeys.SUPABASE_SESSION, session);
             if (data) {
                 await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, data);
+                USER_SINGLE.ID = data.id;
+                console.log('USER_SINGLE.ID', USER_SINGLE.ID);
             }
 
             if (!this.isOnboardingComplete && data) {

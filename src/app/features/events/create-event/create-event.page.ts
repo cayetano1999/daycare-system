@@ -12,6 +12,7 @@ import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.s
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
 interface FormData {
   id: string;
@@ -72,48 +73,7 @@ export class CreateEventPage implements OnInit {
   showSuccess = false;
   createdEvent: any = null;
 
-  plans: Plan[] = [
-    {
-      type: 'Starter',
-      name: 'Starter',
-      description: 'Perfecto para eventos pequeños',
-      color: 'from-green-500 to-emerald-600',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-700',
-      borderColor: 'border-green-200',
-      features: ['Hasta 50 invitados', 'Plantillas básicas', 'Soporte email']
-    },
-    {
-      type: 'Essential',
-      name: 'Essential',
-      description: 'Ideal para celebraciones familiares',
-      color: 'from-blue-500 to-cyan-600',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
-      borderColor: 'border-blue-200',
-      features: ['Hasta 150 invitados', 'Plantillas premium', 'Lista de regalos']
-    },
-    {
-      type: 'Premium',
-      name: 'Premium',
-      description: 'Para eventos especiales importantes',
-      color: 'from-purple-500 to-violet-600',
-      bgColor: 'bg-purple-50',
-      textColor: 'text-purple-700',
-      borderColor: 'border-purple-200',
-      features: ['Hasta 300 invitados', 'Diseños exclusivos', 'Analytics avanzado']
-    },
-    {
-      type: 'Elite',
-      name: 'Elite',
-      description: 'La experiencia más completa',
-      color: 'from-amber-500 to-orange-600',
-      bgColor: 'bg-amber-50',
-      textColor: 'text-amber-700',
-      borderColor: 'border-amber-200',
-      features: ['Invitados ilimitados', 'Soporte prioritario', 'Personalización total']
-    }
-  ];
+  plans: Plan[] = remoteConfig.FESTIVA_PLANS || [];
   user!: Profile;
   isIos = Capacitor.getPlatform() === 'ios';
 

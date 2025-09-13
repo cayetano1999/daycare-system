@@ -135,14 +135,14 @@ export class EventScannerPage implements OnInit {
       const parts = content.split('&');
 
       if (parts.length >= 2) {
-        const scannedEventId = parts[0];
+        const guestUid = parts[0];
         const ticketId = parts[1];
 
-        // Si quieres validar que pertenezca al evento actual descomenta:
-        if (scannedEventId !== this.event?.id) {
-          this.errorMessage = 'Este código QR no pertenece a este evento';
-          return;
-        }
+        // // Si quieres validar que pertenezca al evento actual descomenta:
+        // if (scannedEventId !== this.event?.id) {
+        //   this.errorMessage = 'Este código QR no pertenece a este evento';
+        //   return;
+        // }
 
         this.showToast('Código QR válido para este evento', 'success');
 
@@ -150,7 +150,7 @@ export class EventScannerPage implements OnInit {
         await this.sleep(100);
 
         this.router.navigate(
-          [`events/guest-verification/${this.event?.id}/${ticketId}`],
+          [`events/guest-verification/${guestUid}/${this.event?.id}`],
           { replaceUrl: true, state: { event: this.event } }
         );
       } else {

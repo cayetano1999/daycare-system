@@ -14,6 +14,7 @@ import { Share } from '@capacitor/share';
 import { EventTicket } from '../event-ticket/event-ticket.page';
 import { SegmentSelectorComponent } from './components/segment-selector/segment-selector.component';
 import { Capacitor } from '@capacitor/core';
+import { ImportGuestsModalComponent } from './components/import-guests-modal/import-guests-modal.component';
 
 export interface Guest {
   id: string;
@@ -450,6 +451,12 @@ export class EventGuestsPage implements OnInit {
 
   // Export action
   async exportGuests() {
+
+    if(this.guests.length === 0 || this.filteredGuests.length === 0) {
+      await this.alertController.openFestivaAlert('warning', 'No hay invitados para exportar', 'Agrega invitados para poder exportar la lista.', true, 'Cerrar');
+      return;
+    }
+
     await this.alertController.openModalAlert();
     const { data, error } = await this.supabaseService.getSupabase().functions.invoke('export-guest-list', {
       body: { items: this.filteredGuests, eventName: this.event?.name, fileName: `${this.event?.id}.pdf` },
@@ -459,8 +466,29 @@ export class EventGuestsPage implements OnInit {
       console.error('Error al generar PDF:', error);
     }
     const url = data?.url as string;
-    if (url) window.open(url, '_blank');
+    if (url) window.open(url, '_system');
     return url;
+  }
+
+  async importGuests() {
+
+    const modal = await this.modalController.create({
+      component: ImportGuestsModalComponent,
+      id: 'import-guests-modal',
+      componentProps: {
+        event: this.event,
+        user: this.user,
+        groups: this.groups,
+        tables: this.tables
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    await this.alertController.openModalAlert();
+    await this.loadGuests();
+    this.alertController.dismiss();
   }
 
   // Navigation

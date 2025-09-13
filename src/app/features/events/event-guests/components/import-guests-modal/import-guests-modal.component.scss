@@ -1,0 +1,188 @@
+// Estilos específicos para el componente CSV Uploader
+// Tailwind CSS maneja la mayoría de los estilos
+
+.csv-uploader-container {
+  min-height: 100vh;
+}
+
+// Estilos para el área de drag and drop
+.drag-area {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+  
+  &.drag-over {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+    transform: scale(1.02);
+  }
+}
+
+// Optimizaciones para el input file oculto
+input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Animaciones para los estados de carga
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Estilos para las cards de información
+.info-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
+
+// Estilos para la tabla de vista previa
+.preview-table {
+  th {
+    position: sticky;
+    top: 0;
+    background-color: #f9fafb;
+    z-index: 10;
+  }
+  
+  td {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// Mejoras para dispositivos móviles
+@media (max-width: 768px) {
+  .drag-area {
+    padding: 2rem 1rem;
+  }
+  
+  .info-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .preview-table {
+    font-size: 0.875rem;
+    
+    th, td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .drag-area {
+    padding: 1.5rem 0.75rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Estilos para el contenido de Ionic
+ion-content {
+  --background: #f9fafb;
+  
+  // Scroll suave
+  scroll-behavior: smooth;
+}
+
+ion-header {
+  --background: white;
+  
+  .toolbar-background {
+    background: white;
+  }
+}
+
+// Optimizaciones para accesibilidad
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.drag-area:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+// Estilos para estados disabled
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+// Animaciones suaves para las transiciones
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Mejoras para el rendimiento
+.info-card,
+.drag-area {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// Estilos para mensajes de error (si se implementan)
+.error-message {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+}
+
+.success-message {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+}
+
+// Optimizaciones para la tabla en dispositivos pequeños
+@media (max-width: 480px) {
+  .preview-table {
+    th, td {
+      padding: 0.5rem 0.25rem;
+      font-size: 0.75rem;
+    }
+    
+    td {
+      max-width: 100px;
+    }
+  }
+}

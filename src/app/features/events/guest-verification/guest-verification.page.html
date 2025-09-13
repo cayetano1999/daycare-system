@@ -1,5 +1,5 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="ion-no-border ion-no-padding">
+  <ion-toolbar class="ion-no-border ion-no-padding" style="--background: #000;">
     <div class="bg-black text-white px-0 pb-4 pt-5 flex items-center justify-between">
       <div class="flex items-center space-x-1 pt-4">
         <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
@@ -14,7 +14,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="min-h-screen bg-white flex flex-col">
+  <div class=" bg-white flex flex-col">
     
     <!-- Loading State -->
     <div *ngIf="isLoading" class="flex-1 flex flex-col items-center justify-center">

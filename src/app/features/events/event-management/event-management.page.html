@@ -39,7 +39,7 @@
 
 
             @if (showMoreOptions) {
-            <div class="absolute right-0 top-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-60">
+            <div id="more-event-options" class="absolute right-0 top-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-60">
               <button [appRoleAccess]="['Escritura', 'Admin']" (click)="editEvent()"
                 class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors flex items-center space-x-3">
                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +155,7 @@
               <div class="grid grid-cols-1 gap-4">
                 @for (option of managementOptions; track option.id; let i = $index) {
                 @if(option.isEnabled){
-                <button [id]="option.id" (click)="option.action()"
+                <button eventActionRestrictions [currentEventType]="{ code: event.plan_type, module: option.id, action: 'click' }" [id]="option.id" (click)="option.action()"
                   class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 text-left group transform hover:scale-[1.02] animate-slide-up"
                   [style.animation-delay]="(i * 100) + 'ms'" style="box-shadow: none;
     border: 1px solid #d8d8d8;">

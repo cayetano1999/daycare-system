@@ -77,5 +77,77 @@ export const remoteConfig = {
     },
     FEATURE_FLAGS: [] as any[],
     ADMINS_USERS: [] as string[],
-    TICKET_TEMPLATES: [] as ExampleInvitation[]
+    TICKET_TEMPLATES: [] as ExampleInvitation[],
+
+    FESTIVA_PLANS_TEMPLATE: {
+        FESTIVA_PLANS: [
+            {
+                code: "",
+                name: "",
+                limits: {
+                    guests_max: 0,
+                    admins_max: 0,
+                    groups_max: 0,
+                    tables_max: 0
+                },
+                features: {
+                    guests: {
+                        enabled: false,
+                        crud: false,
+                        export: false,
+                        import: false,
+                        tracking: {
+                            viewed: false,
+                            sent: false,
+                            confirmed: false,
+                            no_send: false
+                        }
+                    },
+                    gift_list: {
+                        enabled: false
+                    },
+                    groups: {
+                        enabled: false,
+                        level: ""
+                    },
+                    tables: {
+                        enabled: false
+                    },
+                    expenses: {
+                        enabled: false,
+                        push_on_record: false,
+                        reports: false
+                    },
+                    admins: {
+                        enabled: false,
+                        roles: []
+                    },
+                    scanner: {
+                        enabled: false,
+                        analytics: false
+                    },
+                    notifications: {
+                        invite_accepted: false,
+                        expense_recorded: false
+                    },
+                    branding: {
+                        customization: ""
+                    }
+                }
+            }
+        ],
+        VALIDATION: {
+            unlimited_value: 0,
+            notes: {
+                groups_level: {
+                    none: 0,
+                    basic: "",
+                    advanced: "",
+                    unlimited: ""
+                }
+            }
+        }
+    },
+    FESTIVA_PLANS: [] as any[]
+
 }

@@ -15,6 +15,7 @@ import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { EventTicket } from '../event-ticket/event-ticket.page';
 import { Capacitor } from '@capacitor/core';
+import { EventActionRestrictions } from 'src/app/shared/directives/event-restrictions.directive';
 
 interface ManagementOption {
   id: string;
@@ -33,7 +34,7 @@ interface ManagementOption {
   selector: 'app-event-management',
   templateUrl: './event-management.page.html',
   styleUrls: ['./event-management.page.scss'],
-  imports: [...StandAloneModules, RoleAccessDirective]
+  imports: [...StandAloneModules, RoleAccessDirective, EventActionRestrictions]
 })
 export class EventManagementPage implements OnInit {
   @Input() event!: FestivaEvent;
@@ -81,7 +82,7 @@ export class EventManagementPage implements OnInit {
       isEnabled: true // Only event creator or admin users can access
     },
     {
-      id: 'gifts',
+      id: 'gift_list',
       title: 'Lista de Regalos',
       description: 'Administra regalos y deseos',
       iconPath: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7',
@@ -117,7 +118,7 @@ export class EventManagementPage implements OnInit {
       isEnabled: true
     },
     {
-      id: 'table',
+      id: 'tables',
       title: 'Mesas',
       description: 'Gestiona la asignación de mesas',
       iconPath: 'M3 9h18v3H3z M7 12v7 M17 12v7',
@@ -254,6 +255,9 @@ export class EventManagementPage implements OnInit {
 
   toggleMoreOptions() {
     this.showMoreOptions = !this.showMoreOptions;
+    if (this.showMoreOptions) {
+      scrollToElement('more-event-options');
+    }
   }
 
   closeMoreOptions() {
