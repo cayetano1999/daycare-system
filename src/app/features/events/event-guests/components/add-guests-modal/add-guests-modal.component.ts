@@ -1,11 +1,16 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { Guest } from '../../event-guests.page';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
+import { cleanPhoneNumber } from 'src/app/core/constants/constants';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { ContactService } from 'src/app/core/services/contacts.service';
+import { ToastControllerService } from 'src/app/core/services/ionic/toast-controller.service';
 
 interface Group {
   id: string;
@@ -56,7 +61,11 @@ export class AddGuestModalComponent implements OnInit {
   isSubmitting: boolean = false;
   isLoadingTables: boolean = false;
 
-  private readonly alertCtrl = inject(AlertControllerService)
+  private readonly alertCtrl = inject(AlertControllerService);
+  private readonly storageHelper = inject(StorageHelper);
+  private readonly contactService = inject(ContactService);
+  private readonly actionSheet = inject(ActionSheetController);
+  private readonly toastCtrl = inject(ToastControllerService);
 
   constructor(
     private modalController: ModalController,
@@ -213,9 +222,30 @@ export class AddGuestModalComponent implements OnInit {
     );
   }
 
-  addFromContacts() {
+  async addFromContacts() {
     console.log('Add from contacts functionality');
-    this.showToast('Función de contactos en desarrollo', 'warning');
+     const contacts = await this.contactService.openContactPicker();
+    const contactSelected = await this.contactService.openContactModal(contacts || []);
+    console.log(contactSelected);
+    this.guestName = contactSelected?.name?.display || '';
+    const actionSheet = await this.actionSheet.create({
+      mode: 'md',
+      header: `Selecciona un número de ${contactSelected?.name?.display || ''}`,
+      subHeader: '',
+      buttons: [
+        ...(contactSelected?.phones?.map((phone: any) => ({
+          text: phone.number,
+          handler: async () => {
+            this.phoneNumber = cleanPhoneNumber(phone.number) || '';
+          }
+        })) || []),
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        }
+      ]
+    });
+    await actionSheet.present();
   }
 
   async handleSubmit() {

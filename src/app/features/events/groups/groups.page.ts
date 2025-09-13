@@ -104,6 +104,8 @@ export class GroupsPage implements OnInit {
       }
 
       this.groups = data as any[] || [];
+      //order by name asc
+      this.groups.sort((a, b) => a.name.localeCompare(b.name));
     } catch (error: any) {
       console.error('Error loading groups:', error);
 

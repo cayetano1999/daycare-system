@@ -109,16 +109,16 @@ export class ImportGuestsModalComponent implements OnInit {
    * Procesa el archivo seleccionado
    * @param file - Archivo seleccionado
    */
-  private handleFile(file: File): void {
+  private async handleFile(file: File): Promise<void> {
     // Validar tipo de archivo
     if (!this.isValidFileType(file)) {
-      this.showError('Por favor selecciona un archivo CSV válido');
+      await this.alertCtrl.openFestivaAlert('danger', 'Error', 'Por favor selecciona un archivo CSV válido');
       return;
     }
 
     // Validar tamaño
     if (file.size > this.maxFileSize) {
-      this.showError('El archivo es demasiado grande. Máximo 10MB permitido');
+      await this.alertCtrl.openFestivaAlert('danger', 'Error', 'El archivo es demasiado grande. Máximo 10MB permitido');
       return;
     }
 
@@ -155,7 +155,7 @@ export class ImportGuestsModalComponent implements OnInit {
     this.isProcessing = true;
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const csv = e.target?.result as string;
         const lines = csv.split('\n').filter(line => line.trim() !== '');
@@ -167,7 +167,7 @@ export class ImportGuestsModalComponent implements OnInit {
         this.parseCsv(csv);
       } catch (error) {
         console.error('Error procesando archivo:', error);
-        this.showError('Error al procesar el archivo CSV');
+        await this.alertCtrl.openFestivaAlert('danger', 'Error', 'Error al procesar el archivo CSV');
       } finally {
         this.isProcessing = false;
       }
@@ -195,7 +195,7 @@ export class ImportGuestsModalComponent implements OnInit {
    * Parsea el contenido CSV
    * @param csvContent - Contenido del archivo CSV
    */
-  private parseCsv(csvContent: string): void {
+  private async parseCsv(csvContent: string): Promise<void> {
     const lines = csvContent.split('\n').filter(line => line.trim() !== '');
 
     if (lines.length === 0) {
@@ -212,6 +212,19 @@ export class ImportGuestsModalComponent implements OnInit {
     // Actualizar información del archivo
     if (this.fileInfo) {
       this.fileInfo.records = this.csvData.length;
+    }
+
+    const mustToBeHeaders = ['nombre', 'acompañantes', 'observaciones', 'telefono'];
+    const missingHeaders = mustToBeHeaders.filter(header => !this.csvHeaders.includes(header));
+    if (missingHeaders.length > 0) {
+      await this.alertCtrl.openFestivaAlert('warning', 'Atención', `Faltan las siguientes columnas obligatorias: ${missingHeaders.join(', ')}`);
+      this.selectedFile = null;
+      this.fileInfo = null;
+      this.csvData = [];
+      this.csvHeaders = [];
+      this.isLoading = false;
+      this.isProcessing = false;
+      return;
     }
 
     console.log('CSV procesado:', {

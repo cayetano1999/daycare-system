@@ -239,3 +239,59 @@ ion-searchbar::part(icon) {
 //   font-family: 'aptops' sans-serif;
 // }
 
+
+.custom-action-sheet {
+  --background: #fff;
+  
+  --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+
+  .action-sheet-group {
+    --border-top-left-radius: 20px;
+  --border-top-right-radius: 20px;
+    overflow: hidden;
+  }
+
+  .action-sheet-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .action-sheet-button {
+    font-size: 1rem;
+    font-weight: 500;
+    --padding-start: 18px;
+    --padding-end: 18px;
+    --min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    ion-icon {
+      font-size: 22px;
+      color: var(--ion-color-medium);
+    }
+  }
+
+  .import-btn {
+    color: #000; 
+  }
+
+  .export-btn {
+    color: #000; 
+  }
+
+  .search-btn {
+    color: #000; 
+  }
+
+  .cancel-btn {
+    color: #ef4444; // rojo
+    font-weight: 600;
+    padding-top: 10px;
+  }
+
+  button:focus { outline: none; box-shadow: none; }           /* opcional si defines lo de abajo */
+button:focus-visible { outline: 2px solid #7aa7ff; }        /* foco accesible para teclado */
+button:focus:not(:focus-visible) { outline: 0; box-shadow: none; } 
+}

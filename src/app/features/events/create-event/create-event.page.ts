@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input, inject } from '@angula
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { AlertController, NavController } from '@ionic/angular';
-import { isAdminUser, removeSpecialCharsAndEmojis } from 'src/app/core/constants/constants';
+import { isAdminUser, removeSpecialCharsAndEmojis, sanitizeForBucket } from 'src/app/core/constants/constants';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
@@ -293,14 +293,17 @@ export class CreateEventPage implements OnInit {
         // Elimina la imagen anterior si existe
         await this.supabaseStorage.removeImage(this.event?.image.split('public/festiva/')[1] || '', 'festiva');
       }
+      // Replace "ñ" with "n" in the name for folder and filename
+      const sanitizedName = sanitizeForBucket(this.formData.name || 'event', { separator: '_', allowSlash: false});
+
       const { url, path } = await this.supabaseStorage.uploadBase64(compressedImage, {
         userId: this.editingEvent ? this.formData.user_id : this.user.id,
-        folder: `events_images/${this.formData.name.replace(/\s+/g, '_').toLowerCase()}`,      // o 'events', 'banners', etc.
+        folder: `events_images/${sanitizedName}`,      // o 'events', 'banners', etc.
         toWebp: true,           // pesa menos
         maxWidthOrHeight: 800,
         maxSizeMB: 0.6,
         bucket: 'festiva',
-        filename: `${this.formData.name.replace(/\s+/g, '_').toLowerCase()}` // nombre personalizado
+        filename: this.editingEvent ? this.event?.id : sanitizedName // nombre personalizado
       });
       // Guarda la URL (y opcionalmente el path) en tu formulario/DB
       this.imagePreview = url;

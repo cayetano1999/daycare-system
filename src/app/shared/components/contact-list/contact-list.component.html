@@ -1,8 +1,17 @@
-<app-kuido-header [isModal]="true" title="Contacts Book"></app-kuido-header>
+<ion-header>
+  <ion-toolbar class="ion-no-border">
+    <ion-title>Tus contactos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="light" (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
   <div class="search-container">
     <div class="search-wrapper">
-      <ion-input [(ngModel)]="searchTerm" (ionInput)="filterContacts()" placeholder="Search by contact name"
+      <ion-input [(ngModel)]="searchTerm" (ionInput)="filterContacts()" placeholder="Buscar por nombre de contacto"
         class="custom-searchbar" class="search-input">
       </ion-input>
       <img class="search-icon" src="assets/img/shared/find.svg" alt="Search icon" />

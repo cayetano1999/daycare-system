@@ -96,3 +96,43 @@ input, select {
 ion-content {
   --background: #F9FAFB;
 } 
+
+
+/* Indicador de mano */
+.hand-indicator {
+  max-width: clamp(25px, 8vw, 40px);
+  width: clamp(20px, 6vw, 30px);
+  margin-top: clamp(-1rem, -4vw, -2rem);
+  position: relative;
+
+}
+
+.responsive-hand-indicator {
+  @media (max-width: 320px) {
+    max-width: 20px;
+    width: 18px;
+    margin-top: -0.8rem;
+  }
+  
+  @media (min-width: 768px) {
+    max-width: 50px;
+    width: 40px;
+    margin-top: -2.5rem;
+  }
+
+
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+#more-options-button {
+  // position: relative;
+  animation: bounce 2s infinite;
+}

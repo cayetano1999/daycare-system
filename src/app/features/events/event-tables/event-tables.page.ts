@@ -84,6 +84,8 @@ export class EventTablesPage implements OnInit {
       }
 
       this.tables = data || [];
+      //order by name asc
+      this.tables.sort((a, b) => a.name.localeCompare(b.name));
 
     } catch (error) {
       console.error('Error loading tables:', error);

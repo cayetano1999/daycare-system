@@ -257,7 +257,7 @@ export class EventExpensesPage implements OnInit {
         };
 
         this.expenses = [...this.expenses, newExpense];
-         this.sendNotificationForOwner(`${this.user?.full_name || 'Alguien'} registró el gasto: ${newExpense?.name || ''}`);
+         this.sendNotificationForOwner(`${this.user?.full_name || 'Alguien'} registró el gasto: ${newExpense?.name || ''} con un valor de ${this.formatCurrency(newExpense.cost)}`);
 
       }
 

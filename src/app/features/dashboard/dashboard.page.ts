@@ -189,7 +189,7 @@ export class DashboardPage implements OnDestroy {
     // Logic to load events
 
 
-    const eventStorage = await this.storageHelper.getStorageKey<FestivaEvent[]>(StorageKeys.USER_EVENTS);
+    const eventStorage = [] as FestivaEvent[]; //await this.storageHelper.getStorageKey<FestivaEvent[]>(StorageKeys.USER_EVENTS);
     if ((!event || !force) && eventStorage && eventStorage.length > 0) {
       this.events = eventStorage || [];
       return;

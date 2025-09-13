@@ -65,3 +65,44 @@ export function isAdminUser(userId: string): boolean {
 export const USER_SINGLE = {
     ID: 0,
 }
+
+/**
+ * Convierte un texto a un nombre seguro para carpeta/archivo en Supabase.
+ * - Quita acentos/diacríticos (áéíóúñ… -> aeioun)
+ * - Reemplaza espacios/Separadores por "_" (configurable)
+ * - Elimina cualquier caracter fuera de [a-z0-9_-] (y opcional "/")
+ */
+export function sanitizeForBucket(
+  input: string,
+  opts: { separator?: '_' | '-'; allowSlash?: boolean; maxLength?: number } = {}
+): string {
+  const separator = opts.separator ?? '_';
+  const allowSlash = opts.allowSlash ?? false;
+
+  // 1) Normaliza y quita diacríticos (compat Safari/Chrome/Node)
+  let s = input.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // elimina marcas combinadas
+
+  // Casos especiales comunes (opcional)
+  s = s.replace(/ß/g, 'ss').replace(/æ/g, 'ae').replace(/œ/g, 'oe');
+
+  // 2) Minúsculas
+  s = s.toLowerCase();
+
+  // 3) Reemplaza cualquier separador por el elegido
+  s = s.replace(/[\s\p{Z}]+/gu, separator); // espacios unicode -> "_"
+
+  // 4) Borra todo lo que no sea permitido
+  const allowed = allowSlash ? new RegExp(`[^a-z0-9_\\-\\/]+`, 'g') : /[^a-z0-9_\-]+/g;
+  s = s.replace(allowed, '');
+
+  // 5) Colapsa separadores repetidos y recorta extremos
+  const rep = new RegExp(`${separator}{2,}`, 'g');
+  s = s.replace(rep, separator).replace(new RegExp(`^${separator}|${separator}$`, 'g'), '');
+
+  // 6) Longitud máxima opcional
+  if (opts.maxLength && s.length > opts.maxLength) s = s.slice(0, opts.maxLength);
+
+  return s;
+}
+
+

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { AddGuestModalComponent } from './components/add-guests-modal/add-guests-modal.component';
@@ -15,6 +15,7 @@ import { EventTicket } from '../event-ticket/event-ticket.page';
 import { SegmentSelectorComponent } from './components/segment-selector/segment-selector.component';
 import { Capacitor } from '@capacitor/core';
 import { ImportGuestsModalComponent } from './components/import-guests-modal/import-guests-modal.component';
+import { EVENT_STATE } from 'src/app/core/constants/constants';
 
 export interface Guest {
   id: string;
@@ -55,6 +56,7 @@ interface Table {
   id: string;
   name: string;
   capacity: number;
+  available: number;
 }
 
 @Component({
@@ -94,10 +96,11 @@ export class EventGuestsPage implements OnInit {
   ticket: EventTicket | null = null;
   segmentSelected: string = '📋 Todos';
   isIos = Capacitor.getPlatform() === 'ios';
+  showFilterCard: boolean = false;
 
   private readonly router = inject(Router);
   private storageHelper = inject(StorageHelper);
-  private navCtrl = inject(NavController);
+  private actionSheet = inject(ActionSheetController);
   private alertController = inject(AlertControllerService);
 
 
@@ -158,10 +161,10 @@ export class EventGuestsPage implements OnInit {
     try {
       // Load all data in parallel
       await Promise.all([
-        this.loadTicket(),
-        this.loadGuests(),
-        this.loadGroups(),
-        this.loadTables(),
+        await this.loadTicket(),
+        await this.loadGuests(),
+        await this.loadGroups(),
+        await this.loadTables(),
       ]);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -171,7 +174,7 @@ export class EventGuestsPage implements OnInit {
     }
   }
 
-    async loadTicket() {
+  async loadTicket() {
     this.isLoading = true;
 
     try {
@@ -275,6 +278,7 @@ export class EventGuestsPage implements OnInit {
       }
 
       this.tables = data as any[] || [];
+      this.tables = this.tables.filter(table => table.available > 0);
 
     } catch (error) {
       console.error('Error loading tables:', error);
@@ -296,7 +300,7 @@ export class EventGuestsPage implements OnInit {
     if (this.selectedGroupId) {
       filtered = filtered.filter(guest => guest.group_id === this.selectedGroupId);
     }
-     
+
     // Filter by table
     if (this.selectedTableId) {
       filtered = filtered.filter(guest => guest.table_id === this.selectedTableId);
@@ -383,12 +387,12 @@ export class EventGuestsPage implements OnInit {
       }
     });
 
-    modal.onDidDismiss().then((result) => {
+    modal.onDidDismiss().then(async (result) => {
       if (result.data?.success) {
-        this.loadGuests();
-        this.loadTicket();
-        this.loadGroups();
-        this.loadTables();
+        await this.loadTicket();
+        await this.loadGuests();
+        await this.loadGroups();
+        await this.loadTables();
         this.showToast('Invitado agregado exitosamente', 'success');
       }
     });
@@ -452,7 +456,7 @@ export class EventGuestsPage implements OnInit {
   // Export action
   async exportGuests() {
 
-    if(this.guests.length === 0 || this.filteredGuests.length === 0) {
+    if (this.guests.length === 0 || this.filteredGuests.length === 0) {
       await this.alertController.openFestivaAlert('warning', 'No hay invitados para exportar', 'Agrega invitados para poder exportar la lista.', true, 'Cerrar');
       return;
     }
@@ -515,6 +519,19 @@ export class EventGuestsPage implements OnInit {
   }
 
   async sendInvitation(guest: Guest) {
+
+    if (!this.ticket?.url) {
+      await this.alertController.openFestivaAlert('warning', 'URL del ticket no disponible', 'La URL del ticket no está configurada. No se puede enviar la invitación.', true, 'Cerrar');
+      return;
+    }
+
+    if (!this.event) {
+      await this.alertController.openFestivaAlert('warning', 'Detalles del evento no disponibles', 'Los detalles del evento no están disponibles. No se puede enviar la invitación.', true, 'Cerrar');
+      return;
+    }
+
+
+
     const eventDetails = [
       `🏳️ Evento: ${this.event?.name}`,
       `🗓️ Fecha: ${this.event?.event_date ? this.formatEventDate(this.event.event_date) : 'Por definir'}`,
@@ -546,6 +563,65 @@ export class EventGuestsPage implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  async toggleMoreOptions() {
+    //open an ionic action sheet with options and icons about Import, Export and Search
+    const actionSheet = await this.actionSheet.create({
+      mode: 'md',
+      header: 'Más Opciones',
+      cssClass: 'custom-action-sheet',
+      buttons: [
+        {
+          text: 'Agregar Invitado',
+          icon: 'person-add-outline',
+          handler: async  () => {
+            if (EVENT_STATE.eventRole === 'Lectura') {
+              await this.alertController.openFestivaAlert('warning', 'Acción no permitida', 'No tienes permisos para agregar invitados en este evento.');
+              return;
+            }
+            this.openAddGuestModal()
+          },
+          cssClass: 'share-btn',
+        },
+        {
+          text: 'Importar invitados .csv',
+          icon: 'cloud-upload-outline',
+           handler: async  () => {
+            if (EVENT_STATE.eventRole === 'Lectura') {
+              await this.alertController.openFestivaAlert('warning', 'Acción no permitida', 'No tienes permisos para importar invitados en este evento.');
+              return;
+            }
+            this.importGuests()
+          },
+          cssClass: 'import-btn'
+        },
+        {
+          text: 'Exportar invitados .pdf',
+          icon: 'cloud-download-outline',
+          handler: () => this.exportGuests(),
+          cssClass: 'export-btn'
+        },
+        {
+          text: 'Buscar invitados',
+          icon: 'search-outline',
+          handler: () => {
+            // this.showSearch = true;
+            this.showFilterSection = true;
+            this.showFilterCard = true;
+          },
+          cssClass: 'search-btn'
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          icon: 'close-outline',
+          cssClass: 'cancel-btn'
+        }
+      ]
+    });
+    await actionSheet.present();
+
   }
 
 
