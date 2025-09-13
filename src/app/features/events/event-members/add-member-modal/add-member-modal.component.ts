@@ -236,4 +236,8 @@ export class AddMemberModalComponent implements OnInit {
       { screen: 'invite-details', inviteId: 'abc-123' }
     );
   }
+
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = 'https://cayetano1999.github.io/festiva-app-host/festiva-logo.png';
+  }
 }

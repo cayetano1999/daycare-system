@@ -116,6 +116,8 @@ export class DashboardPage implements OnDestroy {
     }
   ];
 
+  isIos = Capacitor.getPlatform() === 'ios';
+
   private storageHelper = inject(StorageHelper);
   private router = inject(Router);
   private supabase = inject(SupabaseService);
@@ -129,6 +131,7 @@ export class DashboardPage implements OnDestroy {
 
   async ionViewWillEnter() {
     // Handle scroll effect for header
+    const device = Capacitor.getPlatform();
     this.setActiveTab('home');
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
     this.user.full_name = this.user.full_name.split(' ').slice(0, 2).join(' '); // Get first and second name only
@@ -466,5 +469,9 @@ export class DashboardPage implements OnDestroy {
 
   goToTemplates() {
     this.router.navigate([RoutesApp.TEMPLATES]);
+  }
+
+  goToTemplatesEvent(invitation: ExampleInvitation) {
+    window.open(invitation.url, '_system');
   }
 }

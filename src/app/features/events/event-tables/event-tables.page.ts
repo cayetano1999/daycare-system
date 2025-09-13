@@ -9,6 +9,7 @@ import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { ToastControllerService } from 'src/app/core/services/ionic/toast-controller.service';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Capacitor } from '@capacitor/core';
 
 interface EventTable {
   id: string;
@@ -36,6 +37,7 @@ export class EventTablesPage implements OnInit {
   tableToDelete: string | null = null;
   event: FestivaEvent | null = null;
   user: Profile | null = null;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private readonly router = inject(Router);
   private readonly storageHelper = inject(StorageHelper);

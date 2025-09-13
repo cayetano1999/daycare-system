@@ -16,6 +16,7 @@ interface ScanResult {
   selector: 'app-event-scanner',
   templateUrl: './event-scanner.page.html',
   styleUrls: ['./event-scanner.page.scss'],
+  standalone: true,
   imports: [...StandAloneModules]
 })
 export class EventScannerPage implements OnInit {
@@ -23,6 +24,8 @@ export class EventScannerPage implements OnInit {
   eventName: string = 'Boda de María y José'; // TODO: Get from event data
 
   isScanning: boolean = false;
+  private scanning = false;
+
   scanResult: string = '';
   errorMessage: string = '';
   event: FestivaEvent | undefined;
@@ -32,8 +35,7 @@ export class EventScannerPage implements OnInit {
 
   constructor(private supabaseService: SupabaseService) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   ionViewWillEnter() {
     this.clearResults();
@@ -41,52 +43,87 @@ export class EventScannerPage implements OnInit {
     if (state?.event) this.event = state.event;
   }
 
+  ionViewWillLeave() {
+    // Limpia siempre la UI si el usuario sale durante el escaneo
+    document.body.classList.remove('scanner-active');
+    this.isScanning = false;
+    this.scanning = false;
+  }
+
+  private async ensureCameraPermission(): Promise<boolean> {
+    try {
+      const status: any = await (CapacitorBarcodeScanner as any).checkPermissions?.();
+      if (status?.camera === 'granted') return true;
+
+      const req: any = await (CapacitorBarcodeScanner as any).requestPermissions?.();
+      return req?.camera === 'granted';
+    } catch {
+      // Si el plugin no expone permisos, dejamos que iOS muestre el prompt igual
+      return true;
+    }
+  }
+
   async startScan() {
+    if (this.scanning) return; // evita llamadas duplicadas
+    this.scanning = true;
     this.isScanning = true;
     this.scanResult = '';
     this.errorMessage = '';
 
     try {
-      // Check permission before scanning
-      // Hide background to show camera
+      
+      // Oscurece el fondo para mostrar la cámara sin toques detrás
       document.body.classList.add('scanner-active');
 
-      // Start scanning
-      const result = await CapacitorBarcodeScanner.scanBarcode({
+      const result: any = await CapacitorBarcodeScanner.scanBarcode({
         hint: 0,
         scanInstructions: 'Escanea el código QR de la boleta',
         scanButton: false,
         scanText: 'Escanear',
-        cameraDirection: 1,
-        scanOrientation: 1,
-        // android: {
-        //   scanningLibrary: 'zxing',
-        // },
+        cameraDirection: 1, // <-- TRASERA (clave en iOS)
+        scanOrientation: 1, // portrait
+        // android: { scanningLibrary: 'zxing' },
         web: {
           showCameraSelection: true,
           scannerFPS: 30,
         },
-
       });
 
-      // Show background again
+      // Normaliza posibles formas de respuesta entre plugins
+      const content: string | undefined =
+        result?.ScanResult ??
+        result?.content ??
+        (Array.isArray(result?.barcodes) ? result.barcodes[0]?.rawValue : undefined);
+
+      // Muestra el background otra vez
       document.body.classList.remove('scanner-active');
 
-      if (result.ScanResult) {
-        this.scanResult = result.ScanResult;
-        this.processScanResult(result.ScanResult);
+      if (typeof content === 'string' && content.length > 0) {
+        this.scanResult = content;
+
+        // Pequeño delay para que iOS libere la sesión antes de navegar
+        await this.sleep(150);
+
+        await this.processScanResult(content);
       } else {
-        this.errorMessage = 'No se pudo leer el código QR';
+        // Cancelado o sin contenido no es error fatal
+        this.errorMessage = 'Escaneo cancelado o sin contenido.';
       }
 
-    } catch (error) {
-      console.error('Error during scan:', error);
-      this.errorMessage = 'Error al escanear el código QR';
+    } catch (error: any) {
+      // OS-PLUG-BARC-0006 = cancelado por el SO/usuario
+      if (error?.code === 'OS-PLUG-BARC-0006' || /cancel/i.test(error?.message)) {
+        this.errorMessage = 'Escaneo cancelado.';
+      } else {
+        console.error('Error during scan:', error);
+        this.errorMessage = 'Error al escanear el código QR';
+      }
 
-      // Make sure to show background again
+      // Asegura restaurar background
       document.body.classList.remove('scanner-active');
     } finally {
       this.isScanning = false;
+      this.scanning = false;
     }
   }
 
@@ -94,7 +131,6 @@ export class EventScannerPage implements OnInit {
     try {
       console.log('Scanned QR content:', content);
 
-      // Process the QR content
       // Expected format: eventId&ticketId
       const parts = content.split('&');
 
@@ -102,17 +138,21 @@ export class EventScannerPage implements OnInit {
         const scannedEventId = parts[0];
         const ticketId = parts[1];
 
-        // Verify if this QR belongs to the current event
-        // if (scannedEventId === this.eventId) {
-        // Valid QR for this event
+        // Si quieres validar que pertenezca al evento actual descomenta:
+        if (scannedEventId !== this.event?.id) {
+          this.errorMessage = 'Este código QR no pertenece a este evento';
+          return;
+        }
+
         this.showToast('Código QR válido para este evento', 'success');
 
-        // TODO: Process ticket validation, mark as scanned, etc.
-        this.router.navigate([`events/guest-verification/${this.event?.id}/${ticketId}`], { replaceUrl: true, state: { event: this.event } });
+        // Otro pequeño margen antes de navegar (iOS)
+        await this.sleep(100);
 
-        // } else {
-        //   this.errorMessage = 'Este código QR no pertenece a este evento';
-        // }
+        this.router.navigate(
+          [`events/guest-verification/${this.event?.id}/${ticketId}`],
+          { replaceUrl: true, state: { event: this.event } }
+        );
       } else {
         this.errorMessage = 'Código QR inválido';
       }
@@ -127,6 +167,7 @@ export class EventScannerPage implements OnInit {
     try {
       document.body.classList.remove('scanner-active');
       this.isScanning = false;
+      this.scanning = false;
     } catch (error) {
       console.error('Error stopping scan:', error);
     }
@@ -137,21 +178,19 @@ export class EventScannerPage implements OnInit {
     this.errorMessage = '';
   }
 
-
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
-    // TODO: Implement toast notification
+    // TODO: Implementa tu toast real si lo necesitas
     console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   // Lifecycle cleanup
-  ionViewWillLeave() {
-    if (this.isScanning) {
-      this.stopScan();
-    }
-  }
+  // (si se estaba escaneando, ya se limpia en ionViewWillLeave)
 
   goBack() {
     this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event: this.event }, replaceUrl: true });
+  }
 
+  private sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

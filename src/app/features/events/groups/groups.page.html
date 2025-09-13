@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-toolbar class="ion-no-border ion-no-padding">
-    <div class="pt-4 top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
-      <div class="flex items-center px-4 py-4">
+  <ion-toolbar class="ion-no-border ion-no-padding"  style="--background: #000;">
+    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}" class="top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
+      <div class="flex items-center px-4">
         <button 
           (click)="goBack()"
           class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group"

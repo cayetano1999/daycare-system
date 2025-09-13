@@ -75,12 +75,7 @@ export const remoteConfig = {
             rewarded: ""
         }
     },
-    FEATURE_FLAGS: {
-        FORCE_UPDATE: {
-            active: "",
-            users: [] as any[]
-        }
-    },
+    FEATURE_FLAGS: [] as any[],
     ADMINS_USERS: [] as string[],
     TICKET_TEMPLATES: [] as ExampleInvitation[]
 }

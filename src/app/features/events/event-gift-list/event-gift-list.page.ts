@@ -70,6 +70,7 @@ export class GiftListPage implements OnInit {
   newStoreName = '';
   event: FestivaEvent | null = null;
   user: Profile | null = null;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private alertController = inject(AlertController);
   private navController = inject(NavController);

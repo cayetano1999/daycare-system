@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="ion-no-border ion-no-padding">
-    <div class="bg-black text-white px-0 pb-4 pt-5 flex items-center justify-between">
-      <div class="flex items-center space-x-1 pt-4">
+  <ion-toolbar class="ion-no-border ion-no-padding"  style="--background: #000;">
+    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}" class="bg-black text-white px-0  flex items-center justify-between">
+      <div class="flex items-center space-x-1">
         <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -121,7 +121,7 @@
 
             <!-- Member Info -->
             <div class="flex flex-col items-center text-center mb-6">
-              <img [src]="member.user?.avatar_url || defaultAvatar" [alt]="member.user?.full_name || 'Usuario'"
+              <img (error)="onImageError($event)" [src]="member.user?.avatar_url || defaultAvatar" [alt]="member.user?.full_name || 'Usuario'"
                 class="w-20 h-20 rounded-2xl object-cover shadow-lg mb-4">
               <h4 class="text-xl font-bold text-gray-900 mb-1">{{ member.user?.full_name || 'Usuario desconocido' }}</h4>
               <p class="text-gray-600 text-sm mb-1">{{ member.user?.email }}</p>

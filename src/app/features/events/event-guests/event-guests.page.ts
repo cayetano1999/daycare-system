@@ -13,6 +13,7 @@ import { RoleAccessDirective } from 'src/app/shared/directives/role-access.direc
 import { Share } from '@capacitor/share';
 import { EventTicket } from '../event-ticket/event-ticket.page';
 import { SegmentSelectorComponent } from './components/segment-selector/segment-selector.component';
+import { Capacitor } from '@capacitor/core';
 
 export interface Guest {
   id: string;
@@ -91,6 +92,7 @@ export class EventGuestsPage implements OnInit {
   user: Profile | null = null;
   ticket: EventTicket | null = null;
   segmentSelected: string = '📋 Todos';
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private readonly router = inject(Router);
   private storageHelper = inject(StorageHelper);
@@ -383,6 +385,9 @@ export class EventGuestsPage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result.data?.success) {
         this.loadGuests();
+        this.loadTicket();
+        this.loadGroups();
+        this.loadTables();
         this.showToast('Invitado agregado exitosamente', 'success');
       }
     });

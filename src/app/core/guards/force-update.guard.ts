@@ -23,7 +23,7 @@ export class ForceUpgradeGuard implements CanActivate {
     ): Observable<boolean | UrlTree> {
 
         // Si la actualización forzada está desactivada, permitir acceso
-        if (!remoteConfig.FEATURE_FLAGS.FORCE_UPDATE.active) {
+        if (!remoteConfig.FEATURE_FLAGS.find(f=> f.key === 'FORCE_UPDATE' && f.active)) {
             return of(true);
         }
 

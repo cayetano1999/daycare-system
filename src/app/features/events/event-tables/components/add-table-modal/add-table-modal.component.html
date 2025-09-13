@@ -1,6 +1,8 @@
-<div class="bg-white rounded-t-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-  <!-- Modal Header -->
-  <div class="bg-dark-900 text-dark p-6 rounded-t-2xl flex justify-between items-center">
+
+
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="---background: #fff;">
+     <div class="bg-dark-900 text-dark  rounded-t-2xl flex justify-between items-center">
     <h2 class="text-xl font-semibold">{{ mode === 'edit' ? 'Editar Mesa' : 'Agregar Mesa' }}</h2>
     <button (click)="closeModal()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -8,6 +10,17 @@
       </svg>
     </button>
   </div>
+  </ion-toolbar>
+</ion-header>
+<!-- [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}" -->
+
+<ion-content>
+  <ion-grid fixed class="ion-no-padding">
+    <ion-row>
+      <ion-col size="12">
+        <div class="bg-white rounded-t-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+  <!-- Modal Header -->
+ 
 
   <div class="p-6">
     <!-- Table Icon -->
@@ -91,3 +104,8 @@
     </button>
   </div>
 </div>
+      </ion-col>
+      
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -10,6 +10,7 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { AddMemberModalComponent } from './add-member-modal/add-member-modal.component';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Capacitor } from '@capacitor/core';
 
 interface EventMember {
   id: string;
@@ -36,10 +37,12 @@ export class EventMembersPage implements OnInit {
   eventId: string = ''; // TODO: Get from route params
   eventName: string = ''; // TODO: Get from event data
   isLoading: boolean = true;
-  defaultAvatar: string = 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2';
+  defaultAvatar: string = 'https://cayetano1999.github.io/festiva-app-host/festiva-logo.png';
 
   event: FestivaEvent | null = null;
   user: Profile | null = null;
+
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private router = inject(Router);
   private storageHelper = inject(StorageHelper);
@@ -233,6 +236,10 @@ export class EventMembersPage implements OnInit {
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
     console.log(`${type.toUpperCase()}: ${message}`);
+  }
+
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = this.defaultAvatar;
   }
 
 

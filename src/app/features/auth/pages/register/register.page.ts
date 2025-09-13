@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
@@ -65,6 +66,7 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   private passwordCheckTimer: any;
   user: Profile | null = null;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private alertController = inject(AlertControllerService);
   private navController = inject(NavController);

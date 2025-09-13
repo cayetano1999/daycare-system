@@ -106,7 +106,7 @@ export class TemplatesPage implements OnInit {
     //REDIRIGIR A WS PIDIENDO INFORMACION SOBRE EL EMPLATE SELECCIONADO, USANDO WINDOW.OPEN _SYSTEM
 
     const numero = '18093716874';
-    const mensaje = `Hola, me gustaría recibir información sobre el template "${invitacion.name}" (ID: ${invitacion.id}).`;
+    const mensaje = `Hola, me gustaría recibir información sobre el template "${invitacion.name}" (ID: ${invitacion.id}, Invitación: ${invitacion.url}).`;
     const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_system');
 

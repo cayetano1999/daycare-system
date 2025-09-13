@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { isAdminUser, removeSpecialCharsAndEmojis } from 'src/app/core/constants/constants';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
@@ -114,6 +115,7 @@ export class CreateEventPage implements OnInit {
     }
   ];
   user!: Profile;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private alertController = inject(AlertController);
   private alertCtrl = inject(AlertControllerService)
@@ -167,8 +169,9 @@ export class CreateEventPage implements OnInit {
   async ionViewWillEnter() {
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
 
-    if(!isAdminUser(this.user.id)) {
+    if(!isAdminUser(this.user.id) && !this.editingEvent) {
       await this.alertCtrl.openFestivaAlert('warning', 'Acceso denegado', 'No tienes permisos para crear eventos.', true);
+      this.navController.back();
       return;
     }
 

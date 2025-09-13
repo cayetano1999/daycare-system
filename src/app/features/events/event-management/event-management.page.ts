@@ -14,6 +14,7 @@ import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { EventTicket } from '../event-ticket/event-ticket.page';
+import { Capacitor } from '@capacitor/core';
 
 interface ManagementOption {
   id: string;
@@ -40,6 +41,7 @@ export class EventManagementPage implements OnInit {
   showMoreOptions = false;
   showDeleteConfirm = false;
   eventRole = EVENT_STATE.eventRole;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   managementOptions: ManagementOption[] = [
     {

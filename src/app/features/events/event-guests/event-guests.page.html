@@ -1,27 +1,35 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="ion-no-border ion-no-padding">
-    <ion-header class="ion-no-border">
-      <ion-toolbar class="ion-no-border ion-no-padding">
-        <div class="bg-black text-white px-0 pb-4 pt-5 flex items-center justify-between">
-          <div class="flex items-center space-x-1 pt-4">
-            <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-            </button>
-            <h1 class="text-xl font-semibold">Invitados</h1>
-          </div>
-        </div>
-      </ion-toolbar>
-    </ion-header>
+  <ion-toolbar class="ion-no-border ion-no-padding" style="--background: #000;">
+    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-4' : isIos}"
+      class="bg-black text-white px-0  flex items-center justify-between">
+      <div class="flex items-center space-x-1 ">
+        <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-xl font-semibold">Invitados</h1>
+      </div>
+    </div>
   </ion-toolbar>
 
+  @if(!isIos){
   <app-segment-selector (segmentClick)="onSegmentChanged($event)" [segments]="segments"></app-segment-selector>
+  }
+
+
 
   <ion-toolbar class="ion-no-border ion-no-padding" style="--background: #f6f7f9;">
 
+
+
     <ion-grid fixed>
       <ion-row>
+        @if(isIos){
+        <ion-col size="12" style="margin-top: -3.3rem;">
+          <app-segment-selector (segmentClick)="onSegmentChanged($event)" [segments]="segments"></app-segment-selector>
+        </ion-col>
+      }
         <ion-col size="12">
           <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-2 px-6" style="    align-items: center;
     display: flex;
@@ -78,7 +86,8 @@
 
 
               <!-- Filters -->
-              <div class="bg-white rounded-2xl shadow-lg  mb-6" [ngClass]="{'p-6': showFilterSection, 'px-4 py-2': !showFilterSection}">
+              <div class="bg-white rounded-2xl shadow-lg  mb-6"
+                [ngClass]="{'p-6': showFilterSection, 'px-4 py-2': !showFilterSection}">
                 <h3 class="text-lg font-bold text-gray-900 mb-4" [ngClass]="{'mt-3': !showFilterSection}">Filtros</h3>
                 <!-- colcoar un icono de collapsar para mostrar los filtros, el icono debe estar al final del card a la derecha -->
                 <div class="absolute top-4 right-2" style="top: 2.9rem; right: 3rem;">
@@ -89,12 +98,14 @@
                     </svg> -->
 
                     @if(showFilterSection){
-                    <svg (click)="changeToogle()" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg (click)="changeToogle()" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                     </svg>
                     }
                     @else {
-                    <svg (click)="changeToogle()" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg (click)="changeToogle()" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                     }
@@ -164,7 +175,8 @@
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="text-sm text-gray-500 mt-1">
-                      <b>{{ filteredGuests.length }}</b> invitado{{ filteredGuests.length !== 1 ? 's' : '' }} - ({{getTotalCompanions()}} acompañante{{ getTotalCompanions() !== 1 ? 's' : '' }})
+                      <b>{{ filteredGuests.length }}</b> invitado{{ filteredGuests.length !== 1 ? 's' : '' }} -
+                      ({{getTotalCompanions()}} acompañante{{ getTotalCompanions() !== 1 ? 's' : '' }})
                     </div>
                   </div>
                 </div>
@@ -209,7 +221,8 @@
                     <div class="flex items-start space-x-4">
                       <!-- Guest Avatar/Icon -->
                       <div class="rounded-xl p-3 flex-shrink-0" [ngClass]="getStatusClasses(guest.request_status)">
-                        <svg class="w-6 h-6" [ngClass]="getStatusClasses(guest.request_status)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6" [ngClass]="getStatusClasses(guest.request_status)" fill="none"
+                          stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
@@ -272,7 +285,8 @@
 
                         <ion-button (click)="sendInvitation(guest)" style="--background: #00000008; color: black;">
                           <ion-icon name="link-outline"></ion-icon>
-                          <span style="margin-left: 3px;"> {{guest.request_status !== 'PENDING' ? 'Reenviar' : 'Enviar'}} Invitación</span>
+                          <span style="margin-left: 3px;"> {{guest.request_status !== 'PENDING' ? 'Reenviar' :
+                            'Enviar'}} Invitación</span>
                         </ion-button>
 
 

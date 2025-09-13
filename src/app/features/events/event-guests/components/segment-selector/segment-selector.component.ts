@@ -11,7 +11,8 @@ import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 export class SegmentSelectorComponent implements OnInit {
   @Input() segments: { label: string; count?: number }[] = [];
   @Output() segmentClick = new EventEmitter<string>();
-  
+  @Input() isIos: boolean = false;
+
   selectedSegment = signal<string>('Todos');
   
   selectSegment(label: string) {

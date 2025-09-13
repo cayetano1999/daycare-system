@@ -1,9 +1,9 @@
 <ion-header class="ion-no-border ">
-  <ion-toolbar class="ion-no-border ion-no-padding shadow-lg ">
+  <ion-toolbar class="ion-no-border ion-no-padding shadow-lg "  style="--background: #000;">
         <!-- Floating Header -->
     <div class="relative z-20 animate__animated animate__fadeIn ">
-      <div class="bg-white/95 backdrop-blur-xl border-b border-white/20 shadow-lg pt-4">
-        <div class="flex items-center px-4 py-4">
+      <div class="bg-white/95 backdrop-blur-xl border-b border-white/20 shadow-lg " [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2 py-3' : isIos}" >
+        <div class="flex items-center ">
           <button 
             (click)="goBack()"
             class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-all duration-200 group"

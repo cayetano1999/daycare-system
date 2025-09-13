@@ -10,6 +10,7 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { Router } from '@angular/router';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Capacitor } from '@capacitor/core';
 
 export interface Group {
   id: string;
@@ -66,6 +67,7 @@ export class GroupsPage implements OnInit {
   ];
   user: Profile | null = null;
   event: FestivaEvent | null = null;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   private readonly router = inject(Router);
 

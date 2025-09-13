@@ -7,6 +7,7 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-settings',
@@ -29,6 +30,7 @@ export class SettingsPage implements OnInit {
   // App information
   appVersion: string = '1.0.0';
   appName: string = 'Festiva';
+  isIos = Capacitor.getPlatform() === 'ios';
 
   constructor() { }
 

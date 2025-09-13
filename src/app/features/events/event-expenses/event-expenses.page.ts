@@ -10,6 +10,7 @@ import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { ExpenseModalComponent } from './components/expense-modal/expense-modal.component';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Capacitor } from '@capacitor/core';
 
 interface Expense {
   id: string;
@@ -51,6 +52,7 @@ export class EventExpensesPage implements OnInit {
 
   isLoading = false;
   isLoadingData = true;
+  isIos = Capacitor.getPlatform() === 'ios';
 
   alertController = inject(AlertControllerService);
   alertControllerIonic = inject(AlertController);
