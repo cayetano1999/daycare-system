@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festiva - Invitaciones Digitales</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="nav-logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <span class="nav-title">Festiva</span>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#features" class="nav-link">Características</a>
+                <a href="#screenshots" class="nav-link">Capturas</a>
+                <a href="#event-types" class="nav-link">Tipos de Eventos</a>
+                <button class="nav-button">Descargar App</button>
+            </div>
+
+            <button class="nav-toggle" id="navToggle">
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title animate-fade-in-up">
+                        <span class="text-white">Invitaciones</span><br>
+                        <span class="text-white">Digitales </span>
+                        <span class="text-gradient animate-gradient">que</span><br>
+                        <span class="text-gradient animate-gradient">enamoran</span>
+                    </h1>
+                    
+                    <p class="hero-description animate-fade-in-up delay-300">
+                        Administra tus eventos con <strong class="text-blue">estadísticas en tiempo real</strong>, gestión 
+                        avanzada de invitados, <strong class="text-blue">QR de acceso</strong> y múltiples administradores. 
+                        Todo en una sola app.
+                    </p>
+                    
+                    <div class="hero-buttons animate-fade-in-up delay-500">
+                        <button class="btn-primary">
+                            <span>Probar Festiva</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12,5 19,12 12,19"/>
+                            </svg>
+                        </button>
+                        <button class="btn-secondary">
+                            <span>Ver funciones</span>
+                        </button>
+                    </div>
+                    
+                    <div class="hero-features animate-fade-in-up delay-700">
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Sincronización en tiempo real</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Exportaciones</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-dot"></div>
+                            <span>Seguridad con códigos QR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-mockup animate-fade-in-up delay-300">
+                    <div class="mockup-bg-decoration"></div>
+                    <div class="mockup-bg-decoration-2"></div>
+                    
+                    <div class="phone-mockup animate-float">
+                        <div class="phone-framed">
+                            <div class="phone-screen">
+                                <img src="https://cayetano1999.github.io/festiva-app-host/screenshots-ios/dashboard.png" alt="Festiva App Interface" class="phone-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Características Principales</h2>
+                <p class="section-description">
+                    Descubre todas las herramientas que Festiva pone a tu disposición para crear eventos inolvidables
+                </p>
+            </div>
+
+            <!-- Animated Feature Showcase -->
+            <div class="feature-showcase">
+                <div class="showcase-card">
+                    <div class="showcase-content">
+                        <div class="showcase-header">
+                            <div class="showcase-icon" id="showcaseIcon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="m22 21-3-3m0 0a5.5 5.5 0 1 0-7.78-7.78 5.5 5.5 0 0 0 7.78 7.78Z"/>
+                                </svg>
+                            </div>
+                            <h3 id="showcaseTitle">Gestión Avanzada de Invitados</h3>
+                        </div>
+                        <p id="showcaseDescription">Organiza, clasifica y gestiona todos tus invitados en un solo lugar</p>
+                    </div>
+                    <div class="showcase-image">
+                        <img src="https://cayetano1999.github.io/festiva-app-host/screenshots-ios/members-ipad.png" alt="Feature showcase">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <!-- Feature items will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Capturas de la App</h2>
+                <p class="section-description">
+                    Explora la interfaz intuitiva y elegante de Festiva
+                </p>
+            </div>
+
+            <div class="screenshots-grid">
+                <!-- Screenshots will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Types Section -->
+    <section id="event-types" class="event-types">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tipos de Eventos</h2>
+                <p class="section-description">
+                    Selecciona el tipo de evento perfecto para tu celebración
+                </p>
+            </div>
+
+            <div class="event-types-grid">
+                <!-- Event types will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">¿Listo para crear tu próximo evento?</h2>
+                <p class="cta-description">
+                    Únete a miles de usuarios que ya confían en Festiva para sus eventos especiales
+                </p>
+                <div class="cta-buttons">
+                    <button class="btn-cta-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                            <line x1="12" y1="18" x2="12.01" y2="18"/>
+                        </svg>
+                        <span>Descargar para iOS</span>
+                    </button>
+                    <button class="btn-cta-secondary">
+                        Descargar para Android
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <span>Festiva</span>
+                    </div>
+                    <p class="footer-description">
+                        La plataforma líder en invitaciones digitales para eventos especiales.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Producto</h3>
+                    <ul>
+                        <li><a href="#features">Características</a></li>
+                        <li><a href="#event-types">Tipos de Eventos</a></li>
+                        <li><a href="#screenshots">Capturas</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Soporte</h3>
+                    <ul>
+                        <li><a href="/help">Centro de Ayuda</a></li>
+                        <li><a href="/contact">Contacto</a></li>
+                        <li><a href="/status">Estado del Servicio</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="privacy.html">Política de Privacidad</a></li>
+                        <li><a href="terms.html">Términos y Condiciones</a></li>
+                        <li><a href="data-deletion.html">Eliminación de Datos</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Festiva. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

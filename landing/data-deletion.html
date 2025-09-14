@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminación de Datos - Festiva</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .legal-page {
+            min-height: 100vh;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        .legal-header {
+            background: linear-gradient(to right, #1f2937, #000000);
+            padding: 2rem 0;
+            border-bottom: 1px solid #374151;
+        }
+        
+        .legal-header .container {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .back-button:hover {
+            color: #60a5fa;
+        }
+        
+        .legal-title-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .legal-icon {
+            width: 3rem;
+            height: 3rem;
+            background: #dc2626;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .legal-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .legal-subtitle {
+            color: #9ca3af;
+            margin: 0;
+        }
+        
+        .legal-content {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+        
+        .step-container {
+            display: none;
+        }
+        
+        .step-container.active {
+            display: block;
+        }
+        
+        .warning-box {
+            background: linear-gradient(to right, rgba(220, 38, 38, 0.2), rgba(220, 38, 38, 0.1));
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+        
+        .warning-box h2 {
+            color: #ef4444;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .info-box {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+        }
+        
+        .info-box h3 {
+            color: #ffffff;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .info-box ul {
+            color: #d1d5db;
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .info-box li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .dot-red {
+            background: #ef4444;
+        }
+        
+        .dot-blue {
+            background: #3b82f6;
+        }
+        
+        .download-box {
+            background: linear-gradient(to right, rgba(29, 78, 216, 0.2), rgba(29, 78, 216, 0.1));
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .download-box h3 {
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-container {
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+        
+        .form-box {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            border: 1px solid #374151;
+        }
+        
+        .form-title {
+            color: #ef4444;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 6rem;
+        }
+        
+        .checkbox-container {
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            margin-bottom: 1.5rem;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .checkbox {
+            margin-top: 0.25rem;
+            width: 1rem;
+            height: 1rem;
+            accent-color: #dc2626;
+        }
+        
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn-danger:disabled {
+            background: #4b5563;
+            cursor: not-allowed;
+        }
+        
+        .btn-center {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: #dc2626;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary:hover {
+            background: #b91c1c;
+        }
+        
+        .success-container {
+            max-width: 32rem;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .success-box {
+            background: rgba(5, 150, 105, 0.1);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+        
+        .success-icon {
+            width: 4rem;
+            height: 4rem;
+            background: #059669;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+        }
+        
+        .success-title {
+            color: #10b981;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .success-description {
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-box {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-title {
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .timeline-dot-blue {
+            background: #3b82f6;
+        }
+        
+        .timeline-dot-yellow {
+            background: #eab308;
+        }
+        
+        .timeline-dot-red {
+            background: #ef4444;
+        }
+        
+        .timeline-text {
+            color: #d1d5db;
+            font-size: 0.875rem;
+        }
+        
+        .note-text {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-page">
+        <!-- Header -->
+        <header class="legal-header">
+            <div class="container">
+                <a href="index.html" class="back-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12,19 5,12 12,5"/>
+                    </svg>
+                    <span>Volver</span>
+                </a>
+                <div class="legal-title-section">
+                    <div class="legal-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            <line x1="10" y1="11" x2="10" y2="17"/>
+                            <line x1="14" y1="11" x2="14" y2="17"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="legal-title">Eliminación de Datos</h1>
+                        <p class="legal-subtitle">Gestiona la eliminación de tu información personal</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="legal-content">
+            <!-- Step 1: Information -->
+            <div class="step-container active" id="step1">
+                <div class="warning-box">
+                    <h2>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        Información Importante
+                    </h2>
+                    <p>
+                        La eliminación de datos es un proceso irreversible. Una vez completado, 
+                        no podremos recuperar tu información. Asegúrate de descargar cualquier 
+                        dato importante antes de proceder.
+                    </p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h3>Qué se Eliminará</h3>
+                        <ul>
+                            <li>
+                                <div class="dot dot-red"></div>
+                                <span>Información de perfil</span>
+                            </li>
+                            <li>
+                                <div class="dot dot-red"></div>
+                                <span>Eventos creados</span>
+                            </li>
+                            <li>
+                                <div class="dot dot-red"></div>
+                                <span>Listas de invitados</span>
+                            </li>
+                            <li>
+                                <div class="dot dot-red"></div>
+                                <span>Fotos y archivos subidos</span>
+                            </li>
+                            <li>
+                                <div class="dot dot-red"></div>
+                                <span>Historial de actividad</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h3>Qué se Conservará</h3>
+                        <ul>
+                            <li>
+                                <div class="dot dot-blue"></div>
+                                <span>Registros de transacciones (por ley)</span>
+                            </li>
+                            <li>
+                                <div class="dot dot-blue"></div>
+                                <span>Datos agregados anónimos</span>
+                            </li>
+                            <li>
+                                <div class="dot dot-blue"></div>
+                                <span>Registros de seguridad (90 días)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="download-box">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Descargar Datos Antes de Eliminar
+                    </h3>
+                    <p style="color: #d1d5db; margin-bottom: 1rem;">
+                        Te recomendamos descargar una copia de tus datos antes de proceder con la eliminación.
+                    </p>
+                    <button class="btn btn-secondary" style="width: auto; padding: 0.5rem 1.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Descargar Mis Datos
+                    </button>
+                </div>
+
+                <div class="btn-center">
+                    <button class="btn-primary" onclick="showStep(2)">
+                        Continuar con la Eliminación
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Form -->
+            <div class="step-container" id="step2">
+                <div class="form-container">
+                    <div class="form-box">
+                        <h2 class="form-title">Solicitud de Eliminación de Datos</h2>
+                        
+                        <form id="deletionForm">
+                            <div class="form-group">
+                                <label class="form-label">Correo Electrónico de la Cuenta</label>
+                                <input type="email" class="form-input" id="email" placeholder="tu@email.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Motivo de la Eliminación (Opcional)</label>
+                                <textarea class="form-input form-textarea" id="reason" placeholder="Cuéntanos por qué quieres eliminar tu cuenta..."></textarea>
+                            </div>
+
+                            <div class="checkbox-container">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="confirmDelete" class="checkbox" required>
+                                    <label for="confirmDelete" class="checkbox-label">
+                                        Entiendo que esta acción es irreversible y que todos mis datos 
+                                        serán eliminados permanentemente. He descargado cualquier información 
+                                        importante que deseo conservar.
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="button-group">
+                                <button type="button" class="btn btn-secondary" onclick="showStep(1)">
+                                    Volver
+                                </button>
+                                <button type="submit" class="btn btn-danger" id="submitBtn" disabled>
+                                    Enviar Solicitud
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div class="step-container" id="step3">
+                <div class="success-container">
+                    <div class="success-box">
+                        <div class="success-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20,6 9,17 4,12"/>
+                            </svg>
+                        </div>
+                        
+                        <h2 class="success-title">Solicitud Enviada</h2>
+                        
+                        <p class="success-description">
+                            Hemos recibido tu solicitud de eliminación de datos. Te enviaremos un 
+                            correo de confirmación a <strong id="confirmEmail"></strong> con los próximos pasos.
+                        </p>
+
+                        <div class="timeline-box">
+                            <h3 class="timeline-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                                Cronograma de Eliminación
+                            </h3>
+                            <div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot timeline-dot-blue"></div>
+                                    <span class="timeline-text"><strong>Inmediato:</strong> Desactivación de la cuenta</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot timeline-dot-yellow"></div>
+                                    <span class="timeline-text"><strong>7 días:</strong> Período de gracia para cancelar</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot timeline-dot-red"></div>
+                                    <span class="timeline-text"><strong>30 días:</strong> Eliminación completa de datos</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="note-text">
+                            <p>
+                                Si cambias de opinión, puedes cancelar esta solicitud respondiendo 
+                                al correo de confirmación dentro de los próximos 7 días.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show selected step
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+        }
+
+        // Form validation
+        const confirmCheckbox = document.getElementById('confirmDelete');
+        const submitBtn = document.getElementById('submitBtn');
+
+        confirmCheckbox.addEventListener('change', function() {
+            submitBtn.disabled = !this.checked;
+        });
+
+        // Form submission
+        document.getElementById('deletionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            document.getElementById('confirmEmail').textContent = email;
+            
+            showStep(3);
+        });
+    </script>
+</body>
+</html>
