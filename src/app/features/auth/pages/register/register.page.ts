@@ -94,7 +94,6 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.mapFormToProfile();
     }
 
-    console.log('isFromProfile:', this.isFromProfile);
 
   }
 
@@ -240,7 +239,6 @@ export class RegisterPage implements OnInit, OnDestroy {
     try {
       // 1. Check if email already exists
       const emailExists = await this.checkEmailExists(this.formData.email);
-      console.log('Email exists:', emailExists);
 
       if (emailExists) {
         await this.alertController.openFestivaAlert('warning', 'Correo ya registrado', 'El correo electrónico que ingresaste ya está registrado. Por favor, utiliza otro correo o inicia sesión.');
@@ -294,14 +292,11 @@ export class RegisterPage implements OnInit, OnDestroy {
     if (error) {
       console.error('Auto login error:', error);
     } else {
-      console.log('Auto login successful');
-      console.log(data);
       if (data?.session) {
         this.supabaseService.getSupabase().auth.setSession(data.session);
         await this.storageHelper.setStorageKey(StorageKeys.SESSION_DATA, data.session);
         const profile = await this.supabaseService.profile();
         if (profile) {
-          console.log('User profile data:', profile.data);
           await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, profile.data);
         }
         this.router.navigate([RoutesApp.ONBOARDING]);

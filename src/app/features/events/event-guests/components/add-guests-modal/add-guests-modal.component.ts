@@ -73,7 +73,6 @@ export class AddGuestModalComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    console.log('AddGuestModalComponent initialized with mode:', this.event);
     if (this.mode === 'edit' && this.guest) {
       this.guestName = this.guest.name;
       this.phoneNumber = this.guest.phone_number || '';
@@ -223,10 +222,8 @@ export class AddGuestModalComponent implements OnInit {
   }
 
   async addFromContacts() {
-    console.log('Add from contacts functionality');
      const contacts = await this.contactService.openContactPicker();
     const contactSelected = await this.contactService.openContactModal(contacts || []);
-    console.log(contactSelected);
     this.guestName = contactSelected?.name?.display || '';
     const actionSheet = await this.actionSheet.create({
       mode: 'md',
@@ -302,7 +299,6 @@ export class AddGuestModalComponent implements OnInit {
           return;
         }
         else {
-          console.log('Guest updated:', data);
         }
 
       } else {
@@ -340,7 +336,6 @@ export class AddGuestModalComponent implements OnInit {
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   async showErrorAlert(error: any) {

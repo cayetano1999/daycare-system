@@ -384,7 +384,6 @@ export class ImportGuestsModalComponent implements OnInit {
    async closeModal() {
     try {
       await this.modalController.dismiss({ success: true });
-      console.log('Modal cerrado');
     } catch (error) {
       console.error('Error closing modal:', error);
     }

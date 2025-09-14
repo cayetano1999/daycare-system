@@ -12,4 +12,5 @@ export class FirebaseAppService {
         const app =  firebase.initializeApp(environment.firebaseConfig);
         const analytics = getAnalytics(app);
     }
+    
 }

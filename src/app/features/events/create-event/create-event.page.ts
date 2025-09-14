@@ -90,7 +90,6 @@ export class CreateEventPage implements OnInit {
 
   ) {
     const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
     if (navigation && navigation.extras && navigation.extras.state) {
       const event = navigation.extras.state['event'];
 
@@ -137,7 +136,6 @@ export class CreateEventPage implements OnInit {
 
 
     const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
     if (navigation && navigation.extras && navigation.extras.state) {
       const event = navigation.extras.state['event'];
 

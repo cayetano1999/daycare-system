@@ -66,9 +66,9 @@
       <div class="footer-section">
         <p class="footer-text">
           {{ pageData.main_content.footer.text_part_1 }}
-          <span class="footer-link">{{ pageData.main_content.footer.terms_link }}</span>
+          <span (click)="openUrlTerms()" class="footer-link">{{ pageData.main_content.footer.terms_link }}</span>
           {{ pageData.main_content.footer.text_part_2 }}
-          <span class="footer-link">{{ pageData.main_content.footer.privacy_link }}</span>
+          <span (click)="openPrivacyPolicy()" class="footer-link">{{ pageData.main_content.footer.privacy_link }}</span>
         </p>
       </div>
     </div>

@@ -100,7 +100,6 @@ export class EventExpensesPage implements OnInit {
       }
 
       if (existingRecord) {
-        console.log('Existing expense record found:', existingRecord);
         this.expenseRecord = existingRecord as any;
         this.budget = existingRecord.base || 40000;
         this.expenses = existingRecord.expenses || [];
@@ -128,7 +127,6 @@ export class EventExpensesPage implements OnInit {
       };
 
       const { data, error } = await this.supabaseService.createRecord('event_expenses', newRecord);
-      console.log('Created initial expense record:', data);
       if (error) {
         throw error;
       }
@@ -358,7 +356,6 @@ export class EventExpensesPage implements OnInit {
   Math = Math;
 
   async sendNotificationForOwner(message: string) {
-    console.log('Sending notification to owner:', this.event);
     if (this.event?.user?.id === this.user?.id) return; // No need to notify if user is the owner
 
     if (!this.event?.user?.push_token) return;

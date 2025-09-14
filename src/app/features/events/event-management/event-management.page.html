@@ -155,7 +155,7 @@
               <div class="grid grid-cols-1 gap-4">
                 @for (option of managementOptions; track option.id; let i = $index) {
                 @if(option.isEnabled){
-                <button eventActionRestrictions [currentEventType]="{ code: event.plan_type, module: option.id, action: 'click' }" [id]="option.id" (click)="option.action()"
+                <button eventActionRestrictions [currentEventType]="{ code: event.plan_type, module: option.id, action: 'click' }" [id]="option.id" (click)="navigateToOption(option.url)"
                   class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 text-left group transform hover:scale-[1.02] animate-slide-up"
                   [style.animation-delay]="(i * 100) + 'ms'" style="box-shadow: none;
     border: 1px solid #d8d8d8;">

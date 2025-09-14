@@ -86,7 +86,6 @@ export class CreateTicketModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('From create ticket modal:', this.event);
     if (this.mode === 'edit' && this.ticket) {
       this.ticketName = this.ticket.name;
       this.selectedTicketType = this.ticket.ticket_type;
@@ -192,7 +191,6 @@ export class CreateTicketModalComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    console.log('Done: ',this.event)
     try {
       const ticketData = {
         name: this.ticketName.trim(),
@@ -258,6 +256,5 @@ export class CreateTicketModalComponent implements OnInit {
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 }

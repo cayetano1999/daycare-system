@@ -129,7 +129,6 @@ export class EventScannerPage implements OnInit {
 
   async processScanResult(content: string) {
     try {
-      console.log('Scanned QR content:', content);
 
       // Expected format: eventId&ticketId
       const parts = content.split('&');
@@ -180,7 +179,6 @@ export class EventScannerPage implements OnInit {
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implementa tu toast real si lo necesitas
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   // Lifecycle cleanup

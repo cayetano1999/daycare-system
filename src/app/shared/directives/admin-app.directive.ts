@@ -3,6 +3,8 @@ import {
   HostListener, HostBinding, RendererStyleFlags2, SimpleChanges
 } from '@angular/core';
 import { EVENT_STATE } from 'src/app/core/constants/constants';
+import { FeatureFlagKey } from 'src/app/core/enums/featureFlag.enum';
+import { FeatureFlagHelper } from 'src/app/core/helpers/featureflag.helper';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
 @Directive({
@@ -18,13 +20,13 @@ export class AdminAppDirective implements OnInit, OnChanges {
 
   // Accesibilidad + UX
   @HostBinding('attr.aria-disabled') get ariaDisabled() { return this.blocked ? 'true' : null; }
-  @HostBinding('attr.disabled')      get disabledAttr() { return this.blocked ? '' : null; }
-  @HostBinding('attr.tabindex')      get tabIndex()     { return this.blocked ? -1 : null; }
-  @HostBinding('attr.inert')         get inertAttr()    { return this.blocked ? '' : null; }
+  @HostBinding('attr.disabled') get disabledAttr() { return this.blocked ? '' : null; }
+  @HostBinding('attr.tabindex') get tabIndex() { return this.blocked ? -1 : null; }
+  @HostBinding('attr.inert') get inertAttr() { return this.blocked ? '' : null; }
   @HostBinding('class.admin-action-disabled') get cssClass() { return this.blocked; }
-  @HostBinding('attr.aria-hidden')   get ariaHidden()   { return this.blocked && this.hideWhenBlocked ? 'true' : null; }
+  @HostBinding('attr.aria-hidden') get ariaHidden() { return this.blocked && this.hideWhenBlocked ? 'true' : null; }
 
-  constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2) {}
+  constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2) { }
 
   ngOnInit(): void { this.apply(); }
   ngOnChanges(_: SimpleChanges): void { this.apply(); }
@@ -35,6 +37,12 @@ export class AdminAppDirective implements OnInit, OnChanges {
       && remoteConfig.ADMINS_USERS.some(r => r === this.adminAction);
 
     this.blocked = !allowed;
+
+
+    if (!FeatureFlagHelper.isFeatureActive(FeatureFlagKey.RESTRICTIONS_ADMIN)) {
+      this.blocked = false;
+    }
+
 
     if (this.blocked) {
       if (this.hideWhenBlocked) {

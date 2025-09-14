@@ -16,6 +16,7 @@ import { SegmentSelectorComponent } from './components/segment-selector/segment-
 import { Capacitor } from '@capacitor/core';
 import { ImportGuestsModalComponent } from './components/import-guests-modal/import-guests-modal.component';
 import { EVENT_STATE } from 'src/app/core/constants/constants';
+import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
 
 export interface Guest {
   id: string;
@@ -102,6 +103,7 @@ export class EventGuestsPage implements OnInit {
   private storageHelper = inject(StorageHelper);
   private actionSheet = inject(ActionSheetController);
   private alertController = inject(AlertControllerService);
+  private readonly browser = inject(AppInBrowserService);
 
 
   constructor(
@@ -121,7 +123,6 @@ export class EventGuestsPage implements OnInit {
 
   onSegmentChanged(event: any) {
     this.segmentSelected = event;
-    console.log('Segment changed to', event);
     switch (event) {
       case '📋 Todos':
         this.filteredGuests = this.guests;
@@ -470,8 +471,15 @@ export class EventGuestsPage implements OnInit {
       console.error('Error al generar PDF:', error);
     }
     const url = data?.url as string;
+
+    const system = Capacitor.getPlatform();
+
+    if(system === 'ios' && url) {
+      await this.browser.openUrl(url);
+      return;
+    }
+
     if (url) window.open(url, '_system');
-    return url;
   }
 
   async importGuests() {
@@ -505,17 +513,14 @@ export class EventGuestsPage implements OnInit {
   // Toast helper
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   shareGuest(guest: Guest) {
     // TODO: Implement share guest functionality
-    console.log('Share guest:', guest);
   }
 
   sendReminder(guest: Guest) {
     // TODO: Implement send reminder functionality
-    console.log('Send reminder to guest:', guest);
   }
 
   async sendInvitation(guest: Guest) {

@@ -129,7 +129,6 @@ export class ModalGroupComponent implements OnInit {
         result = { action: 'update', data: { ...this.editingGroup, ...groupData } };
       } else {
         // Create new group
-        console.log('Creating group with data:', groupData);
         const { data, error } = await this.supabaseService.createRecord('groups', groupData);
 
         if (error) {

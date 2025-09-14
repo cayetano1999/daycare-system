@@ -16,6 +16,8 @@ import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { EventTicket } from '../event-ticket/event-ticket.page';
 import { Capacitor } from '@capacitor/core';
 import { EventActionRestrictions } from 'src/app/shared/directives/event-restrictions.directive';
+import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
+import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
 interface ManagementOption {
   id: string;
@@ -26,7 +28,7 @@ interface ManagementOption {
   bgColor: string;
   textColor: string;
   action: () => void;
-  url?: string;
+  url: string;
   isEnabled?: boolean;
 }
 
@@ -44,104 +46,7 @@ export class EventManagementPage implements OnInit {
   eventRole = EVENT_STATE.eventRole;
   isIos = Capacitor.getPlatform() === 'ios';
 
-  managementOptions: ManagementOption[] = [
-    {
-      id: 'expenses',
-      title: 'Gastos del Evento',
-      description: 'Administra presupuesto y gastos',
-      iconPath: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-      color: 'from-green-500 to-emerald-600',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-700',
-      url: eventRoutes[2].path,
-      action: () => this.navigateToOption(eventRoutes[2].path || ''),
-      isEnabled: true
-    },
-    {
-      id: 'admins',
-      title: 'Administradores',
-      description: 'Gestiona quién puede administrar',
-      iconPath: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
-      color: 'from-blue-500 to-cyan-600',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
-      url: eventRoutes[5].path,
-      action: () => this.navigateToOption(eventRoutes[5].path || ''),
-      isEnabled: true
-    },
-    {
-      id: 'ticket',
-      title: 'Ticket del Evento',
-      description: 'Detalle de tu Invitación, boleta o entrada',
-      iconPath: 'M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z',
-      color: 'from-purple-500 to-violet-600',
-      bgColor: 'bg-purple-50',
-      textColor: 'text-purple-700',
-      url: eventRoutes[8].path,
-      action: () => this.navigateToOption(eventRoutes[8].path || ''),
-      isEnabled: true // Only event creator or admin users can access
-    },
-    {
-      id: 'gift_list',
-      title: 'Lista de Regalos',
-      description: 'Administra regalos y deseos',
-      iconPath: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7',
-      color: 'from-pink-500 to-rose-600',
-      bgColor: 'bg-pink-50',
-      textColor: 'text-pink-700',
-      url: eventRoutes[3].path,
-      action: () => this.navigateToOption(eventRoutes[3].path || ''),
-      isEnabled: true
-    },
-    {
-      id: 'groups',
-      title: 'Grupos',
-      description: 'Organiza invitados en grupos',
-      iconPath: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
-      color: 'from-indigo-500 to-blue-600',
-      bgColor: 'bg-indigo-50',
-      textColor: 'text-indigo-700',
-      url: eventRoutes[4].path,
-      action: () => this.navigateToOption(eventRoutes[4].path || ''),
-      isEnabled: true
-    },
-    {
-      id: 'guests',
-      title: 'Invitados',
-      description: 'Gestiona lista de invitados',
-      iconPath: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z',
-      color: 'from-orange-500 to-amber-600',
-      bgColor: 'bg-orange-50',
-      textColor: 'text-orange-700',
-      url: eventRoutes[7].path,
-      action: () => this.navigateToOption(eventRoutes[7].path || ''),
-      isEnabled: true
-    },
-    {
-      id: 'tables',
-      title: 'Mesas',
-      description: 'Gestiona la asignación de mesas',
-      iconPath: 'M3 9h18v3H3z M7 12v7 M17 12v7',
-      color: 'from-black to-blue-600',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
-      url: eventRoutes[6].path,
-      action: () => this.navigateToOption(eventRoutes[6].path || ''),
-       isEnabled: true
-    },
-    {
-      id: 'scanner',
-      title: 'Escáner de Código',
-      description: 'Escanea códigos QR y de barras',
-      iconPath: 'M4 7V5a2 2 0 012-2h2M16 3h2a2 2 0 012 2v2M20 17v2a2 2 0 01-2 2h-2M8 21H6a2 2 0 01-2-2v-2M7 12h10',
-      color: 'from-violet-500 to-indigo-600',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
-      url: eventRoutes[9].path,
-      action: () => this.navigateToOption(eventRoutes[9].path || ''),
-        isEnabled: true
-    }
-  ];
+  managementOptions: ManagementOption[] = remoteConfig.EVENT_OPTIONS;
   user!: Profile;
 
   private alertController = inject(AlertController);
@@ -150,6 +55,7 @@ export class EventManagementPage implements OnInit {
   private router = inject(Router);
   private alertCtrl = inject(AlertControllerService);
   private storageHelper = inject(StorageHelper);
+  private readonly browser = inject(AppInBrowserService);
 
   constructor(
 
@@ -174,7 +80,6 @@ export class EventManagementPage implements OnInit {
     this.managementOptions.find(opt => opt.id === 'ticket')!.isEnabled = (isAdminUser(this.user.id));
 
 
-    console.log('Selected Management Option:', EVENT_STATE.managementOptionSelected);
 
     if (EVENT_STATE.managementOptionSelected.length) {
       scrollToElement(EVENT_STATE.managementOptionSelected);
@@ -266,7 +171,6 @@ export class EventManagementPage implements OnInit {
 
   editEvent() {
     this.showMoreOptions = false;
-    console.log('Navigate to edit event');
     this.router.navigate([RoutesApp.CREATE_EVENT], { state: { event: this.event }, replaceUrl: true });
     // Navigate to edit event screen
   }
@@ -340,54 +244,56 @@ export class EventManagementPage implements OnInit {
       this.alertCtrl.openFestivaAlert('warning', 'Sin URL de Ticket', 'El ticket asociado a este evento no tiene una URL válida. Por favor, edita el ticket para agregar una URL y poder previsualizar el evento.');
       return;
     }
+
+
+    const newUrl = `${url.replace('invitacion.html', 'preview.html')}`
+    const system = Capacitor.getPlatform();
+
+    if(system === 'ios' && newUrl) {
+      await this.browser.openUrl(newUrl);
+      return;
+    }
+
     // this.router.navigate([`events/preview/${this.event.id}`], { state: { event: this.event }, replaceUrl: true });
-    window.open(`${url.replace('invitacion.html', 'preview.html')}`, '_system');
+    window.open(newUrl, '_system');
     // Navigate to event preview screen
   }
 
   // Navigation methods for management options
   navigateToExpenses() {
-    console.log('Navigate to expenses management');
     // this.navController.navigateForward('/event-expenses');
     this.router.navigate([RoutesApp.EVENT_EXPENSES], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToAdmins() {
-    console.log('Navigate to admins management');
     // this.navController.navigateForward('/event-admins');
     this.router.navigate([RoutesApp.EVENT_MEMBERS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToTickets() {
-    console.log('Navigate to tickets management');
     // this.navController.navigateForward('/event-tickets');
     this.router.navigate([RoutesApp.EVENT_TICKETS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToGifts() {
-    console.log('Navigate to gifts management');
     // this.navController.navigateForward('/gift-list');
     this.router.navigate([RoutesApp.EVENT_GIFT_LIST], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToGroups() {
-    console.log('Navigate to groups management');
     // this.navController.navigateForward('/event-groups');
     this.router.navigate([RoutesApp.GROUPS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToGuests() {
-    console.log('Navigate to guests management');
     // this.navController.navigateForward('/event-guests');
     this.router.navigate([RoutesApp.EVENT_GUESTS], { state: { event: this.event }, replaceUrl: true });
   }
 
   navigateToTables() {
-    console.log('Navigate to tables management');
     this.router.navigate([RoutesApp.EVENT_TABLES], { state: { event: this.event }, replaceUrl: true });
   }
   navigateToScanner() {
-    console.log('Navigate to scanner');
     this.router.navigate([RoutesApp.EVENT_SCANNER], { state: { event: this.event }, replaceUrl: true });
   }
 

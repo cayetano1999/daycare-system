@@ -6,6 +6,7 @@ import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { environment } from 'src/environments/environment';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 @Component({
   selector: 'app-pre-home',
@@ -39,7 +40,6 @@ export class PreHomePage implements OnInit, OnDestroy {
     this.startAnimationSequence();
     // Aquí es donde deberías integrar la lógica para cargar los datos de Remote Config
     // Por ejemplo, un método como this.loadRemoteConfigData();
-    console.log('Remote Config Data:', this.pageData);
   }
 
   ngOnDestroy() {
@@ -84,31 +84,26 @@ export class PreHomePage implements OnInit, OnDestroy {
   }
 
   async loginWithGoogle() {
-    console.log('Login with Google');
     // Implement Google login logic
     const { data, error } = await this.supabaseService.signInWithGoogle();
     if (error) {
       console.error('Error logging in with Google:', error);
     } else {
-      console.log('Logged in with Google:', data);
       // Check if onboarding is complete and navigate accordingly
     }
   }
 
   async loginWithApple() {
-    console.log('Login with Apple');
     const { data, error } = await this.supabaseService.signInWithApple();
     if (error) {
       console.error('Error logging in with Apple:', error);
     } else {
-      console.log('Logged in with Apple:', data);
       // Check if onboarding is complete and navigate accordingly
       
     }
   }
 
   register() {
-    console.log('Register');
     this.router.navigate([RoutesApp.AUTH_REGISTER]);
     // Implement registration logic
   }
@@ -120,6 +115,14 @@ export class PreHomePage implements OnInit, OnDestroy {
     this.showIntro = false;
     await this.storageHelper.setStorageKey(StorageKeys.PRE_HOME_ANIMATION_DONE, true);
 
+  }
+
+  openUrlTerms() {
+    window.open(environment.URL_TERMS, '_system');
+  }
+
+  openPrivacyPolicy() {
+    window.open(environment.URL_PRIVACY, '_system');
   }
 
 

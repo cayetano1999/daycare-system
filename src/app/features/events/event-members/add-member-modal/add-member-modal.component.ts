@@ -95,7 +95,6 @@ export class AddMemberModalComponent implements OnInit {
 
         this.searchResults = [userData.profile];
         this.selectUser(userData.profile);
-        console.log('usuario encontrado', this.searchResults);
         this.searchError = '';
       } else {
         this.searchResults = [];
@@ -218,13 +217,10 @@ export class AddMemberModalComponent implements OnInit {
   async getUserByEmail(email: string) {
     const { data, error } = await this.supabaseService.getSupabase().functions.invoke('find-user-by-email', { body: { email } });
     if (error) return null;
-    console.log('usuario encontrado', data);
     return data;
   }
 
   async sendNotification(message: string) {
-    console.log('Sending notification to owner:', this.event);
-
 
     if(!this.selectedUser?.push_token?.length) return;
 

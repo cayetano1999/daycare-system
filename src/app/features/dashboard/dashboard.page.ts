@@ -160,7 +160,6 @@ export class DashboardPage implements OnDestroy {
         priority: 'high',
       }
     });
-    console.log({ data, error });
   }
 
   ngOnDestroy() {
@@ -228,15 +227,12 @@ export class DashboardPage implements OnDestroy {
       'created_at'
     );
 
-    console.log('Loaded events for manage:', data);
     if (error) {
       console.error('Error loading events:', error);
       // this.events = [];
     } else {
       const result = this.mapEventsToManageRole(data || []);
-      console.log('Mapped events with role:', result);
       this.events = [this.events, ...result].flat();
-      console.log('All events:', this.events);
     }
   }
 
@@ -286,7 +282,6 @@ export class DashboardPage implements OnDestroy {
         break;
 
       default:
-        console.log('Tab no manejada:', tab);
         break;
     }
   }

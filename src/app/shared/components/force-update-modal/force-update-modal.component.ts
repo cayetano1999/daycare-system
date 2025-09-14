@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, Platform } from '@ionic/angular';
 import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
+import { environment } from 'src/environments/environment';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 
 @Component({
-    selector: 'app-force-update-modal',
-    templateUrl: './force-update-modal.component.html',
-    styleUrls: ['./force-update-modal.component.scss'],
-    standalone: true,
-    imports:[IonicModule]
-    
+  selector: 'app-force-update-modal',
+  templateUrl: './force-update-modal.component.html',
+  styleUrls: ['./force-update-modal.component.scss'],
+  standalone: true,
+  imports: [IonicModule]
+
 })
 export class ForceUpdateModalComponent {
 
@@ -19,12 +20,14 @@ export class ForceUpdateModalComponent {
 
   //services
   inAppBrowser = inject(AppInBrowserService);
+  platForm = inject(Platform);
 
   constructor() { }
 
 
   async redirectToUpdate() {
-    window.open(remoteConfig.ENVIRONMENTS.URL_APP_ANDROID, '_system');
+    this.platForm.is('android') ? window.open(environment.URL_APP_ANDROID, '_system') : window.open(environment.URL_APP_IOS, '_system');
   }
+
 
 }

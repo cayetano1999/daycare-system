@@ -35,11 +35,9 @@ export class SettingsPage implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('Settings page initialized');
   }
 
   ionViewWillEnter() {
-    console.log('Entering settings page');
   }
 
   // Navigation
@@ -49,19 +47,16 @@ export class SettingsPage implements OnInit {
 
   // Legal Section Methods
   openPrivacyPolicy() {
-    console.log('Opening Privacy Policy');
     // TODO: Navigate to privacy policy page or open external link
     this.showToast('Función de Política de Privacidad en desarrollo', 'info');
   }
 
   openTermsAndConditions() {
-    console.log('Opening Terms and Conditions');
     // TODO: Navigate to terms page or open external link
     this.showToast('Función de Términos y Condiciones en desarrollo', 'info');
   }
 
   shareApp() {
-    console.log('Sharing app');
 
     const shareData = {
       title: 'Festiva - Gestión Profesional de Eventos',
@@ -72,7 +67,6 @@ export class SettingsPage implements OnInit {
     if (navigator.share) {
       navigator.share(shareData)
         .then(() => {
-          console.log('App shared successfully');
           this.showToast('¡Gracias por compartir Festiva!', 'success');
         })
         .catch((error) => {
@@ -110,7 +104,6 @@ export class SettingsPage implements OnInit {
 
   // Support Section Methods
   leaveFeedback() {
-    console.log('Opening feedback form');
 
     const feedbackEmail = 'feedback@festiva.com';
     const subject = encodeURIComponent('Feedback sobre Festiva');
@@ -139,7 +132,6 @@ Saludos,
   }
 
   rateInStore() {
-    console.log('Opening app store for rating');
 
     // Detect platform and open appropriate store
     if (this.platform.is('ios')) {
@@ -157,7 +149,6 @@ Saludos,
   }
 
   reportBug() {
-    console.log('Opening bug report form');
 
     const bugReportEmail = 'bugs@festiva.com';
     const subject = encodeURIComponent('Reporte de Error - Festiva');
@@ -202,7 +193,6 @@ Saludos,
 
   // Contact Section Methods
   openWhatsApp() {
-    console.log('Opening WhatsApp');
 
     const message = encodeURIComponent('Hola, me comunico desde la app Festiva. ¿Podrían ayudarme?');
     const whatsappUrl = `https://wa.me/${this.whatsappNumber}?text=${message}`;
@@ -218,7 +208,6 @@ Saludos,
   // Utility Methods
   private showToast(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') {
     // TODO: Implement proper toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
 
     // Simple alert fallback for now
     if (type === 'error') {
@@ -232,7 +221,6 @@ Saludos,
 
   // Analytics Methods (for future implementation)
   private trackAction(action: string, category: string = 'Settings') {
-    console.log(`Analytics: ${category} - ${action}`);
     // TODO: Implement analytics tracking
   }
 
@@ -248,7 +236,6 @@ Saludos,
 
   // Debug Methods (for development)
   debugInfo() {
-    console.log('App Debug Info:', this.getAppInfo());
   }
 
   async logOut() {
@@ -266,7 +253,6 @@ Saludos,
       'Cerrar Sesión',
       'Cerrar Sesión',
       () => {
-        console.log('Logout cancelled');
       }
     );
 
@@ -274,27 +260,22 @@ Saludos,
 
   // Future Methods (placeholders)
   openNotificationSettings() {
-    console.log('Opening notification settings');
     this.showToast('Configuración de notificaciones próximamente', 'info');
   }
 
   openLanguageSettings() {
-    console.log('Opening language settings');
     this.showToast('Configuración de idioma próximamente', 'info');
   }
 
   openThemeSettings() {
-    console.log('Opening theme settings');
     this.showToast('Configuración de tema próximamente', 'info');
   }
 
   clearCache() {
-    console.log('Clearing app cache');
     this.showToast('Caché limpiado exitosamente', 'success');
   }
 
   exportData() {
-    console.log('Exporting user data');
     this.showToast('Exportación de datos próximamente', 'info');
   }
 
@@ -332,7 +313,6 @@ Saludos,
       await this.clearAndRedirect();
 
     }, '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.', 'Eliminar Cuenta', 'Eliminar', () => {
-      console.log('Account deletion cancelled');
     });
 
   }

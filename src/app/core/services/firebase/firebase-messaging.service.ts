@@ -31,7 +31,6 @@ export class FirebaseMessagingService {
 
         try {
             const token: GetTokenResult = await FirebaseMessaging.getToken();
-            console.log('Firebase Messaging token:', token.token);
             return token.token;
         } catch (error) {
             console.error('Error getting Firebase token:', error);
@@ -43,18 +42,14 @@ export class FirebaseMessagingService {
         if (this.platform.is('mobileweb')) return;
 
         FirebaseMessaging.addListener('tokenReceived', async (token: GetTokenResult) => {
-            console.log('Firebase token received:', token.token);
-            
 
         });
 
         FirebaseMessaging.addListener('notificationReceived', async (action: any) => {
-            console.log('Firebase message received:', action);
 
         });
 
         FirebaseMessaging.addListener('notificationActionPerformed', async (action: any) => {
-            console.log('Firebase notification action performed:', action);
         });
     }
 

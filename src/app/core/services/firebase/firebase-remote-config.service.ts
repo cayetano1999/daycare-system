@@ -4,6 +4,7 @@ import firebase from 'firebase/compat/app'; // Importa la compatibilidad con la 
 import 'firebase/compat/remote-config';
 import { environment } from "src/environments/environment";
 import { remoteConfig } from "src/environments/environment.remoteconfig";
+import { FeatureFlagKey } from "../../enums/featureFlag.enum";
 
 @Injectable({
     providedIn: 'root'
@@ -58,52 +59,29 @@ export class FirebaseRemoteConfigService {
 
             const platform = Capacitor.getPlatform();
 
-            if (platform === 'android') {
-                envKey = 'ENVIRONMENT_ANDROID';
-            } else if (platform === 'ios') {
-                envKey = 'ENVIRONMENT_IOS';
+            if(platform === 'ios' || platform === 'android') {
+                envKey = `ENVIRONMENT_${platform.toUpperCase()}`; // ENVIRONMENT_IOS o ENVIRONMENT_ANDROID
             }
-
             const raw = result[envKey]?.asString() || '{}';
             const parse = JSON.parse(raw)?.[element] as any;
-
-
             environment[element as keyof Object] = parse !== undefined && parse !== '{}' ? parse : environment[element as keyof Object] || null;
         });
 
 
-
         if (environment.STORE_REVIEW && environment.APP_VERSION === environment.STORE_REVIEW_VERSION) {
             // Mostrar la funcionalidad de reseñas en la app
+            [
+            FeatureFlagKey.RESTRICTIONS_ADMIN,
+            
+            ].forEach(flagKey => {
+                // remoteConfig.YAHWEH_FEATURE_FLAGS_V2[flagKey] = true;
 
-            // [
-            // FeatureFlagKey.ONLINE_GAME,
-            // FeatureFlagKey.SHOW_ANDROID_BANNER_ADS,
-            // FeatureFlagKey.SHOW_IOS_BANNER_ADS,
-            // FeatureFlagKey.SHOW_ANDROID_VIDEO_ADS,
-            // FeatureFlagKey.SHOW_IOS_VIDEO_ADS,
-            // FeatureFlagKey.SOUNDS,
-            // FeatureFlagKey.SUPPORT_CHAT
-            // ].forEach(flagKey => {
-            //     // remoteConfig.YAHWEH_FEATURE_FLAGS_V2[flagKey] = true;
-
-            //     const flag = remoteConfig.YAHWEH_FEATURE_FLAGS_V2?.find(f => f.key === flagKey);
-            //     if (flag) {
-            //         flag.enabled = false;
-            //     }
-            // });
-
-
-            // if (Capacitor.getPlatform() === 'ios') {
-            //     const googleAuthFlag = remoteConfig.YAHWEH_FEATURE_FLAGS_V2?.find(f => f.key === FeatureFlagKey.GOOGLE_AUTH_IOS);
-            //     if (googleAuthFlag) {
-            //         googleAuthFlag.enabled = false;
-            //     }
-            // }
-
+                const flag = remoteConfig.FEATURE_FLAGS?.find(f => f.key === flagKey);
+                if (flag) {
+                    flag.enabled = false;
+                }
+            });
 
         }
-
-
     }
 }

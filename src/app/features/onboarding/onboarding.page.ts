@@ -88,7 +88,6 @@ export class OnboardingPage implements OnInit, OnDestroy {
   private triggerConfetti(small = false) {
     // Since we can't use canvas-confetti in Ionic, we'll create CSS-based confetti
     // This is a placeholder for the confetti effect
-    console.log('Confetti triggered!', small ? 'small' : 'large');
   }
 
   private clearConfettiTimers() {
@@ -153,7 +152,6 @@ export class OnboardingPage implements OnInit, OnDestroy {
 
   async onComplete() {
     // Navigate to main app or dashboard
-    console.log('Onboarding completed');
     // this.navController.navigateRoot('/dashboard');
     await this.storageHelper.setStorageKey(StorageKeys.ONBOARDING_COMPLETED, true);
     await this.router.navigate([RoutesApp.HOME]);

@@ -314,7 +314,6 @@ Verificado: ${new Date().toLocaleString('es-ES')}
 
     try {
       await navigator.clipboard.writeText(info);
-      console.log('Información copiada al portapapeles');
     } catch (error) {
       console.error('Error copying to clipboard:', error);
     }

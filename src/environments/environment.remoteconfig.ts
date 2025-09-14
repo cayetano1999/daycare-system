@@ -1,7 +1,7 @@
 import { ExampleInvitation } from "src/app/features/dashboard/dashboard.page";
 
 export const remoteConfig = {
-    ENVIRONMENTS: {
+    ENVIRONMENT: {
         ENABLE_ADS: "",
         ENABLE_ADS_BANNERS: "",
         USER: "",
@@ -148,6 +148,7 @@ export const remoteConfig = {
             }
         }
     },
-    FESTIVA_PLANS: [] as any[]
+    FESTIVA_PLANS: [] as any[],
+    EVENT_OPTIONS: [] as any[]
 
 }

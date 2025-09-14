@@ -105,12 +105,10 @@ export class AppComponent implements OnInit {
         }
         else {
             const { data } = await this.supabase.profile();
-            console.log('User profile data:', data);
             await this.storageHelper.setStorageKey(StorageKeys.SUPABASE_SESSION, session);
             if (data) {
                 await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, data);
                 USER_SINGLE.ID = data.id;
-                console.log('USER_SINGLE.ID', USER_SINGLE.ID);
             }
 
             if (!this.isOnboardingComplete && data) {
@@ -175,7 +173,6 @@ export class AppComponent implements OnInit {
     }
 
     handleItemSelected(item: any): void {
-        console.log('Item selected:', item);
     }
 
     validateUrlWeb() {

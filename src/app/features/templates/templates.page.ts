@@ -102,7 +102,6 @@ export class TemplatesPage implements OnInit {
    * @param invitacion - La invitación seleccionada
    */
   verMas(invitacion: ExampleInvitation): void {
-    console.log('Conocer más de:', invitacion);
     //REDIRIGIR A WS PIDIENDO INFORMACION SOBRE EL EMPLATE SELECCIONADO, USANDO WINDOW.OPEN _SYSTEM
 
     const numero = '18093716874';

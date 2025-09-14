@@ -139,12 +139,10 @@ export class InformationPage implements OnInit {
 
   private showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   // Feature interaction methods
   onFeatureClick(feature: any) {
-    console.log('Feature clicked:', feature.title);
     // TODO: Navigate to specific feature demo or more info
   }
 
@@ -173,12 +171,10 @@ export class InformationPage implements OnInit {
 
   // Analytics methods (for future implementation)
   trackFeatureView(featureName: string) {
-    console.log('Feature viewed:', featureName);
     // TODO: Implement analytics tracking
   }
 
   trackContactAttempt(method: string) {
-    console.log('Contact attempt:', method);
     // TODO: Implement analytics tracking
   }
 

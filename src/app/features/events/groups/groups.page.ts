@@ -141,7 +141,6 @@ export class GroupsPage implements OnInit {
 
   // Modal management
   async openCreateModal() {
-    console.log('Opening create group modal', this.event);
     const modal = await this.modalController.create({
       component: ModalGroupComponent,
       componentProps: {

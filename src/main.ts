@@ -62,12 +62,8 @@ bootstrapApplication(AppComponent, {
       const firebase = inject(FirebaseAppService);
       const remoteConfig = inject(FirebaseRemoteConfigService);
 
-      console.log('[AppInit] Iniciando inicialización…');
       await firebase.initializeFirebaseApp();   // Inicializar Firebase
-      console.log('[AppInit] Firebase listo');
-
       await remoteConfig.loadConfig();          // Cargar Remote Config
-      console.log('[AppInit] Remote Config cargado');
     }),
   ]
 })

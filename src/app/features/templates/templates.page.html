@@ -133,7 +133,7 @@
               </div>
 
               <!-- Contenido derecho - Imagen/GIF -->
-              <div class="w-32 sm:w-36 md:w-40 relative overflow-hidden" (click)="showModal(invitacion.image)">
+              <div class="w-32 sm:w-36 md:w-40 relative overflow-hidden" (click)="goToTemplate(invitacion)">
                 <img [src]="invitacion.image" [alt]="invitacion.name"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy" (error)="onImageError($event)" (load)="onImageLoad($event)" />

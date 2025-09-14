@@ -85,13 +85,11 @@ export class EventMembersPage implements OnInit {
         return;
       }
       
-      console.log('Loaded members:', data);
       // Transform data to match our interface
       this.members = (data || []).map((member: any) => ({
         ...member,
         user: member.member
       }));
-      console.log('Transformed members:', this.members);
 
     } catch (error) {
       console.error('Error loading members:', error);
@@ -235,7 +233,6 @@ export class EventMembersPage implements OnInit {
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   onImageError(event: Event) {

@@ -33,7 +33,6 @@ export class OtpVerificationPage implements OnDestroy {
    */
   constructor() {
     const navigation = this.router.getCurrentNavigation();
-    console.log(navigation);
     if (navigation && navigation.extras && navigation.extras.state) {
       const { email, password } = navigation.extras.state['credentials'] || {};
       this.email = email;
@@ -266,8 +265,6 @@ export class OtpVerificationPage implements OnDestroy {
     if (error) {
       console.error('Auto login error:', error);
     } else {
-      console.log('Auto login successful');
-      console.log(data);
       if (data?.session) {
         this.supabaseService.getSupabase().auth.setSession(data.session);
       }

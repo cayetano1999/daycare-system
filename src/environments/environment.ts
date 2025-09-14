@@ -14,12 +14,14 @@ export const environment = {
   supabaseUrl: "",
   supabaseKey: "",
   URL_API: "",
-  APP_VERSION: "",
+  APP_VERSION: "1.0.0",
   LESS_VERSION: "",
   APP_MAINTENANCE: false,
   URL_TERMS: "",
   URL_APP_ANDROID: "",
   SpPk: "",
   STORE_REVIEW: false,
-  STORE_REVIEW_VERSION: ""
+  STORE_REVIEW_VERSION: "",
+  URL_PRIVACY: "",
+  URL_APP_IOS: ""
 };

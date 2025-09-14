@@ -202,7 +202,6 @@ export class EventTicketsPage {
     if (!this.ticket) return;
 
     // TODO: Implement share functionality
-    console.log('Sharing ticket:', this.ticket.url);
     this.showToast('Función de compartir en desarrollo', 'warning');
   }
 
@@ -226,12 +225,10 @@ export class EventTicketsPage {
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 
   ionViewWillLeave() {
     // TODO: Implement any cleanup or save state logic
-    console.log('Leaving event ticket page');
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras) {
       navigation.extras.state = {};

@@ -25,7 +25,6 @@ export class ContactListComponent implements OnInit {
   ngOnInit() {
     // Inicialmente, asignar la lista ordenada a los contactos filtrados
     this.filteredContacts = this.contactsList;
-    console.log(this.contactsList)
   }
 
   // Método para filtrar contactos
@@ -36,7 +35,6 @@ export class ContactListComponent implements OnInit {
       const phone = contact?.phones?.[0]?.number?.toLowerCase() || '';
       return name.includes(term) || phone.includes(term);
     });
-    console.log(this.filteredContacts)
   }
 
   selectContact(item: ContactPayload){

@@ -184,6 +184,5 @@ export class AddTableModalComponent implements OnInit {
 
   showToast(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     // TODO: Implement toast notification
-    console.log(`${type.toUpperCase()}: ${message}`);
   }
 }
