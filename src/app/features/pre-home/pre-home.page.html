@@ -35,6 +35,7 @@
       </div>
 
       <div class="buttons-section">
+        @if(availableAuths.google) {
         <button class="google-button" (click)="loginWithGoogle()">
           <svg class="button-icon" viewBox="0 0 24 24">
             <path fill="currentColor"
@@ -48,7 +49,9 @@
           </svg>
           <span>{{ pageData.main_content.buttons.google }}</span>
         </button>
+      }
 
+        @if(availableAuths.apple) {
         <button class="apple-button" (click)="loginWithApple()">
           <svg class="button-icon" viewBox="0 0 24 24" fill="currentColor">
             <path
@@ -56,11 +59,20 @@
           </svg>
           <span>{{ pageData.main_content.buttons.apple }}</span>
         </button>
+      }
 
-        <!-- <button class="register-button" (click)="register()">
+      @if(availableAuths.register) {
+        <button class="register-button" (click)="register()">
           {{ pageData.main_content.buttons.register }}
-        </button> -->
-         
+        </button>
+      }
+
+      @if(availableAuths.login) {
+         <button class="register-button" (click)="login()">
+          {{ pageData.main_content.buttons.login }}
+        </button>
+      }
+
       </div>
 
       <div class="footer-section">

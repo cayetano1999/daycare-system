@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule, NavController } from '@ionic/angular';
+import { FeatureFlagKey } from 'src/app/core/enums/featureFlag.enum';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { FeatureFlagHelper } from 'src/app/core/helpers/featureflag.helper';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { environment } from 'src/environments/environment';
@@ -33,6 +35,12 @@ export class PreHomePage implements OnInit, OnDestroy {
 
   // Placeholder para los datos de Remote Config
   pageData: any = remoteConfig.SCREENS.PRE_HOME;
+  availableAuths = {
+    google: FeatureFlagHelper.isFeatureActive(FeatureFlagKey.AUTH_GOOGLE),
+    apple: FeatureFlagHelper.isFeatureActive(FeatureFlagKey.AUTH_APPLE),
+    register: environment.AUTH_REGISTER,
+    login: environment.AUTH_LOGIN,
+  }
 
   async ngOnInit() {
     this.showIntro = !await this.storageHelper.getStorageKey(StorageKeys.PRE_HOME_ANIMATION_DONE);
@@ -106,6 +114,11 @@ export class PreHomePage implements OnInit, OnDestroy {
   register() {
     this.router.navigate([RoutesApp.AUTH_REGISTER]);
     // Implement registration logic
+  }
+
+  login() {
+    this.router.navigate([RoutesApp.AUTH_LOGIN]);
+    // Implement login logic
   }
 
  

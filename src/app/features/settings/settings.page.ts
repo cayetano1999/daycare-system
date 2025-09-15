@@ -8,6 +8,8 @@ import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { Capacitor } from '@capacitor/core';
+import { environment } from 'src/environments/environment';
+import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
 
 @Component({
   selector: 'app-settings',
@@ -22,7 +24,8 @@ export class SettingsPage implements OnInit {
   private platform = inject(Platform);
   private alertCtrl = inject(AlertControllerService);
   private supabaseService = inject(SupabaseService);
-  private storageHelper = inject(StorageHelper)
+  private storageHelper = inject(StorageHelper);
+  private browser = inject(AppInBrowserService);
 
   // Contact information
   whatsappNumber: string = '18093716874';
@@ -46,14 +49,14 @@ export class SettingsPage implements OnInit {
   }
 
   // Legal Section Methods
-  openPrivacyPolicy() {
+  async openPrivacyPolicy() {
     // TODO: Navigate to privacy policy page or open external link
-    this.showToast('Función de Política de Privacidad en desarrollo', 'info');
+    await this.browser.openUrl(environment.URL_PRIVACY);
   }
 
-  openTermsAndConditions() {
+  async openTermsAndConditions() {
     // TODO: Navigate to terms page or open external link
-    this.showToast('Función de Términos y Condiciones en desarrollo', 'info');
+    await this.browser.openUrl(environment.URL_TERMS);
   }
 
   shareApp() {
@@ -61,13 +64,13 @@ export class SettingsPage implements OnInit {
     const shareData = {
       title: 'Festiva - Gestión Profesional de Eventos',
       text: 'Descubre la mejor app para gestionar tus eventos y celebraciones especiales',
-      url: window.location.origin
+      url: "https://festiva.web.app"
     };
 
     if (navigator.share) {
       navigator.share(shareData)
         .then(() => {
-          this.showToast('¡Gracias por compartir Festiva!', 'success');
+          this.alertCtrl.openFestivaAlert('success', '¡Gracias por compartir Festiva!', 'Tu apoyo nos ayuda a crecer.', false, 'Cerrar');
         })
         .catch((error) => {
           console.error('Error sharing app:', error);
@@ -286,7 +289,7 @@ Saludos,
       return;
     }
     //consultar si ya existe una solicitud de eliminación pendiente
-    const data  = await this.supabaseService.getRecords('deleted_accounts', ['*'], 'user_id', user.id, 'created_at');
+    const data = await this.supabaseService.getRecords('deleted_accounts', ['*'], 'user_id', user.id, 'created_at');
 
     if (data.error) {
       console.error('Error checking existing deletion request:', data.error);

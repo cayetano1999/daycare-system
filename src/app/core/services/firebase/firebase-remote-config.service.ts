@@ -54,10 +54,10 @@ export class FirebaseRemoteConfigService {
         ];
 
         const environmentKeys = Object.keys(environment).filter(key => !excludedKeys.includes(key));
+        const platform = Capacitor.getPlatform();
         environmentKeys.forEach(element => {
             let envKey = 'ENVIRONMENT'; // default para web
 
-            const platform = Capacitor.getPlatform();
 
             if(platform === 'ios' || platform === 'android') {
                 envKey = `ENVIRONMENT_${platform.toUpperCase()}`; // ENVIRONMENT_IOS o ENVIRONMENT_ANDROID
@@ -72,6 +72,9 @@ export class FirebaseRemoteConfigService {
             // Mostrar la funcionalidad de reseñas en la app
             [
             FeatureFlagKey.RESTRICTIONS_ADMIN,
+            FeatureFlagKey.AUTH_GOOGLE,
+            FeatureFlagKey.AUTH_APPLE,
+            FeatureFlagKey.AUTH_FORGOT_PASSWORD,
             
             ].forEach(flagKey => {
                 // remoteConfig.YAHWEH_FEATURE_FLAGS_V2[flagKey] = true;
@@ -81,6 +84,19 @@ export class FirebaseRemoteConfigService {
                     flag.enabled = false;
                 }
             });
+
+            if(platform === 'android') {
+                environment.AUTH_LOGIN = false;
+                environment.AUTH_REGISTER = false;
+                environment.AUTH_GOOGLE = true;
+                environment.AUTH_IOS = true;
+            }
+            else if(platform === 'ios') {
+                environment.AUTH_LOGIN = true;
+                environment.AUTH_REGISTER = true;
+                environment.AUTH_GOOGLE = false;
+                environment.AUTH_IOS = false;
+            }
 
         }
     }

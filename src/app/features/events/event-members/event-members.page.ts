@@ -100,8 +100,8 @@ export class EventMembersPage implements OnInit {
   }
 
   async openAddMemberModal() {
-    if(this.members.length > 4){
-      this.alertCtrl.openFestivaAlert("warning", "Ya hay miembros en este evento", 'No se puede registrar más miembros', false, 'Entendido');
+    if(this.members.length > 20){
+      this.alertCtrl.openFestivaAlert("warning", "Limite alcanzado", 'No se puede registrar más miembros', false, 'Entendido');
       return;
     }
 

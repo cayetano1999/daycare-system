@@ -13,7 +13,7 @@ import { templateRoutes } from './features/templates/templates.routes';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/auth/login-preview',
+    redirectTo: '/',
     pathMatch: 'full'
   },
 

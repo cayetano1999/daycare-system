@@ -17,7 +17,6 @@ import { StorageHelper } from './core/helpers/storage.helper';
 import { StorageKeys } from './core/enums/storage.keys.enum';
 import { FirebaseMessagingService } from './core/services/firebase/firebase-messaging.service';
 import { register } from 'swiper/element/bundle';
-import { Stripe } from '@capacitor-community/stripe';
 import { KuidoTabComponent } from './shared/components/kuido-tab/kuido-tab.component';
 import { FingerprintService } from './core/services/fingerprint.service';
 import { App } from '@capacitor/app';

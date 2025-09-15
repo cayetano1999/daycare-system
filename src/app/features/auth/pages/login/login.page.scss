@@ -1,0 +1,192 @@
+// Estilos específicos para el componente de login
+// Tailwind CSS maneja la mayoría de los estilos
+
+.login-container {
+  min-height: 100vh;
+}
+
+// Estilos para el contenido de Ionic
+ion-content {
+  --background: #fef7cd; // amber-50
+  
+  // Scroll suave
+  scroll-behavior: smooth;
+}
+
+ion-header {
+  --background: #fef7cd; // amber-50
+  
+  .toolbar-background {
+    background: #fef7cd;
+  }
+}
+
+// Optimizaciones para los inputs
+input {
+  // Mejorar la experiencia en dispositivos móviles
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  
+  &:focus {
+    outline: none;
+  }
+  
+  // Evitar zoom en iOS
+  @media screen and (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+// Estilos para el checkbox personalizado
+input[type="checkbox"] {
+  accent-color: #fef7cd;
+  
+  &:checked {
+    background-color: rgba(254, 247, 205, 0.1);
+    border-color: rgba(254, 247, 205, 0.2);
+  }
+}
+
+// Animaciones para el botón de submit
+button[type="submit"] {
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Estilos para los iconos SVG
+svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+// Mejoras para la accesibilidad
+button:focus,
+input:focus {
+  outline: 2px solid rgba(254, 247, 205, 0.3);
+  outline-offset: 2px;
+}
+
+// Optimizaciones para dispositivos móviles
+@media (max-width: 768px) {
+  .login-form {
+    padding: 1.5rem;
+  }
+  
+  .welcome-section {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-form {
+    padding: 1.25rem;
+  }
+  
+  .form-field {
+    margin-bottom: 1.25rem;
+  }
+}
+
+// Animaciones suaves para las transiciones
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Mejoras para el rendimiento
+.login-form,
+.welcome-section {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// Estilos para mensajes de error
+.error-message {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Optimizaciones para el spinner de carga
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Estilos para el toggle de contraseña
+.password-toggle {
+  cursor: pointer;
+  user-select: none;
+  
+  &:hover svg {
+    color: #fef7cd;
+  }
+}
+
+// Mejoras para el formulario en general
+.login-form {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+// Optimizaciones para tablets
+@media (min-width: 768px) and (max-width: 1024px) {
+  .login-container {
+    padding: 2rem;
+  }
+}
+
+// Asegurar que los elementos no se desborden
+.overflow-hidden {
+  overflow: hidden;
+}
+
+// Mejoras para la tipografía
+.font-black {
+  font-weight: 900;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+// Optimizaciones para el header sticky
+.sticky {
+  position: sticky;
+  top: 0;
+}
+
+// Mejoras para el backdrop blur
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}

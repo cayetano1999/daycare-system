@@ -59,7 +59,7 @@ export function removeSpecialCharsAndEmojis(text: string): string {
 }
 
 export function isAdminUser(userId: string): boolean {
-    return remoteConfig.ADMINS_USERS.some(r => r === userId);
+    return remoteConfig.ADMINS_USERS.find(r => r === userId) !== undefined;
 }
 
 export const USER_SINGLE = {

@@ -7,11 +7,11 @@ const config: CapacitorConfig = {
   webDir: 'www/browser',
   android: {
     allowMixedContent: true,
-    webContentsDebuggingEnabled: true,
+    webContentsDebuggingEnabled: false,
     
   },
   ios: {
-    webContentsDebuggingEnabled: true,
+    webContentsDebuggingEnabled: false,
   },
   plugins: {
     Keyboard: {

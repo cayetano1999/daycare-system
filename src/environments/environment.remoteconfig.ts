@@ -34,7 +34,8 @@ export const remoteConfig = {
                 buttons: {
                     google: "",
                     apple: "",
-                    register: ""
+                    register: "",
+                    login: ""
                 },
                 footer: {
                     text_part_1: "",

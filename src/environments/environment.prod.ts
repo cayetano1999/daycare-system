@@ -14,7 +14,7 @@ export const environment = {
   supabaseUrl: "",
   supabaseKey: "",
   URL_API: "",
-  APP_VERSION: "1.0.0",
+  APP_VERSION: "1.0.3",
   LESS_VERSION: "",
   APP_MAINTENANCE: false,
   URL_TERMS: "",
@@ -23,7 +23,11 @@ export const environment = {
   STORE_REVIEW: false,
   STORE_REVIEW_VERSION: "",
   URL_PRIVACY: "",
-  URL_APP_IOS: ""
+  URL_APP_IOS: "",
+  AUTH_GOOGLE: true,
+  AUTH_IOS: true,
+  AUTH_REGISTER: true,
+  AUTH_LOGIN: true
 
 
 };
