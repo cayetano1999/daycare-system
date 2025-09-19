@@ -22,6 +22,7 @@ import { FingerprintService } from './core/services/fingerprint.service';
 import { App } from '@capacitor/app';
 import { Profile } from './core/interface/profile.interface';
 import { USER_SINGLE } from './core/constants/constants';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 
 register(); // Register Swiper elements globally
@@ -61,8 +62,24 @@ export class AppComponent implements OnInit {
 
     }
 
+    async setStatusBar() {
+    try {
+      await StatusBar.setStyle({ style: Style.Dark }); // O Style.Dark
+      await StatusBar.show(); // Para asegurarse que sea visible
+      // Puedes ajustar el color de fondo si es necesario
+      await StatusBar.setBackgroundColor({ color: '#FFFFFF' });
+    } catch (error) {
+      console.error('Error al configurar la barra de estado', error);
+    }
+  }
+
 
     async ngOnInit() {
+        // document.body.classList.add('edge-to-edge');
+        await this.platform.ready();
+        await this.setStatusBar();
+        // await SplashScreen.hide();
+        // await this.fingerprint.checkBiometricAvailability();
         this.isOnboardingComplete = await this.storageHelper.getStorageKey(StorageKeys.ONBOARDING_COMPLETED);
         this.profile = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
 

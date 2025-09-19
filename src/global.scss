@@ -295,3 +295,27 @@ ion-searchbar::part(icon) {
 button:focus-visible { outline: 2px solid #7aa7ff; }        /* foco accesible para teclado */
 button:focus:not(:focus-visible) { outline: 0; box-shadow: none; } 
 }
+
+
+/* Aplica padding seguro al área del header/toolbar */
+.edge-to-edge ion-header,
+.edge-to-edge ion-toolbar {
+  padding-top: var(--ion-safe-area-top);      /* Android 10+ */
+}
+
+/* Ajusta la altura del toolbar si usas heights fijas personalizadas */
+.edge-to-edge ion-toolbar {
+  min-height: calc(56px + var(--ion-safe-area-top));
+}
+
+/* Evita doble padding en el contenido si el header ya ocupa el safe area */
+.edge-to-edge ion-content {
+  --padding-top: 0;
+}
+
+/* Si usas images “hero” dentro del header, deja el header pegado */
+.edge-to-edge ion-header.header-transparent,
+.edge-to-edge ion-toolbar.toolbar-transparent {
+  --background: transparent;
+  --ion-color-base: transparent;
+}

@@ -1,7 +1,7 @@
 @if(!(showSuccess && createdEvent)){
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-no-border ion-no-padding "  style="--background: #000;">
-    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}"  class="bg-black border-b border-gray-800 shadow-lg ">
+    <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}"  class="bg-black border-b border-gray-800 shadow-lg ">
       <div class="flex items-center">
         <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
           <svg class="w-6 h-6 text-white group-hover:text-gray-300 transition-colors" fill="none" stroke="currentColor"
@@ -31,7 +31,7 @@
 </ion-header>
 }
 
-<ion-content [fullscreen]="true" class="create-event-content">
+<ion-content [fullscreen]="false" class="create-event-content">
   <!-- Success Screen -->
   @if (showSuccess && createdEvent) {
   <div

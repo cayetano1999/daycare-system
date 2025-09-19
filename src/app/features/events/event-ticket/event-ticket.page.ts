@@ -8,6 +8,7 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import * as qr from 'qrcode';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { Capacitor } from '@capacitor/core';
 
 export interface EventTicket {
   id: string;
@@ -40,6 +41,7 @@ export class EventTicketsPage {
   showCreatedAnimation: boolean = false;
   event: FestivaEvent | null = null;
   qrCode: string = '';
+  isIos = Capacitor.getPlatform() === 'ios';
   private alertController = inject(AlertController);
   private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);

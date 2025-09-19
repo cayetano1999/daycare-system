@@ -43,6 +43,7 @@
     "@capacitor/screen-orientation": "^7.0.0",
     "@capacitor/share": "^7.0.2",
     "@capacitor/status-bar": "^7.0.0",
+    "@capawesome/capacitor-android-edge-to-edge-support": "^7.2.3",
     "@fingerprintjs/fingerprintjs": "^4.6.2",
     "@ionic/angular": "^7.8.6",
     "@primeng/themes": "^19.0.6",

@@ -2,7 +2,7 @@
 
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-no-border ion-no-padding " style="--background: #000;">
-    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}" class=" top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
+    <div [ngClass]="{'py-4' : !isIos, 'pb-2' : isIos}" class=" top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
       <div class="flex items-center justify-between px-4 ">
         <div class="flex items-center">
           <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
@@ -29,7 +29,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="event-management-content">
+<ion-content [fullscreen]="false" class="event-management-content">
   <ion-grid fixed class="ion-no-padding">
     <ion-row>
       <ion-col size="12">

@@ -1,6 +1,9 @@
 .dashboard-content {
 }
 
+ion-header {
+  --padding-top: var(--safe-area-inset-top); /* o un valor fijo como 24px */
+}
 
 
 // Ensure Tailwind classes work properly in Ionic

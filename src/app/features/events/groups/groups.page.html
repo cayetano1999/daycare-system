@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="ion-no-border ion-no-padding"  style="--background: #000;">
-    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}" class="top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
+    <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}" class="top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
       <div class="flex items-center px-4">
         <button 
           (click)="goBack()"
@@ -19,7 +19,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="groups-content">
+<ion-content [fullscreen]="false" class="groups-content">
  <ion-grid fixed class="ion-no-border">
   <ion-row>
     <ion-col size="12">

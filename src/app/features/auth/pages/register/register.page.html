@@ -2,7 +2,7 @@
   <ion-toolbar class="ion-no-border ion-no-padding shadow-lg "  style="--background: #000;">
         <!-- Floating Header -->
     <div class="relative z-20 animate__animated animate__fadeIn ">
-      <div class="bg-white/95 backdrop-blur-xl border-b border-white/20 shadow-lg " [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2 py-3' : isIos}" >
+      <div class="bg-white/95 backdrop-blur-xl border-b border-white/20 shadow-lg " [ngClass]="{'py-4': !isIos, 'pb-2 py-3' : isIos}" >
         <div class="flex items-center ">
           <button 
             (click)="goBack()"
@@ -23,7 +23,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="register-content">
+<ion-content [fullscreen]="false" class="register-content">
   <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 ">
 
 

@@ -7,16 +7,22 @@ const config: CapacitorConfig = {
   webDir: 'www/browser',
   android: {
     allowMixedContent: true,
-    webContentsDebuggingEnabled: false,
+    webContentsDebuggingEnabled: true,
     
   },
   ios: {
-    webContentsDebuggingEnabled: false,
+    webContentsDebuggingEnabled: true,
   },
   plugins: {
     Keyboard: {
-      resize: KeyboardResize.None 
+      resize: KeyboardResize.None,
+      resizeOnFullScreen: false 
     
+    },
+    StatusBar: {
+      overlaysWebView: true,
+      style: 'DARK',
+      backgroundColor: '#FFFFFFFF'
     },
     SplashScreen: {
       launchShowDuration: 3000,
@@ -27,7 +33,11 @@ const config: CapacitorConfig = {
       androidSpinnerStyle: 'large',
       iosSpinnerStyle: 'small',
       spinnerColor: '#999999',
+    },
+    EdgeToEdge: {
+      backgroundColor: '#000000'
     }
+    
   }
 
  

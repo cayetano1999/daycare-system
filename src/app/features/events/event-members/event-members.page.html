@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="ion-no-border ion-no-padding"  style="--background: #000;">
-    <div [ngClass]="{'py-4 mt-6' : !isIos, 'pb-2' : isIos}" class="bg-black text-white px-0  flex items-center justify-between">
+    <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}" class="bg-black text-white px-0  flex items-center justify-between">
       <div class="flex items-center space-x-1">
         <button (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -13,7 +13,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="false">
   <ion-grid fixed class="ion-no-border">
     <ion-row>
       <ion-col size="12">
