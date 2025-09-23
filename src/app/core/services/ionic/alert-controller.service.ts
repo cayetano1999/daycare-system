@@ -261,9 +261,8 @@ export class AlertControllerService {
             cssClass: 'full-modal',
             component: PushNotificationComponent,
             backdropDismiss: false,
-            initialBreakpoint: 1,
             presentingElement: await this.modalCtrl.getTop(), // si usas iOS-style modal stack
-            breakpoints: [1],
+            backdropBreakpoint: 0,
 
 
         });

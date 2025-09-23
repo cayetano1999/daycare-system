@@ -12,6 +12,7 @@ import { DeviceService } from 'src/app/core/services/device/device.service';
 import { FirebaseMessagingService } from 'src/app/core/services/firebase/firebase-messaging.service';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { EventSkeletonComponent } from 'src/app/shared/components/event-skeleton/event-skeleton.component';
 import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { AdminAppDirective } from 'src/app/shared/directives/admin-app.directive';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
@@ -50,7 +51,7 @@ interface Notification {
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
-  imports: [...StandAloneModules, FestivaHeaderComponent, AdminAppDirective],
+  imports: [...StandAloneModules, EventSkeletonComponent, AdminAppDirective],
 })
 export class DashboardPage implements OnDestroy {
   activeTab = 'home';
@@ -124,6 +125,7 @@ export class DashboardPage implements OnDestroy {
   private deviceService = inject(DeviceService);
   private readonly fcm = inject(FirebaseMessagingService);
   private readonly alertCtrl = inject(AlertControllerService);
+  loading: boolean = true;
 
 
 
@@ -142,11 +144,13 @@ export class DashboardPage implements OnDestroy {
     };
 
     window.addEventListener('scroll', this.scrollListener);
-    await this.alertCtrl.openModalAlert();
+    this.loading = true;
+    // await this.alertCtrl.openModalAlert();
     await this.loadEvents();
     await this.registerDeviceInfo();
     await this.setPushNotification();
-    await this.alertCtrl.dismiss();
+    // await this.alertCtrl.dismiss();
+    this.loading = false;
   }
 
   async testingPush() {
@@ -194,9 +198,8 @@ export class DashboardPage implements OnDestroy {
       return;
     }
 
-      event?.target?.complete();
+    event?.target?.complete();
 
-    await this.alertCtrl.openModalAlert();
     const { data, error } = await this.supabase.getRecords<FestivaEvent[]>('events', ['*'], 'user_id', this.user.id, 'created_at');
     if (error) {
       console.error('Error loading events:', error);
@@ -208,7 +211,6 @@ export class DashboardPage implements OnDestroy {
       this.events = this.mapEventsForAdmin(data as any[]);
       await this.loadEventsToManage();
       await this.storageHelper.setStorageKey(StorageKeys.USER_EVENTS, this.events);
-      this.alertCtrl.dismiss();
     }
   }
 
@@ -260,7 +262,7 @@ export class DashboardPage implements OnDestroy {
   }
 
   requestAdminEvents() {
-    window.open('https://wa.me/18099560999?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20la%20administraci%C3%B3n%20de%20eventos', '_system');
+    window.open(`https://wa.me/${remoteConfig.CONTACTS.festiva_phone}?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20la%20administraci%C3%B3n%20de%20eventos`, '_system');
   }
 
   setActiveTab(tab: string) {
@@ -268,7 +270,7 @@ export class DashboardPage implements OnDestroy {
 
     switch (tab) {
       case 'request':
-        window.open('https://wa.me/18099560999?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20las%20invitaciones', '_system');
+        window.open(`https://wa.me/${remoteConfig.CONTACTS.festiva_phone}?text=Hola%2C%20quiero%20saber%20mas%20informaci%C3%B3n%20sobre%20las%20invitaciones`, '_system');
         this.activeTab = 'home';
         break;
       case 'info':
@@ -410,42 +412,46 @@ export class DashboardPage implements OnDestroy {
 
   async setPushNotification() {
 
-    const isWeb = !['android', 'ios'].includes(Capacitor.getPlatform());
+    try {
+      const isWeb = !['android', 'ios'].includes(Capacitor.getPlatform());
 
-    if (isWeb) return;
+      if (isWeb) return;
 
-    const pushPermission = await this.storageHelper.getStorageKey(StorageKeys.PUSH_PERMISSIONS);
+      const pushPermission = await this.storageHelper.getStorageKey(StorageKeys.PUSH_PERMISSIONS);
 
-    if (pushPermission === 'rejected') return; // User has denied permissions previously
+      if (pushPermission === 'rejected') return; // User has denied permissions previously
 
-    if (pushPermission === 'granted' && this.user.push_token) return; // User has granted permissions and has a push token
+      if (pushPermission === 'granted' && this.user.push_token) return; // User has granted permissions and has a push token
 
-    const modalPushShown = await this.storageHelper.getStorageKey<boolean>(StorageKeys.MODAL_PUSH_SHOWN);
+      const modalPushShown = await this.storageHelper.getStorageKey<boolean>(StorageKeys.MODAL_PUSH_SHOWN);
 
-    if (!pushPermission && !this.user.push_token && !modalPushShown) {
-      await this.storageHelper.setStorageKey(StorageKeys.MODAL_PUSH_SHOWN, true);
-      await this.alertCtrl.openModalPushNotification();
-    }
-    const permissionGranted = await this.fcm.requestPermissions();
+      if (!pushPermission && !this.user.push_token && !modalPushShown) {
+        await this.storageHelper.setStorageKey(StorageKeys.MODAL_PUSH_SHOWN, true);
+        await this.alertCtrl.openModalPushNotification();
+      }
+      const permissionGranted = await this.fcm.requestPermissions();
 
-    if (permissionGranted) {
-      const token = await this.fcm.getToken();
-      if (token) {
-        const userTokenUpdated = this.user.push_token !== token;
+      if (permissionGranted) {
+        const token = await this.fcm.getToken();
+        if (token) {
+          const userTokenUpdated = this.user.push_token !== token;
 
-        if (userTokenUpdated) {
-          const { data, error } = await this.supabase.updateRecord('user_profiles', this.user.id, { push_token: token });
-          if (data) {
+          if (userTokenUpdated) {
+            const { data, error } = await this.supabase.updateRecord('user_profiles', this.user.id, { push_token: token });
+            if (data) {
 
-            this.user.push_token = token;
-            await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, this.user);
-            await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'granted');
+              this.user.push_token = token;
+              await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, this.user);
+              await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'granted');
+            }
           }
         }
       }
-    }
-    else {
-      await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'rejected');
+      else {
+        await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'rejected');
+      }
+    } catch (error) {
+      console.error('Error setting up push notifications:', error);
     }
   }
 

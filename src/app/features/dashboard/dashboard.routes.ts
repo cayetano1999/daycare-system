@@ -9,6 +9,6 @@ export const dashBoardRoutes: Routes = [
   {
     path: 'dashboard',
     component: DashboardPage,
-    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+    canActivate: [ForceUpgradeGuard, AppMaintenanceGuard, InternetConnectionGuard]
   }
 ];

@@ -245,7 +245,7 @@ export class AddGuestModalComponent implements OnInit {
     await actionSheet.present();
   }
 
-  async handleSubmit() {
+  async handleSubmit(sendInvitation: boolean = false) {
     if (!this.validateForm()) {
       return;
     }
@@ -317,7 +317,9 @@ export class AddGuestModalComponent implements OnInit {
 
       // Close modal with success
       this.modalController.dismiss({
-        success: true
+        success: true,
+        sendInvitation: sendInvitation,
+        guest: guestData
       });
 
     } catch (error) {

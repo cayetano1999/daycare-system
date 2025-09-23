@@ -108,7 +108,6 @@ export class LoginPage implements OnInit {
   private onLoginSuccess(): void {
     // Redirigir al dashboard o página principal
     // this.router.navigate(['/dashboard']);
-    console.log('Login successful!');
   }
 
   /**

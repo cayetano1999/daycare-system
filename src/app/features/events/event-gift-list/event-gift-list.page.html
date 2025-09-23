@@ -3,7 +3,7 @@
     <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}" class="top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
       <div class="flex items-center justify-between px-4 ">
         <div class="flex items-center">
-          <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
+          <button id="btn-mng-back" (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
             <svg class="w-6 h-6 text-white group-hover:text-gray-300 transition-colors" fill="none"
               stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -64,7 +64,7 @@
     <!-- Main Content -->
     <div class="pt-2 pb-8">
       <!-- Gift List Overview -->
-      <div class="px-6 py-6">
+      <div class="py-6">
         <div class="bg-white rounded-3xl shadow-xl p-6 animate-fade-in">
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
@@ -202,7 +202,7 @@
       </div>
 
       <!-- Items List -->
-      <div class="px-6">
+      <div class="px-0">
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-2xl font-bold text-gray-800">Lista de Artículos</h3>
           <span class="text-sm text-gray-500">{{ totalItems }} artículo{{ totalItems !== 1 ? 's' : '' }}</span>

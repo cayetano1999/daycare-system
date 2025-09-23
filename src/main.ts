@@ -37,8 +37,8 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(IonicModule.forRoot({
       mode: 'ios',
       backButtonText: '',
-      swipeBackEnabled: false,
-      hardwareBackButton: false,
+      swipeBackEnabled: true,
+      hardwareBackButton: true,
       animated: false,
     })),
     importProvidersFrom(PipesModule), // Pipes compartidos

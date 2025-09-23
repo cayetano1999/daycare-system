@@ -398,7 +398,12 @@ export class EventGuestsPage implements OnInit {
       }
     });
 
-    return await modal.present();
+    await modal.present();
+    const result = await modal.onDidDismiss();
+
+    if (result.data?.sendInvitation) {
+      this.sendInvitation(result.data.guest);
+    }
   }
 
   async openEditGuestModal(guest: Guest) {
@@ -421,7 +426,12 @@ export class EventGuestsPage implements OnInit {
       }
     });
 
-    return await modal.present();
+    await modal.present();
+    const result = await modal.onDidDismiss();
+
+    if (result.data?.sendInvitation) {
+      this.sendInvitation(result.data.guest);
+    }
   }
 
   // Delete actions
@@ -474,7 +484,7 @@ export class EventGuestsPage implements OnInit {
 
     const system = Capacitor.getPlatform();
 
-    if(system === 'ios' && url) {
+    if (system === 'ios' && url) {
       await this.browser.openUrl(url);
       return;
     }
@@ -580,7 +590,7 @@ export class EventGuestsPage implements OnInit {
         {
           text: 'Agregar Invitado',
           icon: 'person-add-outline',
-          handler: async  () => {
+          handler: async () => {
             if (EVENT_STATE.eventRole === 'Lectura') {
               await this.alertController.openFestivaAlert('warning', 'Acción no permitida', 'No tienes permisos para agregar invitados en este evento.');
               return;
@@ -592,7 +602,7 @@ export class EventGuestsPage implements OnInit {
         {
           text: 'Importar invitados .csv',
           icon: 'cloud-upload-outline',
-           handler: async  () => {
+          handler: async () => {
             if (EVENT_STATE.eventRole === 'Lectura') {
               await this.alertController.openFestivaAlert('warning', 'Acción no permitida', 'No tienes permisos para importar invitados en este evento.');
               return;

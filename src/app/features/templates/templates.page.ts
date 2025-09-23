@@ -4,6 +4,8 @@ import { ExampleInvitation } from '../dashboard/dashboard.page';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
 import { ModalController, NavController } from '@ionic/angular';
 import { ModalGifTemplateComponent } from 'src/app/shared/components/modal-gif-template/modal-gif-template.component';
+import { Capacitor } from '@capacitor/core';
+import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
 
 
 @Component({
@@ -23,8 +25,11 @@ export class TemplatesPage implements OnInit {
   // Invitaciones agrupadas y ordenadas (Boda primero)
   invitacionesAgrupadasOrdenadas: { key: string, value: ExampleInvitation[] }[] = [];
 
+  isIos = Capacitor.getPlatform() === 'ios';
+
   private readonly modalCtrl = inject(ModalController);
   private readonly navCtrl = inject(NavController);
+  private readonly browser = inject(AppInBrowserService);
 
   constructor() { }
 
@@ -33,7 +38,7 @@ export class TemplatesPage implements OnInit {
     this.ordenarGrupos();
   }
 
-  back() {
+  goBack() {
     this.navCtrl.back();
   }
 
@@ -93,21 +98,22 @@ export class TemplatesPage implements OnInit {
     return descripciones[tipo] || 'Diseño elegante y moderno para tu evento';
   }
 
-  goToTemplate(template: ExampleInvitation) {
-    window.open(template.url, '_system');
+  async goToTemplate(template: ExampleInvitation) {
+    await this.browser.openUrl(template.url);
   }
 
   /**
    * Maneja el evento de "Conocer más" de una invitación
    * @param invitacion - La invitación seleccionada
    */
-  verMas(invitacion: ExampleInvitation): void {
+  async verMas(invitacion: ExampleInvitation): Promise<void> {
     //REDIRIGIR A WS PIDIENDO INFORMACION SOBRE EL EMPLATE SELECCIONADO, USANDO WINDOW.OPEN _SYSTEM
 
-    const numero = '18093716874';
-    const mensaje = `Hola, me gustaría recibir información sobre el template "${invitacion.name}" (ID: ${invitacion.id}, Invitación: ${invitacion.url}).`;
-    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+  
+    const mensaje = `Hola, me gustaría recibir información sobre el template "${invitacion.name}" (ID: ${invitacion.id}, Invitación: ${invitacion.url}`;
+    const url = `https://wa.me/${remoteConfig.CONTACTS.festiva_phone}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_system');
+
 
     // Aquí puedes implementar la navegación o modal para ver más detalles
     // Por ejemplo:

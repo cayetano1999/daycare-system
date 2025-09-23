@@ -122,6 +122,13 @@ export class OnboardingPage implements OnInit, OnDestroy {
     if (isRightSwipe && this.currentStep > 0) {
       this.prevStep();
     }
+
+   
+  }
+
+  getColorByStep(step: number): string {
+    const colors = ['#2652d1', '#1c827c', '#9a2097'];
+    return colors[step] || '#000000';
   }
 
   nextStep() {

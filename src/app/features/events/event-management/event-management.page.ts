@@ -76,9 +76,6 @@ export class EventManagementPage implements OnInit {
     // Reset the selected management option when entering the view
     // EVENT_STATE.managementOptionSelected = '';
     this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
-    console.log(remoteConfig.ADMINS_USERS)
-    console.log('User Id:', this.user.id)
-    console.log(isAdminUser(this.user.id))
     this.eventRole = EVENT_STATE.eventRole;
     this.managementOptions.find(opt => opt.id === 'ticket')!.isEnabled = (isAdminUser(this.user.id));
 
@@ -301,6 +298,6 @@ export class EventManagementPage implements OnInit {
   }
 
   goBack() {
-    this.navController.back();
+    this.router.navigate([RoutesApp.HOME]);
   }
 }

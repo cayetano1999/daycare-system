@@ -158,7 +158,7 @@ export class AppComponent implements OnInit {
     }
 
     private setupBackButton(): void {
-        this.platform.backButton.subscribeWithPriority(10, async () => {
+        this.platform.backButton.subscribeWithPriority(999, async () => {
             await this.backBtnService.backBtnManager(this.navegationHistory);
         });
     }

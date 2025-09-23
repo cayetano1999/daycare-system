@@ -14,14 +14,7 @@ ion-content {
   scroll-behavior: smooth;
 }
 
-ion-header {
-  // Asegurar que el header sea transparente para el backdrop-blur
-  --background: transparent;
-  
-  .toolbar-background {
-    background: transparent;
-  }
-}
+
 
 // Optimizaciones para las imágenes
 img {

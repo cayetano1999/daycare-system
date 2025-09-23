@@ -4,7 +4,7 @@
       class=" top-0 left-0 right-0 z-50 bg-black border-b border-gray-800 shadow-lg">
       <div class="flex items-center justify-between px-4 ">
         <div class="flex items-center">
-          <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
+          <button id="btn-mng-back" (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-gray-800 transition-all duration-200 group">
             <svg class="w-6 h-6 text-white group-hover:text-gray-300 transition-colors" fill="none"
               stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -307,7 +307,7 @@
 
                     </div>
 
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center" style="justify-content: center;">
                       <div class="flex space-x-4">
                         <!-- Share Button -->
 

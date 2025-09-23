@@ -10,6 +10,9 @@ import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { Capacitor } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
 import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
+import { Share } from '@capacitor/share';
+import { remoteConfig } from 'src/environments/environment.remoteconfig';
+import { Device } from '@capacitor/device';
 
 @Component({
   selector: 'app-settings',
@@ -31,7 +34,7 @@ export class SettingsPage implements OnInit {
   whatsappNumber: string = '18093716874';
 
   // App information
-  appVersion: string = '1.0.0';
+  appVersion: string = environment.APP_VERSION;
   appName: string = 'Festiva';
   isIos = Capacitor.getPlatform() === 'ios';
 
@@ -62,31 +65,23 @@ export class SettingsPage implements OnInit {
   shareApp() {
 
     const shareData = {
-      title: 'Festiva - Gestión Profesional de Eventos',
-      text: 'Descubre la mejor app para gestionar tus eventos y celebraciones especiales',
-      url: "https://festiva.web.app"
+      title: 'Festiva - Gestión Profesional de Eventos e Invitaciones Digitales',
+      text: `🎊 Descubre la mejor app para gestionar tus eventos y celebraciones especiales \n\n Disponible en 🍎 ios: ${environment.URL_APP_IOS} \n Disponible en 🤖android: ${environment.URL_APP_ANDROID}`,
     };
 
-    if (navigator.share) {
-      navigator.share(shareData)
-        .then(() => {
-          this.alertCtrl.openFestivaAlert('success', '¡Gracias por compartir Festiva!', 'Tu apoyo nos ayuda a crecer.', false, 'Cerrar');
-        })
-        .catch((error) => {
-          console.error('Error sharing app:', error);
-          this.fallbackShare();
-        });
-    } else {
-      this.fallbackShare();
-    }
+    Share.share(shareData).then(() => {
+      this.showToast('¡Gracias por compartir Festiva!', 'success');
+    }).catch((error) => {
+      console.error('Error sharing:', error);
+      this.fallbackShare(shareData);
+    });
   }
 
-  private fallbackShare() {
+  private fallbackShare(shareData: { title: string; text: string }) {
     // Fallback for browsers that don't support Web Share API
-    const shareText = `¡Descubre Festiva! La mejor app para gestionar eventos y celebraciones especiales. ${window.location.origin}`;
 
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareText)
+      navigator.clipboard.writeText(shareData.text)
         .then(() => {
           this.showToast('Enlace copiado al portapapeles', 'success');
         })
@@ -96,7 +91,7 @@ export class SettingsPage implements OnInit {
     } else {
       // Even older fallback
       const textArea = document.createElement('textarea');
-      textArea.value = shareText;
+      textArea.value = shareData.text;
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand('copy');
@@ -108,7 +103,6 @@ export class SettingsPage implements OnInit {
   // Support Section Methods
   leaveFeedback() {
 
-    const feedbackEmail = 'feedback@festiva.com';
     const subject = encodeURIComponent('Feedback sobre Festiva');
     const body = encodeURIComponent(`
 Hola equipo de Festiva,
@@ -124,7 +118,7 @@ Saludos,
 [Tu nombre]
     `);
 
-    const mailtoUrl = `mailto:${feedbackEmail}?subject=${subject}&body=${body}`;
+    const mailtoUrl = `mailto:${remoteConfig.CONTACTS.email}?subject=${subject}&body=${body}`;
 
     try {
       window.open(mailtoUrl, '_system');
@@ -135,25 +129,14 @@ Saludos,
   }
 
   rateInStore() {
-
     // Detect platform and open appropriate store
-    if (this.platform.is('ios')) {
-      // iOS App Store
-      const appStoreUrl = 'https://apps.apple.com/app/festiva/id123456789'; // TODO: Replace with actual App Store ID
-      window.open(appStoreUrl, '_system');
-    } else if (this.platform.is('android')) {
-      // Google Play Store
-      const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.festiva.app'; // TODO: Replace with actual package name
-      window.open(playStoreUrl, '_system');
-    } else {
-      // Web fallback
-      this.showToast('¡Gracias! Califícanos cuando descargues la app móvil', 'info');
-    }
+    // iOS App Store
+    const appStoreUrl = this.isIos ? environment.URL_APP_IOS : environment.URL_APP_ANDROID; // TODO: Replace with actual App Store ID
+    window.open(appStoreUrl, '_system');
   }
 
-  reportBug() {
+  async reportBug() {
 
-    const bugReportEmail = 'bugs@festiva.com';
     const subject = encodeURIComponent('Reporte de Error - Festiva');
     const body = encodeURIComponent(`
 Hola equipo técnico de Festiva,
@@ -175,16 +158,16 @@ COMPORTAMIENTO ACTUAL:
 [Qué está pasando realmente]
 
 INFORMACIÓN TÉCNICA:
-- Versión de la app: ${this.appVersion}
-- Plataforma: ${this.platform.platforms().join(', ')}
-- Navegador: ${navigator.userAgent}
+- Versión de la app: ${environment.APP_VERSION}
+- Plataforma: ${Capacitor.getPlatform()}
+- Dispositivo: ${(await Device.getInfo()).manufacturer}
 - Fecha y hora: ${new Date().toLocaleString('es-ES')}
 
 Saludos,
 [Tu nombre]
     `);
 
-    const mailtoUrl = `mailto:${bugReportEmail}?subject=${subject}&body=${body}`;
+    const mailtoUrl = `mailto:${remoteConfig.CONTACTS.email}?subject=${subject}&body=${body}`;
 
     try {
       window.open(mailtoUrl, '_system');
@@ -198,7 +181,7 @@ Saludos,
   openWhatsApp() {
 
     const message = encodeURIComponent('Hola, me comunico desde la app Festiva. ¿Podrían ayudarme?');
-    const whatsappUrl = `https://wa.me/${this.whatsappNumber}?text=${message}`;
+    const whatsappUrl = `https://wa.me/${remoteConfig.CONTACTS.festiva_phone}?text=${message}`;
 
     try {
       window.open(whatsappUrl, '_system');
@@ -210,16 +193,12 @@ Saludos,
 
   // Utility Methods
   private showToast(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') {
-    // TODO: Implement proper toast notification
 
-    // Simple alert fallback for now
-    if (type === 'error') {
-      alert(`Error: ${message}`);
-    } else if (type === 'success') {
-      alert(`Éxito: ${message}`);
-    } else {
-      alert(message);
-    }
+    const festivaType: 'success' | 'warning' | 'question' | 'danger' =
+      type === 'error' ? 'danger'
+        : type === 'info' ? 'question'
+          : type;
+    this.alertCtrl.openFestivaAlert(festivaType, message, '');
   }
 
   // Analytics Methods (for future implementation)
@@ -242,22 +221,11 @@ Saludos,
   }
 
   async logOut() {
-    const result = await this.alertCtrl.confirmation(async () => {
-      try {
+
+    const answer = await this.alertCtrl.openFestivaAlert('warning', 'Cerrar Sesión', '¿Estás seguro de que deseas cerrar sesión?', true, 'Cancelar', 'Cerrar Sesión');
+    if(answer.action === 'confirm') {
         await this.clearAndRedirect();
-
-      } catch (error) {
-        console.error('Error al cerrar sesión:', error);
-        this.showToast('Error al cerrar sesión. Inténtalo de nuevo.', 'error');
-      }
-
-    },
-      '¿Estás seguro de que deseas cerrar sesión?',
-      'Cerrar Sesión',
-      'Cerrar Sesión',
-      () => {
-      }
-    );
+    }
 
   }
 
@@ -289,34 +257,36 @@ Saludos,
       return;
     }
     //consultar si ya existe una solicitud de eliminación pendiente
-    const data = await this.supabaseService.getRecords('deleted_accounts', ['*'], 'user_id', user.id, 'created_at');
+    const existRecord: any = await this.supabaseService.getRecords('deleted_accounts', ['*'], 'user_id', user.id, 'created_at');
 
-    if (data.error) {
-      console.error('Error checking existing deletion request:', data.error);
+    if (existRecord.error) {
+      console.error('Error checking existing deletion request:', existRecord.error);
       await this.alertCtrl.openFestivaAlert('danger', 'Error', 'No se pudo procesar tu solicitud. Inténtalo de nuevo más tarde.');
       return;
     }
 
-    if (data) {
+    if (existRecord?.data.length > 0 || existRecord?.data || existRecord?.data.id) {
       await this.alertCtrl.openFestivaAlert('warning', 'Solicitud Pendiente', 'Ya tienes una solicitud de eliminación de cuenta pendiente. Nuestro equipo se pondrá en contacto contigo pronto.');
       return;
     }
 
-    const confirmation = await this.alertCtrl.confirmation(async () => {
-      const { data, error } = await this.supabaseService.createRecord('deleted_accounts', {
-        user_id: user.id,
-      });
-      if (error) {
-        console.error('Error requesting account deletion:', error);
-        await this.alertCtrl.openFestivaAlert('danger', 'Error', 'No se pudo procesar tu solicitud. Inténtalo de nuevo más tarde.');
-        return;
-      }
-      await this.alertCtrl.openFestivaAlert('success', 'Solicitud Enviada', 'Hemos recibido tu solicitud de eliminación de cuenta. Nuestro equipo se pondrá en contacto contigo pronto para completar el proceso.');
-      // Optionally log out the user
-      await this.clearAndRedirect();
+    const confirmation = await this.alertCtrl.openFestivaAlert('warning', 'Confirmar Eliminación', '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible y se eliminarán todos tus datos.', true, 'Cancelar', 'Eliminar');
 
-    }, '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.', 'Eliminar Cuenta', 'Eliminar', () => {
+    if (confirmation.action === 'cancel') {
+      return;
+    }
+
+    const { data, error } = await this.supabaseService.createRecord('deleted_accounts', {
+      user_id: user.id,
     });
+    if (error) {
+      console.error('Error requesting account deletion:', error);
+      await this.alertCtrl.openFestivaAlert('danger', 'Error', 'No se pudo procesar tu solicitud. Inténtalo de nuevo más tarde.');
+      return;
+    }
+    await this.clearAndRedirect();
+    await this.alertCtrl.openFestivaAlert('success', 'Solicitud Enviada', 'Hemos recibido tu solicitud de eliminación de cuenta. Nuestro equipo se pondrá en contacto contigo pronto para completar el proceso.');
+    // Optionally log out the user
 
   }
 

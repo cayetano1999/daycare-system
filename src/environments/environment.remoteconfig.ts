@@ -150,6 +150,11 @@ export const remoteConfig = {
         }
     },
     FESTIVA_PLANS: [] as any[],
-    EVENT_OPTIONS: [] as any[]
+    EVENT_OPTIONS: [] as any[],
+    CONTACTS: {
+        email: "",
+        invitarte_phone: "",
+        festiva_phone: ""
+    }
 
 }

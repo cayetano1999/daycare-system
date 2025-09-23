@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { StandAloneModules } from '../../shared/stand-alone-module';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-app-info',
@@ -28,6 +29,7 @@ export class InformationPage implements OnInit {
     professionalPlanners: '500+',
     countriesServed: '15+'
   };
+  isIos = Capacitor.getPlatform() === 'ios';
 
   // Features list
   features = [

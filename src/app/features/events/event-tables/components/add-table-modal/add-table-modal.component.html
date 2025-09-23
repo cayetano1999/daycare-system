@@ -1,15 +1,20 @@
 
-
-<ion-header>
-  <ion-toolbar class="ion-no-border" style="---background: #fff;">
-     <div class="bg-dark-900 text-dark  rounded-t-2xl flex justify-between items-center">
-    <h2 class="text-xl font-semibold">{{ mode === 'edit' ? 'Editar Mesa' : 'Agregar Mesa' }}</h2>
-    <button (click)="closeModal()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-  </div>
+<!-- Modal Header -->
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-toolbar" style="--background: #fff">
+    <div class="flex items-center justify-between p-6 border-b border-gray-100">
+      <h3 class="text-xl font-bold text-gray-800">
+        {{ mode === 'edit' ? 'Editar Mesa' : 'Nueva Mesa' }}
+      </h3>
+      <button
+        (click)="closeModal()"
+        class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+      >
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
   </ion-toolbar>
 </ion-header>
 <!-- [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}" -->
@@ -48,8 +53,11 @@
             [(ngModel)]="tableName"
             placeholder="Ej: Mesa Principal, Mesa 1, Mesa VIP..."
             [class]="getInputClasses('name')"
+            maxlength="30"
             class="w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         </div>
+        <p class="text-gray-500 text-sm mt-2">{{ tableName.length }}/30</p>
+
         <p *ngIf="errors.name" class="text-red-600 text-sm mt-2">{{ errors.name }}</p>
       </div>
 

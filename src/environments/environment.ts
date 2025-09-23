@@ -14,7 +14,7 @@ export const environment = {
   supabaseUrl: "",
   supabaseKey: "",
   URL_API: "",
-  APP_VERSION: "1.0.3",
+  APP_VERSION: "1.0.5",
   LESS_VERSION: "",
   APP_MAINTENANCE: false,
   URL_TERMS: "",

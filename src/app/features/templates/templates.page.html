@@ -1,16 +1,11 @@
-<ion-header  class="ion-no-border" >
-  <ion-toolbar class="ion-no-border" style="--background: #fff;">
-
-    <ion-icon (click)="back()" style="font-size: 2rem;" color="dark" slot="start" name="chevron-back"></ion-icon>
-
-    <div class="bg-white sticky top-0 z-10 border-b border-black/10 backdrop-blur-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-        <div class="flex items-center justify-between">
-          <h1 class="text-black font-black text-2xl sm:text-3xl md:text-4xl">
-            Invitaciones
-          </h1>
-
-        </div>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border ion-no-padding"  style="--background: #000;">
+    <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}" class="bg-black text-white   flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <button id="btn-mng-back" (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+          <ion-icon style="color: white; font-size: 1.8rem;" name="chevron-back"></ion-icon>
+        </button>
+        <h1 class="text-xl font-semibold">Plantillas</h1>
       </div>
     </div>
   </ion-toolbar>
@@ -61,7 +56,7 @@
           <h2 class="text-black font-bold text-xl sm:text-2xl md:text-3xl">
             {{ grupo.key }}
           </h2>
-          <div class="flex-1 ml-4 h-px bg-gradient-to-r from-black/20 to-transparent"></div>
+          <!-- <div class="flex-1 ml-4 h-px bg-gradient-to-r from-black/20 to-transparent"></div> -->
         </div>
 
         <!-- Grid de Cards Horizontales -->
