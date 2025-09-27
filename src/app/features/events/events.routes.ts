@@ -10,6 +10,7 @@ import { EventGuestsPage } from "./event-guests/event-guests.page";
 import { EventTicketsPage } from "./event-ticket/event-ticket.page";
 import { EventScannerPage } from "./event-scanner/event-scanner.page";
 import { GuestVerificationPage } from "./guest-verification/guest-verification.page";
+import { MessagesPage } from "./messages/messages.page";
 
 export const eventRoutes: Routes = [
   {
@@ -57,6 +58,10 @@ export const eventRoutes: Routes = [
   {
     path: 'events/guest-verification/:guest_id/:event_id',
     component: GuestVerificationPage
+  },
+  {
+    path: 'events/messages',
+    component: MessagesPage
   }
 
 

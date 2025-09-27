@@ -262,6 +262,7 @@ export class AddGuestModalComponent implements OnInit {
     }
 
     this.isSubmitting = true;
+    let guestId = '';
 
     try {
       const guestData = {
@@ -301,7 +302,8 @@ export class AddGuestModalComponent implements OnInit {
         else {
         }
 
-      } else {
+      } 
+      else {
         // Create new guest
         const { data, error }: any = await this.supabaseService.createRecord<Partial<Guest>>(
           'guests',
@@ -313,13 +315,16 @@ export class AddGuestModalComponent implements OnInit {
           this.showToast('Error al crear el invitado', 'error');
           return;
         }
+
+        this.guest = data;
+        
       }
 
       // Close modal with success
       this.modalController.dismiss({
         success: true,
         sendInvitation: sendInvitation,
-        guest: guestData
+        guest: this.guest
       });
 
     } catch (error) {

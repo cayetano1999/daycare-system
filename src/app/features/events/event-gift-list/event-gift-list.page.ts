@@ -16,6 +16,7 @@ import { Device } from '@capacitor/device';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 
 interface GiftItem {
   article_code?: string;
@@ -77,6 +78,7 @@ export class GiftListPage implements OnInit {
   private supabaseService = inject(SupabaseService);
   private storageHelper = inject(StorageHelper);
   private router = inject(Router);
+  private readonly alertCtrlService = inject(AlertControllerService);
 
   /**
    *
@@ -93,7 +95,7 @@ export class GiftListPage implements OnInit {
     const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
     if (state?.event) this.event = state.event;
 
-    if(this.event) {
+    if (this.event) {
       this.eventId = this.event.id || '';
     }
     this.user = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
@@ -353,38 +355,42 @@ export class GiftListPage implements OnInit {
   }
 
   // Delete management
-  confirmDeleteItem(index: number) {
+  async confirmDeleteItem(index: number) {
     this.itemToDelete = index;
     this.showDeleteConfirm = true;
-  }
 
-  cancelDeleteItem() {
-    this.showDeleteConfirm = false;
-    this.itemToDelete = null;
-  }
+    const response = await this.alertCtrlService.openFestivaAlert('warning', '¿Eliminar artículo?', 'Esta acción no se puede deshacer. El artículo será elimnado permanentemente de la lista', true, 'Cancelar', 'Eliminar')
 
-  async handleDeleteItem() {
-    if (this.itemToDelete === null) return;
+    if (response.action === 'confirm') {
 
-    try {
-      const updatedItems = this.giftList.items.filter((_, index) => index !== this.itemToDelete);
-      this.giftList.items = updatedItems;
+      if (this.itemToDelete === null) return;
 
-      // Update in Supabase
-      await this.updateGiftList();
+      try {
+        const updatedItems = this.giftList.items.filter((_, index) => index !== this.itemToDelete);
+        this.giftList.items = updatedItems;
 
+        // Update in Supabase
+        await this.updateGiftList();
+
+        this.showDeleteConfirm = false;
+        this.itemToDelete = null;
+      } catch (error: any) {
+        console.error('Error deleting item:', error);
+
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'No se pudo eliminar el artículo. Intenta nuevamente.',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
+    }
+    else {
       this.showDeleteConfirm = false;
       this.itemToDelete = null;
-    } catch (error: any) {
-      console.error('Error deleting item:', error);
-
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo eliminar el artículo. Intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
     }
+
+
   }
 
   // Excel import

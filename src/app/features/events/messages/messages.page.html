@@ -1,0 +1,104 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border ion-no-padding" style="--background: #000;">
+    <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}"
+      class="bg-black text-white px-0 flex items-center justify-between">
+      <div class="flex items-center space-x-1">
+        <button id="btn-mng-back" (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-xl font-semibold">Mensajes</h1>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-gray-100">
+  <ion-grid class="px-1">
+
+    @if(event) {
+    <ion-col size="12">
+
+
+      <div class="pt-0 pb-8">
+        <!-- Event Details Card -->
+        <div class="">
+          <div class="bg-white rounded-3xl overflow-hidden animate-fade-in">
+            <!-- Event Image -->
+            <div class="relative h-48 overflow-hidden">
+              <img [src]="event?.image" [alt]="event?.name" class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-4 left-4 right-4">
+                <h2 class="text-2xl font-bold text-white mb-2">
+                  {{ event.name }}
+                </h2>
+
+              </div>
+            </div>
+
+            <!-- Event Info -->
+            <div class="py-6 px-2 space-y-4">
+              <!-- Messages List -->
+              <div class="space-y-3" style="max-height: 500px; overflow-y: scroll;">
+
+                <ion-card-title class="text-center mt-2">Mensajes de los invitados</ion-card-title>
+                <ion-card-subtitle class="text-center mb-2">Aquí podrás ver todos los mensajes enviados por los invitados desde la invitación digital.</ion-card-subtitle>
+
+                <div *ngFor="let message of messages; let i = index"
+                  class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
+                  <div class="flex items-start space-x-3">
+                    <!-- Avatar -->
+                    <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span class="text-white font-medium text-sm">
+                        {{ getInitials(message.guestName) }}
+                      </span>
+                    </div>
+
+                    <!-- Message Content -->
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-medium text-gray-900 text-sm"><b>{{ message.guestName }}</b></h3>
+                        <span class="text-xs text-gray-500">{{ formatDate(message.date) }}</span>
+                      </div>
+
+                      <p class="text-gray-700 text-sm leading-relaxed mb-2">
+                        {{ message.messageText }}
+                      </p>
+
+                      <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-400">{{ formatTime(message.date) }}</span>
+                        <span class="text-xs text-gray-400">#{{ i + 1 }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="messages.length === 0" class="text-center py-16">
+                <div class="bg-gray-200 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                    </path>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-500 mb-2">No hay mensajes</h3>
+                <p class="text-gray-400">Los mensajes de los invitados aparecerán aquí</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </ion-col>
+    }
+
+
+    <ion-col size="12" class="p-4">
+
+    </ion-col>
+  </ion-grid>
+</ion-content>
