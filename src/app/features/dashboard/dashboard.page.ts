@@ -434,9 +434,9 @@ export class DashboardPage implements OnDestroy {
       if (permissionGranted) {
         const token = await this.fcm.getToken();
         if (token) {
-          const userTokenUpdated = this.user.push_token !== token;
+          // const userTokenUpdated = this.user.push_token !== token;
 
-          if (userTokenUpdated) {
+          // if (userTokenUpdated) {
             const { data, error } = await this.supabase.updateRecord('user_profiles', this.user.id, { push_token: token });
             if (data) {
 
@@ -444,7 +444,7 @@ export class DashboardPage implements OnDestroy {
               await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, this.user);
               await this.storageHelper.setStorageKey(StorageKeys.PUSH_PERMISSIONS, 'granted');
             }
-          }
+          // }
         }
       }
       else {

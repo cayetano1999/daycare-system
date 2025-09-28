@@ -17,6 +17,7 @@ export enum StorageKeys  {
     PRE_HOME_ANIMATION_DONE = 'pre_home_animation_done',
     PUSH_PERMISSIONS = 'push_permissions',
     MODAL_PUSH_SHOWN = 'modal_push_shown',
-    USER_EVENTS = 'user_events'
+    USER_EVENTS = 'user_events',
+    SCANNER_HISTORY = 'scanner_history',
 
 }

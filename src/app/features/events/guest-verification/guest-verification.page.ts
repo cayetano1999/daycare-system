@@ -1,7 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
@@ -74,12 +76,13 @@ export class GuestVerificationPage {
   private router = inject(Router);
   private storageHelper = inject(StorageHelper);
   private supabaseService: SupabaseService = inject(SupabaseService);
+  private readonly alertCtrl = inject(AlertControllerService);
 
   /**
    *
    */
   constructor() {
-     const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
+    const state = this.router.getCurrentNavigation()?.extras?.state ?? history.state;
     if (state?.event) this.eventState = state.event;
   }
 
@@ -103,6 +106,8 @@ export class GuestVerificationPage {
     this.isLoading = true;
     this.verificationResult = null;
 
+    const scannerHistory = await this.storageHelper.getStorageKey<any[]>(StorageKeys.SCANNER_HISTORY) || [];
+
     try {
       // Load guest and event in parallel
       const [guestResult, eventResult] = await Promise.all([
@@ -118,6 +123,55 @@ export class GuestVerificationPage {
       // Verify that guest belongs to the event
       if (this.guest?.event_id === this.event?.id) {
         this.handleSuccess();
+        const userData = await this.storageHelper.getStorageKey<any>(StorageKeys.USER_DATA);
+
+        //verificar si anteriormente se escaneo este invitado
+        const alreadyScanned = scannerHistory.find((entry: any) => entry.guest.id === this.guest?.id && entry.event.id === this.event?.id);
+
+
+        if(alreadyScanned?.quantity_scanned >= (this.guest?.companions_number || 0) + 1){
+         await this.alertCtrl.openFestivaAlert('warning', 'Límite de escaneos alcanzado', `El invitado ${this.guest?.name} ya ha sido escaneado el número máximo de veces permitido (${alreadyScanned.quantity_scanned} veces).`, false, 'Aceptar', 'Ok');
+         this.isLoading = false;
+         return;
+        }
+
+        if (alreadyScanned) {
+          // Incrementar la cantidad escaneada
+          alreadyScanned.quantity_scanned += 1;
+          alreadyScanned.date = new Date().toISOString(); // Actualizar la fecha al último escaneo
+          alreadyScanned.guest = {
+            ...alreadyScanned.guest,
+          } // Actualizar el nombre por si acaso
+          // Mover el registro al inicio del array
+          const index = scannerHistory.indexOf(alreadyScanned);
+          if (index > -1) {
+            scannerHistory.splice(index, 1);
+            scannerHistory.unshift(alreadyScanned);
+          }
+          await this.storageHelper.setStorageKey(StorageKeys.SCANNER_HISTORY, scannerHistory);
+          return;
+        }
+
+        const newScannerEntry = {
+          guest: {
+            id: guestResult.success ? this.guest?.id : '',
+            name: guestResult.success ? this.guest?.name : '',
+            companions: guestResult.success ? this.guest?.companions_number : 0
+          },
+          scannedBy: {
+            id: userData?.id || '',
+            name: userData?.full_name || ''
+          },
+          event: {
+            id: eventResult.success ? this.event?.id : '',
+            name: eventResult.success ? this.event?.name : ''
+          },
+          date: new Date().toISOString(),
+          quantity_scanned: 1
+        };
+        scannerHistory.unshift(newScannerEntry);
+        await this.storageHelper.setStorageKey(StorageKeys.SCANNER_HISTORY, scannerHistory);
+
       } else {
         this.handleError('El invitado no pertenece a este evento');
       }
@@ -187,6 +241,7 @@ export class GuestVerificationPage {
   }
 
   private handleSuccess() {
+
     this.verificationResult = 'success';
     this.errorMessage = '';
 
@@ -278,7 +333,7 @@ export class GuestVerificationPage {
 
   goBack() {
     if (this.event) {
-      this.router.navigate([RoutesApp.MANAGE_EVENT], { state: { event: this.event }, replaceUrl: true });
+      this.router.navigate([RoutesApp.EVENT_SCANNER], { state: { event: this.event }, replaceUrl: true });
     } else {
       this.router.navigate([RoutesApp.HOME], { replaceUrl: true });
     }

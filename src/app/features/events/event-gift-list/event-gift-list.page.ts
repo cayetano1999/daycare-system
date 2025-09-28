@@ -74,7 +74,6 @@ export class GiftListPage implements OnInit {
   isIos = Capacitor.getPlatform() === 'ios';
 
   private alertController = inject(AlertController);
-  private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
   private storageHelper = inject(StorageHelper);
   private router = inject(Router);
@@ -132,12 +131,9 @@ export class GiftListPage implements OnInit {
     } catch (error: any) {
       console.error('Error loading gift list data:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo cargar la lista de regalos del evento.',
-        buttons: ['OK']
-      });
-      await alert.present();
+
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo cargar la lista de regalos del evento. Intenta nuevamente más tarde.', false, 'OK');
+
     } finally {
       this.isLoadingData = false;
     }
@@ -325,12 +321,7 @@ export class GiftListPage implements OnInit {
     } catch (error: any) {
       console.error('Error saving item:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo guardar el artículo. Intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo guardar el artículo. Intenta nuevamente.', false, 'OK');
     }
   }
 
@@ -345,13 +336,9 @@ export class GiftListPage implements OnInit {
     } catch (error: any) {
       console.error('Error updating item status:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo actualizar el estado del artículo.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo actualizar el estado del artículo.', false, 'OK');
     }
+
   }
 
   // Delete management
@@ -377,12 +364,7 @@ export class GiftListPage implements OnInit {
       } catch (error: any) {
         console.error('Error deleting item:', error);
 
-        const alert = await this.alertController.create({
-          header: 'Error',
-          message: 'No se pudo eliminar el artículo. Intenta nuevamente.',
-          buttons: ['OK']
-        });
-        await alert.present();
+        await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo eliminar el artículo. Intenta nuevamente.', false, 'OK');
       }
     }
     else {
@@ -408,12 +390,7 @@ export class GiftListPage implements OnInit {
     const validTypes = ['text/csv', 'application/vnd.ms-excel'];
 
     if (!validTypes.includes(file.type) && !file.name.toLowerCase().endsWith('.csv')) {
-      const alert = await this.alertController.create({
-        header: 'Archivo inválido',
-        message: 'Solo se permiten archivos CSV (.csv)',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Tipo de archivo inválido', 'Por favor selecciona un archivo CSV válido.', false, 'OK');
       return;
     }
 
@@ -519,12 +496,14 @@ export class GiftListPage implements OnInit {
 
       // Show errors if any
       if (errors.length > 0) {
-        const alert = await this.alertController.create({
-          header: 'Errores en el archivo',
-          message: `Se encontraron ${errors.length} errores:\n\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? '\n\n...y más errores' : ''}`,
-          buttons: ['OK']
-        });
-        await alert.present();
+        // const alert = await this.alertController.create({
+        //   header: 'Errores en el archivo',
+        //   message: `Se encontraron ${errors.length} errores:\n\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? '\n\n...y más errores' : ''}`,
+        //   buttons: ['OK']
+        // });
+        // await alert.present();
+
+        await this.alertCtrlService.openFestivaAlert('warning', 'Errores en el archivo', `Se encontraron ${errors.length} errores. Los artículos válidos serán importados.`, false, 'OK');
 
         // If no valid items, stop here
         if (importedItems.length === 0) {
@@ -537,22 +516,13 @@ export class GiftListPage implements OnInit {
       // Update in Supabase
       await this.updateGiftList();
 
-      // Show success message
-      const alert = await this.alertController.create({
-        header: 'Importación exitosa',
-        message: `Se importaron ${importedItems.length} artículos exitosamente${errors.length > 0 ? ` (${errors.length} errores ignorados)` : ''}`,
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('success', 'Importación exitosa', `Se importaron ${importedItems.length} artículos exitosamente${errors.length > 0 ? ` (${errors.length} errores ignorados)` : ''}`, false, 'OK');
+
     } catch (error) {
       console.error('Error importing Excel:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error de importación',
-        message: error instanceof Error ? error.message : 'Error al importar el archivo CSV. Verifica el formato.',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error de importación', error instanceof Error ? error.message : 'Error al importar el archivo CSV. Verifica el formato.', false, 'OK');
+
     } finally {
       this.isImporting = false;
       // Reset file input
@@ -691,22 +661,13 @@ export class GiftListPage implements OnInit {
 
       // Save PDF
       pdf.save(`${this.giftList.name.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+      
 
-      const alert = await this.alertController.create({
-        header: 'Exportación exitosa',
-        message: 'Lista exportada como PDF exitosamente',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('success', 'Exportación exitosa', 'Lista exportada como PDF exitosamente', false, 'OK');
     } catch (error) {
       console.error('Error exporting PDF:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error de exportación',
-        message: 'Error al exportar PDF',
-        buttons: ['OK']
-      });
-      await alert.present();
+      this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo exportar la lista como PDF. Intenta nuevamente.', false, 'OK');
     } finally {
       this.isExporting = false;
     }
@@ -814,21 +775,12 @@ export class GiftListPage implements OnInit {
       link.href = canvas.toDataURL('image/png');
       link.click();
 
-      const alert = await this.alertController.create({
-        header: 'Exportación exitosa',
-        message: 'Lista exportada como imagen PNG exitosamente',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('success', 'Exportación exitosa', 'Lista exportada como imagen PNG exitosamente', false, 'OK');
     } catch (error) {
       console.error('Error exporting PNG:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error de exportación',
-        message: 'Error al exportar imagen',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo exportar la lista como imagen. Intenta nuevamente.', false, 'OK');
+
     } finally {
       this.isExporting = false;
     }
@@ -890,21 +842,12 @@ export class GiftListPage implements OnInit {
         URL.revokeObjectURL(url);
       }
 
-      const alert = await this.alertController.create({
-        header: 'Exportación exitosa',
-        message: 'Lista exportada como PDF exitosamente',
-        buttons: ['OK']
-      });
-      await alert.present();
+        await this.alertCtrlService.openFestivaAlert('success', 'Exportación exitosa', 'Lista exportada como PDF exitosamente', false, 'OK');
+
     } catch (error) {
       console.error('Error exporting PDF:', error);
 
-      const alert = await this.alertController.create({
-        header: 'Error de exportación',
-        message: 'Error al exportar PDF',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo exportar la lista como PDF. Intenta nuevamente.', false, 'OK');
     } finally {
       this.isExporting = false;
     }
@@ -954,21 +897,10 @@ export class GiftListPage implements OnInit {
         URL.revokeObjectURL(url);
       }
 
-      const alert = await this.alertController.create({
-        header: 'Exportación exitosa',
-        message: 'Lista exportada como imagen PNG exitosamente',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('success', 'Exportación exitosa', 'Lista exportada como imagen PNG exitosamente', false, 'OK');
     } catch (error) {
       console.error('Error exporting PNG:', error);
-
-      const alert = await this.alertController.create({
-        header: 'Error de exportación',
-        message: 'Error al exportar imagen',
-        buttons: ['OK']
-      });
-      await alert.present();
+      await this.alertCtrlService.openFestivaAlert('danger', 'Error', 'No se pudo exportar la lista como imagen. Intenta nuevamente.', false, 'OK');
     } finally {
       this.isExporting = false;
     }

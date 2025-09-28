@@ -304,3 +304,42 @@ button:focus {
   border-left: none;
   border-top: none;
 }
+
+ion-content {
+  --background: #f3f4f6;
+}
+
+ion-toolbar {
+  --background: #000000;
+  --color: white;
+}
+
+ion-title {
+  font-weight: 500;
+}
+
+// History section animations
+.history-item {
+  animation: historySlideIn 0.5s ease-out forwards;
+}
+
+@keyframes historySlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// History card hover effects
+.history-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}

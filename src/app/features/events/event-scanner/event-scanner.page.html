@@ -1,73 +1,123 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="ion-no-border ">
-      <div class="bg-white border-b border-gray-200 px-6 py-4">
-    <div class="flex items-center justify-center">
-      <h1 class="text-xl font-semibold text-gray-900">Scanner de evento</h1>
+  <ion-toolbar class="ion-no-border ion-no-padding"  style="--background: #000;">
+    <div [ngClass]="{'py-4': !isIos, 'pb-2' : isIos}" class="bg-black text-white px-0 flex items-center justify-between">
+      <div class="flex items-center space-x-1">
+        <button id="btn-mng-back" (click)="goBack()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h1 class="text-xl font-semibold">Scanner QR</h1>
+      </div>
     </div>
-  </div>
   </ion-toolbar>
 </ion-header>
 
-
-<ion-content [fullscreen]="false">
-
-<div class="min-h-screen bg-white">
-  <!-- Header -->
-
-
-  <!-- Content -->
-  <div class="flex flex-col items-center justify-center px-6 py-2">
-    <!-- Scanner Icon -->
-    <div class="bg-gray-50 rounded-3xl p-8 mb-8">
-      <ion-icon style="font-size: 8rem;" name="scan-circle-sharp"></ion-icon>
-    </div>
-
-    <!-- Scan Button -->
-    <button 
-      (click)="startScan()"
-      [disabled]="isScanning"
-      class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-12 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-3 mb-6">
-      <svg *ngIf="!isScanning" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 16h4m-4 0v4m-6-4h2m0 0v-3m0 0h4m-4 0h2m6-7h2m-2-4h-4m4 0V4m-6 7h4m-6 0v4m0-4h2m2-7h4m0 0v3m0 0h2M9 7h1m0 0v1m0 0H9m1 0h1m0 0H9"></path>
-      </svg>
-      <div *ngIf="isScanning" class="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-      <span>{{ isScanning ? 'Escaneando...' : 'Escanear' }}</span>
-    </button>
-
-    <button 
-    id="btn-mng-back"
-      (click)="goBack()"
-      class="bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white px-12 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-3 mb-6">
+<ion-content class="bg-gray-100">
+  <ion-grid class="px-2">
+    <ion-col size="12" class="p-4">
       
-      <span>Cancelar</span>
-    </button>
-
-    <!-- Event Name -->
-    <div class="text-center">
-      <p class="text-gray-600 text-lg font-medium">{{ event?.name }}</p>
-    </div>
-
-    <!-- Scan Result (if any) -->
-    <div *ngIf="scanResult" class="mt-8 bg-green-50 border border-green-200 rounded-2xl p-6 max-w-md w-full">
-      <div class="flex items-center space-x-3 mb-3">
-        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <h3 class="text-lg font-semibold text-green-800">Código escaneado</h3>
+      <!-- QR Scanner Button -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6 text-center">
+        <button 
+          (click)="startQRScan()" 
+          class="bg-black text-white px-8 py-4 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center mx-auto space-x-3"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h2M4 4h4m0 0v4m0 0h4m0 0V4m-4 16h4m0 0v-4m0 0h-4m0 4v-4">
+            </path>
+          </svg>
+          <span>Escanear Código QR</span>
+        </button>
+        <p class="text-gray-500 text-sm mt-3">Toca para escanear el código QR del invitado</p>
       </div>
-      <p class="text-green-700 font-mono text-sm break-all">{{ scanResult }}</p>
-    </div>
 
-    <!-- Error Message (if any) -->
-    <div *ngIf="errorMessage" class="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6 max-w-md w-full">
-      <div class="flex items-center space-x-3 mb-3">
-        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <h3 class="text-lg font-semibold text-red-800">Error</h3>
+      <div *ngIf="errorMessage" class="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6 max-w-md w-full">
+        <div class="flex items-center space-x-3 mb-3">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-semibold text-red-800">Error</h3>
+        </div>
+        <p class="text-red-700 text-sm">{{ errorMessage }}</p>
       </div>
-      <p class="text-red-700 text-sm">{{ errorMessage }}</p>
-    </div>
-  </div>
-</div>
+
+      <!-- History Section -->
+      <div class="w-full max-w-4xl mt-3" *ngIf="scanHistory.length > 0">
+        <!-- History Header -->
+        <div class="flex items-center justify-between mb-6 px-4">
+          <h2 class="text-xl font-semibold text-gray-900">Historial</h2>
+          <button 
+            (click)="clearHistory()" 
+            class="text-red-600 text-sm font-medium hover:text-red-700 transition-colors duration-200 flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-50"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+              </path>
+            </svg>
+            <span>Limpiar</span>
+          </button>
+        </div>
+
+        <!-- Scan History List -->
+        <div class="space-y-4 px-1">
+          <div 
+            *ngFor="let scan of scanHistory; let i = index" 
+            class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
+          >
+            <div class="flex items-start space-x-4">
+              <!-- Avatar -->
+              <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-medium text-sm">
+                  {{ getInitials(scan.guest.name) }}
+                </span>
+              </div>
+              
+              <!-- Scan Content -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="font-semibold text-gray-900 text-lg">{{ scan.guest.name }}</h3>
+                  <span class="text-sm text-gray-500">{{ scan.date | date: 'shortDate' }}</span>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                  <!-- <p class="text-gray-600 text-sm">
+                    <span class="font-medium">Evento:</span> {{ scan.event.name }}
+                  </p> -->
+                  <!-- <p class="text-gray-600 text-sm">
+                    <span class="font-medium">Escaneado por:</span> {{ scan.scannedBy.name }}
+                  </p> -->
+                  <p class="text-gray-600 text-sm">
+                    <span class="font-medium">Acompañantes:</span> {{ scan.guest.companions || 0 }}
+                  </p>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">
+                    Escaneado: {{ scan.quantity_scanned }} ve{{ scan.quantity_scanned === 1 ? 'z' : 'ces' }}.
+                  </span>
+                  <span class="text-sm text-gray-400">{{ formatTime(scan.date) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty History State -->
+      <div *ngIf="scanHistory.length === 0" class="w-full max-w-md mt-12 text-center">
+        <div class="bg-gray-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h2M4 4h4m0 0v4m0 0h4m0 0V4m-4 16h4m0 0v-4m0 0h-4m0 4v-4">
+            </path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-500 mb-2">No hay escaneos</h3>
+        <p class="text-gray-400">El historial de códigos QR escaneados aparecerá aquí</p>
+      </div>
+    </ion-col>
+  </ion-grid>
 </ion-content>

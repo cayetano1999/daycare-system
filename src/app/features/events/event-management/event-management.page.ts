@@ -1,23 +1,20 @@
 import { Component, OnInit, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { FestivaEvent } from 'src/app/core/interface/event.interface';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
-import { FestivaHeaderComponent } from 'src/app/shared/components/festiva-header/festiva-header.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
-import { eventRoutes } from '../events.routes';
 import { EVENT_STATE, isAdminUser, scrollToElement } from 'src/app/core/constants/constants';
 import { RoleAccessDirective } from 'src/app/shared/directives/role-access.directive';
 import { Profile } from 'src/app/core/interface/profile.interface';
 import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
-import { EventTicket } from '../event-ticket/event-ticket.page';
 import { Capacitor } from '@capacitor/core';
 import { EventActionRestrictions } from 'src/app/shared/directives/event-restrictions.directive';
 import { AppInBrowserService } from 'src/app/core/services/browser/app-in-browser.service';
 import { remoteConfig } from 'src/environments/environment.remoteconfig';
+import { environment } from 'src/environments/environment';
 
 interface ManagementOption {
   id: string;
@@ -49,8 +46,6 @@ export class EventManagementPage implements OnInit {
   managementOptions: ManagementOption[] = remoteConfig.EVENT_OPTIONS;
   user!: Profile;
 
-  private alertController = inject(AlertController);
-  private navController = inject(NavController);
   private supabaseService = inject(SupabaseService);
   private router = inject(Router);
   private alertCtrl = inject(AlertControllerService);
@@ -98,7 +93,17 @@ export class EventManagementPage implements OnInit {
     if (optionId) {
       EVENT_STATE.managementOptionSelected = optionId;
     }
-    this.router.navigate([url], { state: { event: this.event }, replaceUrl: true });
+    try {
+      this.router.navigate([url], { state: { event: this.event }, replaceUrl: true }).catch(async err => {
+         const response = await this.alertCtrl.openFestivaAlert('warning', 'Opción no disponible', 'La opción seleccionada no está disponible en esta versión de la aplicación. Por favor, actualiza la aplicación para acceder a esta función.', true, 'Cancelar', 'Actualizar');
+      if (response.action === 'confirm') {
+        window.open(Capacitor.getPlatform() === 'ios' ? environment.URL_APP_IOS : environment.URL_APP_ANDROID, '_system');
+        return;
+      }
+      });
+    } catch (error) {
+      console.error('Error navigating to option:', error);
+    }
   }
 
   formatDate(dateString: string): string {
@@ -198,34 +203,18 @@ export class EventManagementPage implements OnInit {
         throw error;
       }
 
-      // Show success message
-      const alerts = await this.alertController.create({
-        header: 'Evento eliminado',
-        message: 'El evento ha sido eliminado exitosamente.',
-        buttons: [{
-          text: 'OK',
-          handler: () => {
-            this.goBack();
-          }
-        }]
-      });
-      await alerts.present();
+      await this.alertCtrl.openFestivaAlert('success', 'Evento eliminado', 'El evento ha sido eliminado exitosamente.');
 
     } catch (error: any) {
       console.error('Error deleting event:', error);
-
-      const alerts = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo eliminar el evento. Intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await alerts.present();
+       await this.alertCtrl.openFestivaAlert('danger', 'Error', 'No se pudo eliminar el evento. Intenta nuevamente.');
+      return;
     }
   }
 
   async previewEvent() {
 
-    const {data, error} = await this.supabaseService.getRecord('event_ticket', ['*'], 'event_id', this.event.id || '');
+    const { data, error } = await this.supabaseService.getRecord('event_ticket', ['*'], 'event_id', this.event.id || '');
 
     if (error) {
       console.error('Error fetching tickets:', error);
@@ -240,7 +229,7 @@ export class EventManagementPage implements OnInit {
 
     const result = data as any;
     const url = result.url as string;
-    if(!url || url.length === 0) {
+    if (!url || url.length === 0) {
       this.alertCtrl.openFestivaAlert('warning', 'Sin URL de Ticket', 'El ticket asociado a este evento no tiene una URL válida. Por favor, edita el ticket para agregar una URL y poder previsualizar el evento.');
       return;
     }
@@ -249,7 +238,7 @@ export class EventManagementPage implements OnInit {
     const newUrl = `${url.replace('invitacion.html', 'preview.html')}`
     const system = Capacitor.getPlatform();
 
-    if(system === 'ios' && newUrl) {
+    if (system === 'ios' && newUrl) {
       await this.browser.openUrl(newUrl);
       return;
     }
@@ -259,43 +248,6 @@ export class EventManagementPage implements OnInit {
     // Navigate to event preview screen
   }
 
-  // Navigation methods for management options
-  navigateToExpenses() {
-    // this.navController.navigateForward('/event-expenses');
-    this.router.navigate([RoutesApp.EVENT_EXPENSES], { state: { event: this.event }, replaceUrl: true });
-  }
-
-  navigateToAdmins() {
-    // this.navController.navigateForward('/event-admins');
-    this.router.navigate([RoutesApp.EVENT_MEMBERS], { state: { event: this.event }, replaceUrl: true });
-  }
-
-  navigateToTickets() {
-    // this.navController.navigateForward('/event-tickets');
-    this.router.navigate([RoutesApp.EVENT_TICKETS], { state: { event: this.event }, replaceUrl: true });
-  }
-
-  navigateToGifts() {
-    // this.navController.navigateForward('/gift-list');
-    this.router.navigate([RoutesApp.EVENT_GIFT_LIST], { state: { event: this.event }, replaceUrl: true });
-  }
-
-  navigateToGroups() {
-    // this.navController.navigateForward('/event-groups');
-    this.router.navigate([RoutesApp.GROUPS], { state: { event: this.event }, replaceUrl: true });
-  }
-
-  navigateToGuests() {
-    // this.navController.navigateForward('/event-guests');
-    this.router.navigate([RoutesApp.EVENT_GUESTS], { state: { event: this.event }, replaceUrl: true });
-  }
-
-  navigateToTables() {
-    this.router.navigate([RoutesApp.EVENT_TABLES], { state: { event: this.event }, replaceUrl: true });
-  }
-  navigateToScanner() {
-    this.router.navigate([RoutesApp.EVENT_SCANNER], { state: { event: this.event }, replaceUrl: true });
-  }
 
   goBack() {
     this.router.navigate([RoutesApp.HOME]);
