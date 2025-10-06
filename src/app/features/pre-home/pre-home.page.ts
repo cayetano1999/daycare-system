@@ -36,8 +36,8 @@ export class PreHomePage implements OnInit, OnDestroy {
   // Placeholder para los datos de Remote Config
   pageData: any = remoteConfig.SCREENS.PRE_HOME;
   availableAuths = {
-    google: FeatureFlagHelper.isFeatureActive(FeatureFlagKey.AUTH_GOOGLE),
-    apple: FeatureFlagHelper.isFeatureActive(FeatureFlagKey.AUTH_APPLE),
+    google: environment.AUTH_GOOGLE,
+    apple: environment.AUTH_IOS,
     register: environment.AUTH_REGISTER,
     login: environment.AUTH_LOGIN,
   }

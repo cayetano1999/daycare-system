@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
       await StatusBar.setStyle({ style: Style.Dark }); // O Style.Dark
       await StatusBar.show(); // Para asegurarse que sea visible
       // Puedes ajustar el color de fondo si es necesario
-      await StatusBar.setBackgroundColor({ color: '#FFFFFF' });
+      await StatusBar.setBackgroundColor({ color: '#000000' });
     } catch (error) {
       console.error('Error al configurar la barra de estado', error);
     }
