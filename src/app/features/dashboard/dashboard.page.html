@@ -9,8 +9,8 @@
       )">
       <div class="flex items-center justify-between">
         <!-- User Info -->
-        <div class="flex items-center space-x-3">
-          <img (error)="onImageError($event)" [src]="user?.avatar_url" [alt]="user?.full_name"
+        <div  class="flex items-center space-x-3">
+          <img (click)="setActiveTab('profile')" (error)="onImageError($event)" [src]="user?.avatar_url" [alt]="user?.full_name"
             class="w-12 h-12 rounded-full object-cover" />
           <div>
             <p [class]="'text-base font-medium mb-1 transition-colors duration-300 ' + 
@@ -41,10 +41,6 @@
       <ion-col size="12">
         <div class="min-h-screen bg-gray-50 pb-20">
           <!-- Header -->
-
-
-
-
           <!-- Main Content -->
           <div class="pt-2 space-y-8">
             <!-- Search Bar -->

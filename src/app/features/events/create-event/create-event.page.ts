@@ -394,11 +394,13 @@ export class CreateEventPage implements OnInit {
         const response = await this.supabaseService.updateRecord('events', eventData.id, eventData);
         data = response.data;
         error = response.error;
+        this.event = data;
       } else {
         delete eventData.id; // Remove id for new records
         const response = await this.supabaseService.createRecord('events', eventData);
         data = response.data;
         error = response.error;
+        this.event = data;
       }
 
       if (error) {

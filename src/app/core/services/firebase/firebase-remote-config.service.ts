@@ -88,8 +88,8 @@ export class FirebaseRemoteConfigService {
             if(platform === 'android') {
                 environment.AUTH_LOGIN = false;
                 environment.AUTH_REGISTER = false;
-                environment.AUTH_GOOGLE = false;
-                environment.AUTH_IOS = true;
+                environment.AUTH_GOOGLE = true;
+                environment.AUTH_IOS = false;
             }
             else if(platform === 'ios') {
                 environment.AUTH_LOGIN = true;
