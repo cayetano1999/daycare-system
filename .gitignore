@@ -9,6 +9,9 @@ dist/
 tmp/
 app/**/*.js
 app/**/*.js.map
+client_secret_2_96276999190-bsdo7de2vluiui5adlm89bvhd026900a.apps.googleusercontent.com.json
+client_secret_2_193661590436-pik35gum993dh1r0imj8b3debnnblbsu.apps.googleusercontent.com.json
+festiva-30592-firebase-adminsdk-fbsvc-e80d3d64d9.json
 
 # dependencies
 node_modules/
