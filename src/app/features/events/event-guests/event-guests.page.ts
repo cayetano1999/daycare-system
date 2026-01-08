@@ -545,17 +545,9 @@ export class EventGuestsPage implements OnInit {
       return;
     }
 
-
-
-    const eventDetails = [
-      `🏳️ Evento: ${this.event?.name}`,
-      `🗓️ Fecha: ${this.event?.event_date ? this.formatEventDate(this.event.event_date) : 'Por definir'}`,
-      `📍 Lugar: ${this.event?.location}`
-    ].filter(Boolean).join('\n\n');
-
     const result = await Share.share({
       title: `${this.ticket?.url}${guest.id}`,
-      text: ` ${this.ticket?.url}${guest.id} \n\n\n ${guest.name.toUpperCase()},  \n\n ${this.event?.share_text}\n\n • Detalles del Evento: \n\n${eventDetails}`,
+      text: ` ${this.ticket?.url}${guest.id} \n\n\n ${guest.name.toUpperCase()},  \n\n ${this.event?.share_text}\n}`,
       dialogTitle: this.event?.name
     });
 
