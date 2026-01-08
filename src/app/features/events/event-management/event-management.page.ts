@@ -106,15 +106,15 @@ export class EventManagementPage implements OnInit {
     }
   }
 
-  formatDate(dateString: string): string {
+   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
-      weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: true
     });
   }
 
