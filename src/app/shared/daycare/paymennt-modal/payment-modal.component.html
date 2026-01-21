@@ -1,0 +1,237 @@
+<ion-header>
+  <ion-toolbar class="modal-header">
+    <ion-title class="modal-title">Registrar Nuevo Pago</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" class="close-button">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div class="content-wrapper">
+    <div class="form-container">
+
+      <!-- Child Search Section -->
+      <div class="search-section">
+        <h2 class="section-title">
+          <ion-icon name="search"></ion-icon>
+          Buscar Niño/a
+        </h2>
+
+        <div class="search-grid">
+          <div class="form-group">
+            <label class="form-label">Buscar por:</label>
+            <select [(ngModel)]="searchType" class="form-select">
+              <option value="id">ID</option>
+              <option value="name">Nombre</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">{{ searchType === 'id' ? 'ID del Niño' : 'Nombre del Niño' }}</label>
+            <input
+              type="text"
+              [(ngModel)]="searchValue"
+              (keyup.enter)="searchChild()"
+              class="form-input"
+              [placeholder]="searchType === 'id' ? 'Ingrese el ID' : 'Ingrese el nombre'">
+          </div>
+
+          <div class="form-group search-buttons">
+            <ion-button
+              expand="block"
+              color="primary"
+              (click)="searchChild()"
+              [disabled]="!searchValue || isSearching"
+            >
+              <ion-icon slot="start" name="search"></ion-icon>
+              {{ isSearching ? 'Buscando...' : 'Buscar' }}
+            </ion-button>
+            <ion-button
+              expand="block"
+              fill="outline"
+              color="medium"
+              (click)="clearSearch()"
+              [disabled]="!searchValue && !selectedChild"
+            >
+              <ion-icon slot="start" name="close-circle"></ion-icon>
+              Limpiar
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- Child Found -->
+        <div *ngIf="selectedChild" class="child-card found">
+          <div class="child-card-header">
+            <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
+            <span>Niño/a Encontrado</span>
+          </div>
+          <div class="child-info">
+            <div class="child-photo">
+              <img [src]="selectedChild.photo" [alt]="selectedChild.fullName">
+            </div>
+            <div class="child-details">
+              <h3 class="child-name">{{ selectedChild.fullName }}</h3>
+              <div class="child-meta">
+                <div class="meta-item">
+                  <ion-icon name="calendar"></ion-icon>
+                  <span>{{ calculateAge(selectedChild.birthDate) }} años</span>
+                </div>
+                <div class="meta-item">
+                  <ion-icon [name]="selectedChild.gender === 'Masculino' ? 'male' : 'female'"></ion-icon>
+                  <span>{{ selectedChild.gender }}</span>
+                </div>
+                <div class="meta-item">
+                  <ion-icon [name]="selectedChild.schedule === 'Matutina' ? 'sunny' : 'moon'"></ion-icon>
+                  <span>{{ selectedChild.schedule }}</span>
+                </div>
+              </div>
+              <div class="child-address">
+                <ion-icon name="location"></ion-icon>
+                <span>{{ selectedChild.address }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Not Found -->
+        <div *ngIf="!selectedChild && searchPerformed && !isSearching" class="child-card not-found">
+          <div class="child-card-header">
+            <ion-icon name="alert-circle" class="error-icon"></ion-icon>
+            <span>Niño/a No Encontrado</span>
+          </div>
+          <p class="not-found-text">
+            No se encontró ningún niño/a con {{ searchType === 'id' ? 'el ID' : 'el nombre' }} "{{ searchValue }}".
+            Por favor verifica los datos e intenta nuevamente.
+          </p>
+        </div>
+      </div>
+
+      <!-- Payment Details Section -->
+      <div class="payment-section" [class.disabled]="!selectedChild">
+        <h2 class="section-title">
+          <ion-icon name="card"></ion-icon>
+          Detalles del Pago
+        </h2>
+
+        <div class="payment-grid">
+          <div class="form-group">
+            <label class="form-label">Monto a Pagar *</label>
+            <div class="input-with-icon">
+              <ion-icon name="cash"></ion-icon>
+              <input
+                type="number"
+                [(ngModel)]="paymentForm.amount"
+                class="form-input"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                [disabled]="!selectedChild">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Fecha de Pago *</label>
+            <div class="input-with-icon">
+              <ion-icon name="calendar"></ion-icon>
+              <input
+                type="date"
+                [(ngModel)]="paymentForm.paymentDate"
+                class="form-input"
+                [disabled]="!selectedChild">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Método de Pago *</label>
+            <select
+              [(ngModel)]="paymentForm.paymentMethod"
+              class="form-select"
+              [disabled]="!selectedChild">
+              <option *ngFor="let method of paymentMethods" [value]="method.value">
+                {{ method.label }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Estado del Pago *</label>
+            <select
+              [(ngModel)]="paymentForm.status"
+              class="form-select"
+              [disabled]="!selectedChild">
+              <option *ngFor="let status of paymentStatuses" [value]="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Notas (Opcional)</label>
+            <textarea
+              [(ngModel)]="paymentForm.notes"
+              class="form-textarea"
+              rows="3"
+              placeholder="Ingrese notas adicionales sobre el pago..."
+              [disabled]="!selectedChild"></textarea>
+          </div>
+        </div>
+
+        <!-- Payment Summary -->
+        <div *ngIf="selectedChild && paymentForm.amount" class="payment-summary">
+          <h3 class="summary-title">Resumen del Pago</h3>
+          <div class="summary-content">
+            <div class="summary-row">
+              <span class="summary-label">Niño/a:</span>
+              <span class="summary-value">{{ selectedChild.fullName }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Monto:</span>
+              <span class="summary-value amount">RD$ {{ paymentForm.amount }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Fecha:</span>
+              <span class="summary-value">{{ paymentForm.paymentDate }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Método:</span>
+              <span class="summary-value">{{ getPaymentMethodLabel(paymentForm.paymentMethod) }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Estado:</span>
+              <span class="summary-value" [class.status-badge]="true" [class]="'status-' + paymentForm.status">
+                {{ getPaymentStatusLabel(paymentForm.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <ion-button
+          expand="block"
+          size="large"
+          fill="outline"
+          color="medium"
+          (click)="dismiss()"
+        >
+          <ion-icon slot="start" name="close-circle"></ion-icon>
+          Cancelar
+        </ion-button>
+        <ion-button
+          expand="block"
+          size="large"
+          color="success"
+          (click)="savePayment()"
+          [disabled]="!isFormValid()"
+        >
+          <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+          Guardar Pago
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

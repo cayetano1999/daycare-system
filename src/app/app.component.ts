@@ -36,8 +36,48 @@ register(); // Register Swiper elements globally
 export class AppComponent implements OnInit {
     // Properties
     public version = environment.APP_VERSION;
-    public menuOptions = remoteConfig.OPTIONS_ITEMS.options as any;
-    public availableMenu = false;
+    public menuOptions = [
+         {
+            title: 'Gestión de Incripciones',
+            menu: true,
+            icon: 'document-text-outline',
+            url: 'daycare/inscription'
+
+        },
+        {
+            title: 'Gestión de Padres',
+            menu: true,
+            icon: 'people-circle',
+            url: 'daycare/parents-management'
+        },
+        {
+            title: 'Administración de Niños',
+            menu: true,
+            icon: 'accessibility-outline',
+            url: 'daycare/child-management'
+        },
+         {
+            title: 'Gestión de Tandas',
+            menu: true,
+            icon: 'time-outline',
+            url: 'daycare/schedule-management'
+        },
+        {
+            title: 'Gestión de Pagos',
+            menu: true,
+            icon: 'card-outline',
+            url: 'daycare/payment-management'
+        },
+        {
+            title: 'Personas Autorizadas',
+            menu: true,
+            icon: 'person-add-outline',
+            url: 'daycare/authorized-person-management'
+        }
+
+       
+    ]  //remoteConfig.OPTIONS_ITEMS.options as any;
+    public availableMenu = true;
     public loadingAds = false;
     public navegationHistory: string[] = [];
     public isOnboardingComplete: boolean = false;
@@ -189,6 +229,7 @@ export class AppComponent implements OnInit {
     }
 
     handleItemSelected(item: any): void {
+        this.router.navigate([item.url]);
     }
 
     validateUrlWeb() {

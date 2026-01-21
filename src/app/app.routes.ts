@@ -9,6 +9,7 @@ import { eventRoutes } from './features/events/events.routes';
 import { informationRoutes } from './features/information/information.routes';
 import { settingsRoutes } from './features/settings/settings.routes';
 import { templateRoutes } from './features/templates/templates.routes';
+import { dayCareRoutes } from './features/daycare/daycare.routes';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,7 @@ export const routes: Routes = [
   ...informationRoutes,
   ...settingsRoutes,
   ...templateRoutes,
+  ...dayCareRoutes,
 
   {
     path: 'no-internet',

@@ -1,0 +1,8 @@
+// Most styles are handled by Tailwind CSS classes
+// Only custom styles needed for Angular-specific behavior
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

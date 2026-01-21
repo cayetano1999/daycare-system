@@ -121,3 +121,7 @@ ion-item.selected {
 #img-avatar {
   filter: grayscale(100%) contrast(120%) brightness(70%);
 }
+
+ion-menu {
+      max-width: 400px!important;
+}

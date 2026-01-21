@@ -1,0 +1,47 @@
+import { Routes } from "@angular/router";
+import { InscriptionPage } from "./inscription/inscription.page";
+import { AppMaintenanceGuard } from "src/app/core/guards/app-maintenance.guard";
+import { ForceUpgradeGuard } from "src/app/core/guards/force-update.guard";
+import { InternetConnectionGuard } from "src/app/core/guards/internet-conection.guard";
+import { LoginPage } from "../auth/pages/login/login.page";
+import { OtpVerificationPage } from "../auth/pages/otp-verification/otp-verification.page";
+import { AuthorizedPersonManagementPage } from "./authorized-person-management/authorized-person-management.page";
+import { ChildManagementComponent } from "./child-management/child-management.component";
+import { PaymentManagementComponent } from "./payment-management/payment-management.component";
+import { AuthorizedPickerPage } from "./authorized-picker/authorized-picker.page";
+
+
+export const dayCareRoutes: Routes = [
+
+  //Authentication routes
+  {
+    path: 'daycare/inscription',
+    component: InscriptionPage,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+  {
+    path: 'daycare/parents-management',
+    component: AuthorizedPickerPage,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+
+  {
+    path: 'daycare/child-management',
+    component: ChildManagementComponent,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+
+    {
+    path: 'daycare/payment-management',
+    component: PaymentManagementComponent,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+
+    {
+    path: 'daycare/authorized-person-management',
+    component: AuthorizedPersonManagementPage,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+
+
+]

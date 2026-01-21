@@ -5,17 +5,17 @@
       <ion-content>
         <ion-list id="inbox-list">
           <img src="../assets/img/logodefault.png" style="width: 50px; margin-left: 13px;" alt="">
-          <ion-list-header>Ionic Template</ion-list-header>
-          <ion-note>Ionic - Angular - Capacitor</ion-note>
+          <ion-list-header class="mb-3">DayCare System</ion-list-header>
           <hr>
 
           @for(option of menuOptions; track option) {
-          <ion-menu-toggle auto-hide="false" >
+          <ion-menu-toggle auto-hide="false" style="margin-top: -20px;" >
             @if(option.menu) {
             <ion-item routerDirection="root" (click)="handleItemSelected(option)" lines="none" detail="false" routerLinkActive="selected">
-               <ion-avatar slot="start" style="width: 30px; height: 30px;">
+               <!-- <ion-avatar slot="start" style="width: 30px; height: 30px;">
                 <img id="img-avatar" [src]="option?.image | imageLoader" />
-               </ion-avatar>
+              </ion-avatar> -->
+              <ion-icon slot="start" [name]="option.icon"></ion-icon>
               <ion-label><b>{{ option.title }}</b></ion-label>
             </ion-item>
           }

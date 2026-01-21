@@ -1,0 +1,180 @@
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="--background: #000;">
+    <ion-title class="ion-text-center" style="color: #fff;">Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="authorized-person-management">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="icon-container">
+            <ion-icon name="person-add" class="header-icon"></ion-icon>
+          </div>
+          <div class="header-text">
+            <h1 class="title">Personas Autorizadas</h1>
+            <p class="subtitle">Gestión de personas autorizadas para recoger niños</p>
+          </div>
+        </div>
+        <ion-button
+          color="success"
+          class="register-button"
+          (click)="onRegisterNewPerson()"
+        >
+          <ion-icon slot="start" name="person-add"></ion-icon>
+          Registrar Persona
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <ion-searchbar
+        [(ngModel)]="searchTerm"
+        placeholder="Buscar por nombre, teléfono o niño..."
+        animated="true"
+        mode="ios"
+      ></ion-searchbar>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Total Autorizados</p>
+              <p class="stat-value">{{ totalAuthorized }}</p>
+            </div>
+            <div class="stat-icon-container green">
+              <ion-icon name="person-add" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Niños Cubiertos</p>
+              <p class="stat-value">{{ uniqueChildren }}</p>
+            </div>
+            <div class="stat-icon-container blue">
+              <ion-icon name="people" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Contactos Activos</p>
+              <p class="stat-value">{{ activeContacts }}</p>
+            </div>
+            <div class="stat-icon-container purple">
+              <ion-icon name="call" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Table -->
+    <ion-card class="table-card">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Nombre del Niño</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let person of filteredPersons" class="table-row">
+              <td (click)="openDetailModal(person)">
+                <div class="person-info">
+                  <div class="avatar green-avatar">
+                    {{ getInitials(person.name) }}
+                  </div>
+                  <div class="person-details">
+                    <div class="person-name">{{ person.name }}</div>
+                    <div class="person-relationship">{{ person.relationship }}</div>
+                  </div>
+                </div>
+              </td>
+              <td (click)="openDetailModal(person)">
+                <div class="phone-info">
+                  <ion-icon name="call" class="phone-icon"></ion-icon>
+                  <span>{{ person.phone }}</span>
+                </div>
+              </td>
+              <td (click)="openDetailModal(person)">
+                <div class="child-info">
+                  <ion-icon name="person" class="child-icon"></ion-icon>
+                  <span class="child-name">{{ person.childName }}</span>
+                </div>
+              </td>
+              <td>
+                <ion-button
+                  id="options-trigger-{{ person.id }}"
+                  class="options-button"
+                  fill="clear"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                </ion-button>
+                <ion-popover [trigger]="'options-trigger-' + person.id" triggerAction="click">
+                  <ng-template>
+                    <ion-content class="options-popover">
+                      <ion-list lines="none">
+                        <ion-item button (click)="openDetailModal(person)">
+                          <ion-icon slot="start" name="eye" color="primary"></ion-icon>
+                          <ion-label>Ver Detalles</ion-label>
+                        </ion-item>
+                        <ion-item button (click)="onEditPerson(person)">
+                          <ion-icon slot="start" name="create" color="success"></ion-icon>
+                          <ion-label>Editar</ion-label>
+                        </ion-item>
+                        <ion-item button (click)="onDeletePerson(person)">
+                          <ion-icon slot="start" name="trash" color="danger"></ion-icon>
+                          <ion-label color="danger">Eliminar</ion-label>
+                        </ion-item>
+                      </ion-list>
+                    </ion-content>
+                  </ng-template>
+                </ion-popover>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredPersons.length === 0" class="empty-state">
+          <ion-icon name="person-add" class="empty-icon"></ion-icon>
+          <p class="empty-title">No se encontraron personas autorizadas</p>
+          <p class="empty-subtitle">Intenta con otro término de búsqueda</p>
+        </div>
+      </div>
+    </ion-card>
+
+    <!-- Results Summary -->
+    <div *ngIf="searchTerm" class="results-summary">
+      Mostrando {{ filteredPersons.length }} de {{ mockAuthorizedPersons.length }} personas autorizadas
+    </div>
+  </div>
+
+  <!-- Detail Modal
+  <app-authorized-person-detail-modal
+    [person]="selectedPerson"
+    [isOpen]="isModalOpen"
+    (close)="closeModal()"
+  ></app-authorized-person-detail-modal> -->
+</ion-content>
+

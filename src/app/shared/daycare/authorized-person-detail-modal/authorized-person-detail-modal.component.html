@@ -1,0 +1,110 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="closeModal()" class="authorized-person-detail-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="modal-header">
+        <ion-title class="modal-title">Detalles de Persona Autorizada</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()" class="close-button">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content *ngIf="person" class="modal-content">
+      <div class="content-wrapper">
+        <!-- Profile Section -->
+        <ion-card class="profile-card">
+          <ion-card-content>
+            <div class="profile-section">
+              <div class="avatar-large">
+                {{ getInitials(person?.name || '') }}
+              </div>
+              <div class="profile-info">
+                <h2 class="person-name">{{ person?.name }}</h2>
+                <div class="relationship-badge">
+                  <ion-icon name="people"></ion-icon>
+                  <span>{{ person?.relationship }}</span>
+                </div>
+                <div class="basic-info-grid">
+                  <div class="info-item">
+                    <ion-icon name="card" class="info-icon green"></ion-icon>
+                    <span>{{ person?.idNumber }}</span>
+                  </div>
+                  <div class="info-item">
+                    <ion-icon name="person" class="info-icon blue"></ion-icon>
+                    <span>Para recoger a: {{ person?.childName }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Contact Information -->
+        <ion-card class="info-card">
+          <div class="card-header">
+            <ion-icon name="call" class="section-icon"></ion-icon>
+            <h3 class="section-title">Información de Contacto</h3>
+          </div>
+          <ion-card-content>
+            <div class="info-list">
+              <div class="info-row">
+                <div class="info-icon-container green">
+                  <ion-icon name="call"></ion-icon>
+                </div>
+                <div class="info-text">
+                  <p class="info-label">Teléfono Principal</p>
+                  <p class="info-value">{{ person?.phone }}</p>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Child Information -->
+        <ion-card class="info-card child-card">
+          <div class="card-header blue-header">
+            <ion-icon name="person" class="section-icon"></ion-icon>
+            <h3 class="section-title">Información del Niño</h3>
+          </div>
+          <ion-card-content>
+            <div class="child-detail">
+              <div class="child-avatar">
+                {{ getInitials(person?.childName || '') }}
+              </div>
+              <div class="child-info-text">
+                <p class="info-label">Niño Autorizado</p>
+                <p class="child-name-large">{{ person?.childName }}</p>
+                <p class="child-relationship">
+                  Relación: <span class="relationship-text">{{ person?.relationship }}</span>
+                </p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Notes -->
+        <ion-card *ngIf="person.notes" class="info-card notes-card">
+          <div class="card-header amber-header">
+            <ion-icon name="alert-circle" class="section-icon"></ion-icon>
+            <h3 class="section-title">Notas Importantes</h3>
+          </div>
+          <ion-card-content>
+            <p class="notes-text">{{ person?.notes }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <ion-button expand="block" color="primary" class="action-btn" (click)="onContact()">
+            Contactar
+          </ion-button>
+          <ion-button expand="block" fill="outline" color="medium" class="action-btn" (click)="onPrint()">
+            Imprimir
+          </ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

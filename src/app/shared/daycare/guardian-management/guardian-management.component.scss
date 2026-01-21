@@ -1,0 +1,125 @@
+ion-content {
+  --background: linear-gradient(to bottom right, rgb(248 250 252), rgb(241 245 249));
+}
+
+ion-card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  margin: 0;
+}
+
+ion-card-content {
+  padding: 0;
+}
+
+ion-button {
+  --border-radius: 0.5rem;
+  text-transform: none;
+  font-weight: 600;
+}
+
+ion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-badge {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+}
+
+ion-searchbar {
+  --background: transparent;
+  --border-radius: 0.5rem;
+  --box-shadow: none;
+  --cancel-button-color: var(--ion-color-primary);
+  --clear-button-color: var(--ion-color-medium);
+  --color: var(--ion-color-dark);
+  --icon-color: var(--ion-color-medium);
+  --placeholder-color: var(--ion-color-medium);
+  padding: 0;
+
+  &::part(native) {
+    border: 2px solid rgb(226 232 240);
+    border-radius: 0.5rem;
+  }
+
+  &::part(native):focus-within {
+    border-color: rgb(59 130 246);
+  }
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+
+  th {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    font-size: 0.875rem;
+  }
+}
+
+.relative {
+  position: relative;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+@media (max-width: 1024px) {
+  table {
+    font-size: 0.75rem;
+
+    th, td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 800px;
+  }
+}
+
+input {
+    background: white!important;
+}

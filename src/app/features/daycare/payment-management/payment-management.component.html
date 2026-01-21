@@ -1,0 +1,288 @@
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="--background: #000;">
+    <ion-title class="ion-text-center" style="color: #fff;">Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="payment-management">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="icon-container">
+            <ion-icon name="card" class="header-icon"></ion-icon>
+          </div>
+          <div class="header-text">
+            <h1 class="title">Gestión de Pagos</h1>
+            <p class="subtitle">Administración y seguimiento de pagos</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <ion-button
+            color="success"
+            class="add-button"
+            (click)="openPaymentModal()"
+          >
+            <ion-icon slot="start" name="add-circle"></ion-icon>
+            Agregar Pago
+          </ion-button>
+          <ion-button
+            color="primary"
+            class="export-button"
+            (click)="onExport()"
+          >
+            <ion-icon slot="start" name="download"></ion-icon>
+            Exportar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Filters -->
+    <div class="filters-container">
+      <div class="filters-header">
+        <h3 class="filters-title">
+          <ion-icon name="funnel"></ion-icon>
+          Filtros de Búsqueda
+        </h3>
+        <ion-button
+          fill="clear"
+          size="small"
+          color="medium"
+          (click)="clearFilters()"
+        >
+          <ion-icon slot="start" name="close-circle"></ion-icon>
+          Limpiar
+        </ion-button>
+      </div>
+
+      <div class="filters-grid">
+        <!-- Search by Type and Value -->
+        <div class="filter-group">
+          <label class="filter-label">Buscar por:</label>
+          <select [(ngModel)]="searchType" class="filter-select">
+            <option *ngFor="let type of searchTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Valor:</label>
+          <input
+            type="text"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="applyFilters()"
+            class="filter-input"
+            placeholder="Ingrese el valor a buscar...">
+        </div>
+
+        <!-- Date Range -->
+        <div class="filter-group">
+          <label class="filter-label">Fecha Desde:</label>
+          <input
+            type="date"
+            [(ngModel)]="startDate"
+            (ngModelChange)="applyFilters()"
+            class="filter-input">
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Fecha Hasta:</label>
+          <input
+            type="date"
+            [(ngModel)]="endDate"
+            (ngModelChange)="applyFilters()"
+            class="filter-input">
+        </div>
+
+        <!-- Amount Range -->
+        <div class="filter-group">
+          <label class="filter-label">Monto Mínimo:</label>
+          <input
+            type="number"
+            [(ngModel)]="minAmount"
+            (ngModelChange)="applyFilters()"
+            class="filter-input"
+            placeholder="0.00">
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Monto Máximo:</label>
+          <input
+            type="number"
+            [(ngModel)]="maxAmount"
+            (ngModelChange)="applyFilters()"
+            class="filter-input"
+            placeholder="0.00">
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Total de Pagos</p>
+              <p class="stat-value">{{ payments.length }}</p>
+            </div>
+            <div class="stat-icon-container blue">
+              <ion-icon name="receipt" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Monto Total Filtrado</p>
+              <p class="stat-value">RD$ {{ getTotalAmount().toFixed(2) }}</p>
+            </div>
+            <div class="stat-icon-container green">
+              <ion-icon name="cash" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Completados</p>
+              <p class="stat-value">{{ getStatusCount('completed') }}</p>
+            </div>
+            <div class="stat-icon-container success">
+              <ion-icon name="checkmark-circle" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Pendientes</p>
+              <p class="stat-value">{{ getStatusCount('pending') }}</p>
+            </div>
+            <div class="stat-icon-container warning">
+              <ion-icon name="time" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Vencidos</p>
+              <p class="stat-value">{{ getStatusCount('overdue') }}</p>
+            </div>
+            <div class="stat-icon-container danger">
+              <ion-icon name="alert-circle" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Resultados Filtrados</p>
+              <p class="stat-value">{{ filteredPayments.length }}</p>
+            </div>
+            <div class="stat-icon-container purple">
+              <ion-icon name="search" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Table -->
+    <ion-card class="table-card">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Niño/a</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+              <th>Estado del Pago</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of filteredPayments" class="table-row">
+              <td (click)="onViewDetails(payment)">
+                <div class="child-name">{{ payment.child_name }}</div>
+              </td>
+              <td (click)="onViewDetails(payment)">
+                <div class="amount-text">RD$ {{ payment.amount.toFixed(2) }}</div>
+              </td>
+              <td (click)="onViewDetails(payment)">
+                <div class="date-text">{{ payment.payment_date }}</div>
+              </td>
+              <td (click)="onViewDetails(payment)">
+                <div class="status-badge" [class]="'status-' + payment.status">
+                  <ion-icon [name]="getStatusIcon(payment.status)"></ion-icon>
+                  <span>{{ getStatusLabel(payment.status) }}</span>
+                </div>
+              </td>
+              <td>
+                <ion-button
+                  id="options-trigger-{{ payment.id }}"
+                  class="options-button"
+                  fill="clear"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                </ion-button>
+                <ion-popover [trigger]="'options-trigger-' + payment.id" triggerAction="click">
+                  <ng-template>
+                    <ion-content class="options-popover">
+                      <ion-list lines="none">
+                        <ion-item button (click)="onViewDetails(payment)">
+                          <ion-icon slot="start" name="eye" color="primary"></ion-icon>
+                          <ion-label>Detalles</ion-label>
+                        </ion-item>
+                        <ion-item button (click)="onEditPayment(payment)">
+                          <ion-icon slot="start" name="create" color="success"></ion-icon>
+                          <ion-label>Editar</ion-label>
+                        </ion-item>
+                        <ion-item button (click)="onDeletePayment(payment)">
+                          <ion-icon slot="start" name="trash" color="danger"></ion-icon>
+                          <ion-label color="danger">Eliminar</ion-label>
+                        </ion-item>
+                      </ion-list>
+                    </ion-content>
+                  </ng-template>
+                </ion-popover>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredPayments.length === 0" class="empty-state">
+          <ion-icon name="receipt" class="empty-icon"></ion-icon>
+          <p class="empty-title">No se encontraron pagos</p>
+          <p class="empty-subtitle">Intenta con otros criterios de búsqueda</p>
+        </div>
+      </div>
+    </ion-card>
+
+    <!-- Results Summary -->
+    <div class="results-summary">
+      Mostrando {{ filteredPayments.length }} de {{ payments.length }} pagos
+    </div>
+  </div>
+</ion-content>

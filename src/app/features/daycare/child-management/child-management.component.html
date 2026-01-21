@@ -1,0 +1,218 @@
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="--background: #000;">
+    <ion-title class="ion-text-center" style="color: #fff;">Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="child-management">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="icon-container">
+            <ion-icon name="people" class="header-icon"></ion-icon>
+          </div>
+          <div class="header-text">
+            <h1 class="title">Administración de Niños</h1>
+            <p class="subtitle">Gestión completa del registro de niños</p>
+          </div>
+        </div>
+        <ion-button
+          color="primary"
+          class="export-button"
+          (click)="onExport()"
+        >
+          <ion-icon slot="start" name="download"></ion-icon>
+          Exportar
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="search-container">
+      <div class="search-grid">
+        <div class="search-type">
+          <label class="search-label">Buscar por:</label>
+          <select [(ngModel)]="searchType" class="search-select">
+            <option *ngFor="let type of searchTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+        </div>
+        <div class="search-input">
+          <label class="search-label">Valor:</label>
+          <input
+            type="text"
+            [(ngModel)]="searchValue"
+            class="search-field"
+            placeholder="Ingrese el valor a buscar...">
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Total de Niños</p>
+              <p class="stat-value">{{ mockChildren.length }}</p>
+            </div>
+            <div class="stat-icon-container blue">
+              <ion-icon name="people" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Resultados Filtrados</p>
+              <p class="stat-value">{{ filteredChildren.length }}</p>
+            </div>
+            <div class="stat-icon-container green">
+              <ion-icon name="search" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Tanda Matutina</p>
+              <p class="stat-value">{{ getScheduleCount('Matutina') }}</p>
+            </div>
+            <div class="stat-icon-container amber">
+              <ion-icon name="sunny" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Tanda Vespertina</p>
+              <p class="stat-value">{{ getScheduleCount('Vespertina') }}</p>
+            </div>
+            <div class="stat-icon-container orange">
+              <ion-icon name="moon" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Table -->
+    <ion-card class="table-card">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nombre</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Edad</th>
+              <th>Género</th>
+              <th>Dirección</th>
+              <th>Tanda</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let child of filteredChildren" class="table-row">
+              <td (click)="openDetailModal(child)">
+                <div class="photo-container">
+                  <img [src]="child.photo" [alt]="child.fullName" class="child-photo">
+                </div>
+              </td>
+              <td (click)="openDetailModal(child)">
+                <div class="child-name">{{ child.fullName }}</div>
+              </td>
+              <td (click)="openDetailModal(child)">
+                <div class="info-text">{{ child.birthDate }}</div>
+              </td>
+              <td (click)="openDetailModal(child)">
+                <div class="age-badge">{{ calculateAge(child.birthDate) }}</div>
+              </td>
+              <td (click)="openDetailModal(child)">
+                <div class="gender-info">
+                  <ion-icon
+                    [name]="child.gender === 'Masculino' ? 'male' : 'female'"
+                    [class]="child.gender === 'Masculino' ? 'gender-icon-male' : 'gender-icon-female'">
+                  </ion-icon>
+                  <span>{{ child.gender }}</span>
+                </div>
+              </td>
+              <td (click)="openDetailModal(child)">
+                <div class="address-text">{{ child.address }}</div>
+              </td>
+              <td (click)="openDetailModal(child)">
+                <div class="schedule-badge" [class.matutina]="child.schedule === 'Matutina'" [class.vespertina]="child.schedule === 'Vespertina'">
+                  <ion-icon [name]="child.schedule === 'Matutina' ? 'sunny' : 'moon'"></ion-icon>
+                  <span>{{ child.schedule }}</span>
+                </div>
+              </td>
+              <td>
+                <ion-button
+                  id="options-trigger-{{ child.id }}"
+                  class="options-button"
+                  fill="clear"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                </ion-button>
+                <ion-popover [trigger]="'options-trigger-' + child.id" triggerAction="click">
+                  <ng-template>
+                    <ion-content class="options-popover">
+                      <ion-list lines="none">
+                        <ion-item button (click)="openDetailModal(child)">
+                          <ion-icon slot="start" name="eye" color="primary"></ion-icon>
+                          <ion-label>Detalles</ion-label>
+                        </ion-item>
+                        <ion-item button (click)="onEditChild(child)">
+                          <ion-icon slot="start" name="create" color="success"></ion-icon>
+                          <ion-label>Editar</ion-label>
+                        </ion-item>
+                        <ion-item button (click)="onDeleteChild(child)">
+                          <ion-icon slot="start" name="trash" color="danger"></ion-icon>
+                          <ion-label color="danger">Eliminar</ion-label>
+                        </ion-item>
+                      </ion-list>
+                    </ion-content>
+                  </ng-template>
+                </ion-popover>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredChildren.length === 0" class="empty-state">
+          <ion-icon name="people" class="empty-icon"></ion-icon>
+          <p class="empty-title">No se encontraron niños</p>
+          <p class="empty-subtitle">Intenta con otros criterios de búsqueda</p>
+        </div>
+      </div>
+    </ion-card>
+
+    <!-- Results Summary -->
+    <div *ngIf="searchValue" class="results-summary">
+      Mostrando {{ filteredChildren.length }} de {{ mockChildren.length }} niños
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <!-- <app-child-detail-modal
+    [child]="selectedChild"
+    [isOpen]="isModalOpen"
+    (close)="closeModal()"
+  ></app-child-detail-modal> -->
+</ion-content>
