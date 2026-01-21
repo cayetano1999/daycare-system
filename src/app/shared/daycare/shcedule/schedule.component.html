@@ -1,0 +1,337 @@
+<div class="schedule-management">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="icon-container">
+            <ion-icon name="time" class="header-icon"></ion-icon>
+          </div>
+          <div class="header-text">
+            <h1 class="title">Gestión de Tandas</h1>
+            <p class="subtitle">Administración de horarios y turnos</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <ion-button
+            color="success"
+            class="add-button"
+            (click)="showAddForm()"
+            [disabled]="isAddingNew"
+          >
+            <ion-icon slot="start" name="add-circle"></ion-icon>
+            Nueva Tanda
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-container">
+      <div class="filters-header">
+        <h3 class="filters-title">
+          <ion-icon name="funnel"></ion-icon>
+          Filtros
+        </h3>
+        <ion-button
+          fill="clear"
+          size="small"
+          color="medium"
+          (click)="clearFilters()"
+        >
+          <ion-icon slot="start" name="close-circle"></ion-icon>
+          Limpiar
+        </ion-button>
+      </div>
+
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label class="filter-label">Buscar por descripción:</label>
+          <input
+            type="text"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="applyFilters()"
+            class="filter-input"
+            placeholder="Nombre de la tanda...">
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Filtrar por estado:</label>
+          <select [(ngModel)]="statusFilter" (ngModelChange)="applyFilters()" class="filter-select">
+            <option value="all">Todos</option>
+            <option value="ACTIVA">Activas</option>
+            <option value="INACTIVA">Inactivas</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Total de Tandas</p>
+              <p class="stat-value">{{ schedules.length }}</p>
+            </div>
+            <div class="stat-icon-container blue">
+              <ion-icon name="calendar" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Tandas Activas</p>
+              <p class="stat-value">{{ getActiveCount() }}</p>
+            </div>
+            <div class="stat-icon-container success">
+              <ion-icon name="checkmark-circle" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Tandas Inactivas</p>
+              <p class="stat-value">{{ getInactiveCount() }}</p>
+            </div>
+            <div class="stat-icon-container danger">
+              <ion-icon name="close-circle" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <p class="stat-label">Resultados Filtrados</p>
+              <p class="stat-value">{{ filteredSchedules.length }}</p>
+            </div>
+            <div class="stat-icon-container purple">
+              <ion-icon name="search" class="stat-icon"></ion-icon>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Add New Form -->
+    <div *ngIf="isAddingNew" class="add-form-card">
+      <div class="form-header">
+        <h3 class="form-title">
+          <ion-icon name="add-circle"></ion-icon>
+          Nueva Tanda
+        </h3>
+        <ion-button
+          fill="clear"
+          size="small"
+          color="danger"
+          (click)="cancelAdd()"
+        >
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="form-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Descripción *</label>
+            <input
+              type="text"
+              [(ngModel)]="newSchedule.description"
+              class="form-input"
+              placeholder="Ej: Matutina, Vespertina, etc."
+              (keyup.enter)="saveNew()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Estado</label>
+            <div class="toggle-container">
+              <span class="toggle-label" [class.active]="newSchedule.status === 'ACTIVA'">
+                {{ newSchedule.status }}
+              </span>
+              <ion-toggle
+                [(ngModel)]="newSchedule.status"
+                [checked]="newSchedule.status === 'ACTIVA'"
+                (ionChange)="newSchedule.status = newSchedule.status === 'ACTIVA' ? 'INACTIVA' : 'ACTIVA'"
+                color="success"
+              ></ion-toggle>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <ion-button
+            fill="outline"
+            color="medium"
+            (click)="cancelAdd()"
+          >
+            <ion-icon slot="start" name="close-circle"></ion-icon>
+            Cancelar
+          </ion-button>
+          <ion-button
+            color="success"
+            (click)="saveNew()"
+            [disabled]="!newSchedule.description.trim() || loading"
+          >
+            <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+            Guardar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedules List -->
+    <ion-card class="list-card">
+      <div class="list-header">
+        <h3 class="list-title">
+          <ion-icon name="list"></ion-icon>
+          Listado de Tandas
+        </h3>
+      </div>
+
+      <div class="list-content">
+        <!-- Loading State -->
+        <div *ngIf="loading && schedules.length === 0" class="loading-state">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Cargando tandas...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loading && filteredSchedules.length === 0" class="empty-state">
+          <ion-icon name="calendar" class="empty-icon"></ion-icon>
+          <p class="empty-title">No se encontraron tandas</p>
+          <p class="empty-subtitle">
+            {{ schedules.length === 0 ? 'Agrega tu primera tanda' : 'Intenta con otros criterios de búsqueda' }}
+          </p>
+        </div>
+
+        <!-- Schedules Items -->
+        <div *ngIf="!loading && filteredSchedules.length > 0" class="schedules-list">
+          <div
+            *ngFor="let schedule of filteredSchedules"
+            class="schedule-item"
+            [class.editing]="editingScheduleId === schedule.id"
+          >
+            <!-- View Mode -->
+            <div *ngIf="editingScheduleId !== schedule.id" class="schedule-view">
+              <div class="schedule-info">
+                <div class="schedule-main">
+                  <h4 class="schedule-description">{{ schedule.description }}</h4>
+                  <span class="schedule-badge" [class]="'badge-' + schedule.status.toLowerCase()">
+                    <ion-icon [name]="schedule.status === 'ACTIVA' ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+                    {{ schedule.status }}
+                  </span>
+                </div>
+                <div class="schedule-meta">
+                  <span class="meta-item">
+                    <ion-icon name="calendar"></ion-icon>
+                    Creado: {{ formatDate(schedule.created_at!) }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="schedule-actions">
+                <ion-toggle
+                  [(ngModel)]="schedule.status"
+                  [checked]="schedule.status === 'ACTIVA'"
+                  (ionChange)="toggleStatus(schedule)"
+                  color="success"
+                  class="status-toggle"
+                ></ion-toggle>
+
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  color="primary"
+                  (click)="startEdit(schedule)"
+                  [disabled]="loading"
+                >
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-button>
+
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  color="danger"
+                  (click)="deleteSchedule(schedule)"
+                  [disabled]="loading"
+                >
+                  <ion-icon slot="icon-only" name="trash"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+
+            <!-- Edit Mode -->
+            <div *ngIf="editingScheduleId === schedule.id" class="schedule-edit">
+              <div class="edit-content">
+                <div class="edit-row">
+                  <div class="form-group">
+                    <label class="form-label">Descripción *</label>
+                    <input
+                      type="text"
+                      [(ngModel)]="editForm.description"
+                      class="form-input"
+                      placeholder="Descripción de la tanda"
+                      (keyup.enter)="saveEdit(schedule.id)">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <div class="toggle-container">
+                      <span class="toggle-label" [class.active]="editForm.status === 'ACTIVA'">
+                        {{ editForm.status }}
+                      </span>
+                      <ion-toggle
+                        [(ngModel)]="editForm.status"
+                        [checked]="editForm.status === 'ACTIVA'"
+                        (ionChange)="editForm.status = editForm.status === 'ACTIVA' ? 'INACTIVA' : 'ACTIVA'"
+                        color="success"
+                      ></ion-toggle>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="edit-actions">
+                  <ion-button
+                    fill="outline"
+                    size="small"
+                    color="medium"
+                    (click)="cancelEdit()"
+                  >
+                    <ion-icon slot="start" name="close-circle"></ion-icon>
+                    Cancelar
+                  </ion-button>
+                  <ion-button
+                    size="small"
+                    color="success"
+                    (click)="saveEdit(schedule.id)"
+                    [disabled]="!editForm.description.trim() || loading"
+                  >
+                    <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+                    Guardar
+                  </ion-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-card>
+
+    <!-- Results Summary -->
+    <div class="results-summary">
+      Mostrando {{ filteredSchedules.length }} de {{ schedules.length }} tandas
+    </div>
+  </div>
+</div>

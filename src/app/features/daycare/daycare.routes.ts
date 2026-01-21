@@ -9,6 +9,7 @@ import { AuthorizedPersonManagementPage } from "./authorized-person-management/a
 import { ChildManagementComponent } from "./child-management/child-management.component";
 import { PaymentManagementComponent } from "./payment-management/payment-management.component";
 import { AuthorizedPickerPage } from "./authorized-picker/authorized-picker.page";
+import { ScheduleManagementComponent } from "./schedule-management/schedule-management.component";
 
 
 export const dayCareRoutes: Routes = [
@@ -42,6 +43,12 @@ export const dayCareRoutes: Routes = [
     component: AuthorizedPersonManagementPage,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   },
+
+  {
+    path:'daycare/schedule-management',
+    component: ScheduleManagementComponent,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  }
 
 
 ]
