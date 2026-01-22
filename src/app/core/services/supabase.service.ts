@@ -24,7 +24,9 @@ export class SupabaseService {
   session: AuthSession | null = null
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    const supabaseUrl = 'https://cchztsiivmddznqtevrw.supabase.co';
+    const supabaseKey = 'sb_publishable_LcCBe5kNxddZYO3JVseRHw_TYeCJ7BU';
+    this.supabase = createClient(supabaseUrl, supabaseKey);
 
     this.supabase.auth.getSession().then(({ data }) => {
       this.session = data.session;
@@ -193,15 +195,15 @@ export class SupabaseService {
   }
 
   // 1) SignUp con email/clave (crea el usuario en Auth)
-  async signUpWithEmail(opts: { email: string; password: string; full_name: string; phone: string }) {
-    const { email, password, full_name, phone } = opts;
+  async signUpWithEmail(opts: { email: string; password: string; full_name: string; phone: string, avatar_url?: string }) {
+    const { email, password, full_name, phone, avatar_url } = opts;
 
     const { data, error } = await this.supabase.auth.signUp({
       email,
       password,
       options: {
         // metadata va al user_metadata de Auth (útil para saludar antes de tener profile)
-        data: { full_name, phone },
+        data: { full_name, phone, avatar_url },
         // si confirmación por correo está activa, Supabase redirigirá aquí
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },

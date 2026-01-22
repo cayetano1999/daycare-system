@@ -73,6 +73,12 @@ export class AppComponent implements OnInit {
             menu: true,
             icon: 'person-add-outline',
             url: 'daycare/authorized-person-management'
+        },
+        {
+            title: 'Configuración',
+            menu: true,
+            icon: 'settings-outline',
+            url: 'daycare/register'
         }
 
        

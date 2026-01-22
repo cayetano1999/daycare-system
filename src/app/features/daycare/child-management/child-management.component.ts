@@ -72,8 +72,8 @@ export class ChildManagementComponent {
     {
       id: '1',
       photo: 'https://images.pexels.com/photos/1257110/pexels-photo-1257110.jpeg?auto=compress&cs=tinysrgb&w=200',
-      fullName: 'María José González Pérez',
-      birthDate: '2025-11-15',
+      fullName: 'Adhara Genesis Randy',
+      birthDate: '2023-11-08',
       gender: 'Femenino',
       address: 'Calle Principal #123, Santo Domingo',
       schedule: 'Matutina',
@@ -280,7 +280,7 @@ export class ChildManagementComponent {
       parts.push('0 días');
     }
 
-    return parts[0];
+    return parts.join(', ');
   }
 
   getScheduleCount(schedule: string): number {

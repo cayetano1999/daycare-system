@@ -1,25 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import {
-  IonContent,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonButton,
-  IonInput,
-  IonSelect,
-  IonSelectOption,
-  IonCheckbox,
-  IonTextarea,
-  IonIcon,
-  IonLabel,
-  IonItem, IonCol } from '@ionic/angular/standalone';
+  IonCol } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cameraOutline, documentOutline, saveOutline, printOutline } from 'ionicons/icons';
-import { IonicModule, IonRow } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
+import { SupabaseService } from 'src/app/core/services/supabase.service';
 
 @Component({
   selector: 'app-inscription',
@@ -33,6 +20,10 @@ import { IonicModule, IonRow } from '@ionic/angular';
   ]
 })
 export class InscriptionComponent implements OnInit {
+
+  //services
+  supabaseService = inject(SupabaseService);
+
   inscriptionForm!: FormGroup;
   avatarPreview: string = 'https://via.placeholder.com/150';
 
@@ -46,12 +37,7 @@ export class InscriptionComponent implements OnInit {
     authorizedPersonId: { file: null as File | null, preview: '' }
   };
 
-  scheduleOptions = [
-    'Matutina',
-    'Vespertina',
-    'Nocturna',
-    'Todo el día'
-  ];
+  scheduleOptions: any[] = [];
 
   identificationTypes = [
     'Cédula',
@@ -79,60 +65,71 @@ export class InscriptionComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initForm();
+    console.log("Loading schedule options...");
+    await this.initSchedules();
+  }
+
+
+  async initSchedules(){
+    const result = await this.supabaseService.getSupabase().from('schedules').select('*');
+    console.log("Schedule Options Result:", result);
+    if(result.data){
+      this.scheduleOptions = result.data;
+    }
   }
 
   initForm() {
     this.inscriptionForm = this.fb.group({
       childData: this.fb.group({
-        avatarUrl: [''],
-        fullName: ['', [Validators.required, Validators.minLength(3)]],
-        birthDate: ['', [Validators.required, this.validBirthDate]],
-        gender: ['', Validators.required],
-        address: ['NOT PROVIDED', [Validators.required, Validators.minLength(10)]],
-        schedule: ['', Validators.required]
+        avatar_url: ['not_provided'],
+        full_name: ['JOSUE ALEXANDER CAYETANO', [Validators.required, Validators.minLength(3)]],
+        birth_date: ['2023-01-01', [Validators.required, this.validBirthDate]],
+        gender: ['M', Validators.required],
+        address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
+        schedule: ['Matutina', Validators.required]
       }),
       firstGuardian: this.fb.group({
-        fullName: ['', [Validators.required, Validators.minLength(3)]],
-        identificationType: ['Cédula', Validators.required],
-        identificationNumber: ['', [Validators.required, this.validateIdentification.bind(this)]],
-        phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['', Validators.required]
+        full_name: ['JUAN SOTO', [Validators.required, Validators.minLength(3)]],
+        identification_type: ['Cédula', Validators.required],
+        identification_number: ['40209341789', [Validators.required, this.validateIdentification.bind(this)]],
+        phone_number: ['8093716874', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['INAPA 2', Validators.required]
       }),
       secondGuardian: this.fb.group({
-        fullName: [''],
-        identificationType: ['Cédula'],
-        identificationNumber: ['', [this.validateIdentification.bind(this)]],
-        phoneNumber: ['', [Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['']
+        full_name: ['MARTA CANDELA'],
+        identification_type: ['Cédula'],
+        identification_number: ['02300893167', [this.validateIdentification.bind(this)]],
+        phone_number: ['8093716874', [Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['INAPA']
       }),
       medicalInfo: this.fb.group({
-        hasMedicalCondition: [false],
-        medicalConditionDetails: [''],
-        takesMedication: [false],
-        medicationDetails: [''],
-        allergies: [''],
-        preferredMedicalCenter: ['', Validators.required]
+        has_medical_condition: [true],
+        medical_condition_details: ['muchas'],
+        takes_medication: [true],
+        medication_details: ['no hay'],
+        allergies: ['a la pobreza'],
+        preferred_medical_center: ['MUSA', Validators.required]
       }),
       authorizedPerson: this.fb.group({
-        fullName: ['', [Validators.required, Validators.minLength(3)]],
-        phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        relationship: ['', Validators.required]
+        full_name: ['Los Proto Proto', [Validators.required, Validators.minLength(3)]],
+        phone_number: ['8093716874', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        relationship: ['Padre', Validators.required]
       }),
       authorizations: this.fb.group({
-        allowSocialMedia: [false]
+        allow_social_media: [true]
       }),
       signature: this.fb.group({
-        signatureText: ['', Validators.required],
-        signatureDate: [new Date().toISOString().split('T')[0], Validators.required],
-        startDate: [null, Validators.required]
+        signature_text: ['LISSETE MARQUEZ', Validators.required],
+        signature_date: [new Date().toISOString().split('T')[0], Validators.required],
+        start_date: ['2025-01-01', Validators.required]
       })
     });
 
     // Watch for medical condition changes
-    this.inscriptionForm.get('medicalInfo.hasMedicalCondition')?.valueChanges.subscribe(value => {
-      const detailsControl = this.inscriptionForm.get('medicalInfo.medicalConditionDetails');
+    this.inscriptionForm.get('medicalInfo.has_medical_condition')?.valueChanges.subscribe(value => {
+      const detailsControl = this.inscriptionForm.get('medicalInfo.medical_condition_details');
       if (value) {
         detailsControl?.setValidators([Validators.required]);
       } else {
@@ -142,8 +139,8 @@ export class InscriptionComponent implements OnInit {
     });
 
     // Watch for medication changes
-    this.inscriptionForm.get('medicalInfo.takesMedication')?.valueChanges.subscribe(value => {
-      const detailsControl = this.inscriptionForm.get('medicalInfo.medicationDetails');
+    this.inscriptionForm.get('medicalInfo.takes_medication')?.valueChanges.subscribe(value => {
+      const detailsControl = this.inscriptionForm.get('medicalInfo.medication_details');
       if (value) {
         detailsControl?.setValidators([Validators.required]);
       } else {
@@ -227,7 +224,7 @@ export class InscriptionComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = (e: any) => {
           this.avatarPreview = e.target.result;
-          this.inscriptionForm.get('childData.avatarUrl')?.setValue(e.target.result);
+          this.inscriptionForm.get('childData.avatar_url')?.setValue(e.target.result);
         };
         reader.readAsDataURL(file);
       }
@@ -262,7 +259,7 @@ export class InscriptionComponent implements OnInit {
     this.documents[documentType].preview = '';
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.inscriptionForm.valid) {
       const formData = {
         ...this.inscriptionForm.value,
@@ -270,7 +267,31 @@ export class InscriptionComponent implements OnInit {
       };
 
       console.log('=== DATOS DE INSCRIPCIÓN ===');
-      console.log(JSON.stringify(formData, null, 2));
+
+      try {
+      const supabase = this.supabaseService.getSupabase();
+      const dataToSupabase = { ...formData };
+      // Remove file previews before sending to Supabase
+      delete dataToSupabase.documents;
+      dataToSupabase.childData.avatar_url = 'no_haya_url';
+      console.log('Data to send to Supabase Function:', dataToSupabase);
+      const response = await supabase.functions.invoke('save-inscription', {
+        body: { ...dataToSupabase },
+        
+      });
+
+      if (response.error) {
+        console.error('Error checking email:', response.error);
+        return false;
+      }
+
+      return response.data?.exists || false;
+    } catch (error) {
+      console.error('Error calling edge function:', error);
+      return false;
+    }
+
+
 
       alert('Formulario guardado exitosamente. Revisa la consola para ver los datos.');
     } else {

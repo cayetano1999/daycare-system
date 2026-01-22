@@ -114,3 +114,123 @@ textarea {
 input {
     background-color: white!important;
 }
+
+ion-content {
+  --background: linear-gradient(to bottom right, rgb(248 250 252), rgb(241 245 249));
+}
+
+ion-card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+  margin: 0;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  }
+}
+
+ion-card-header {
+  padding: 1.5rem;
+}
+
+ion-card-content {
+  padding: 1.5rem;
+}
+
+ion-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+ion-card-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+ion-button {
+  --border-radius: 0.5rem;
+  text-transform: none;
+  font-weight: 600;
+}
+
+ion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.font-signature {
+  font-family: 'Brush Script MT', cursive;
+}
+
+input,
+select,
+textarea {
+  &:focus {
+    outline: none;
+  }
+}
+
+// Print Styles
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  ion-content {
+    --background: white;
+  }
+
+  body {
+    background: white;
+  }
+
+  ion-card {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+  }
+
+  ion-card-header {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  ion-card-title,
+  ion-card-subtitle {
+    color: #1e293b !important;
+  }
+
+  .grid {
+    gap: 1rem;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid #cbd5e1 !important;
+    background: white !important;
+  }
+
+  .bg-gradient-to-r,
+  .bg-gradient-to-br {
+    background: #f1f5f9 !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+    size: letter;
+  }
+}
+
+  input,
+  select,
+  textarea {
+    border: 1px solid #cbd5e1 !important;
+    background: white !important;
+  }
