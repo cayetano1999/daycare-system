@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar style="--background:#0f172a">
+    <ion-title class="ion-text-center text-white">Tutores</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-bg">
+  <div class="page-container">
+
+    <!-- Header -->
+    <div class="page-header">
+      <h1>Gestión de Tutores</h1>
+      <p>Administra los tutores y sus hijos registrados</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="filter search">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Buscar tutor..."
+          [(ngModel)]="searchTerm"
+          (input)="filterGuardians()"
+        />
+      </div>
+
+      <div class="filter">
+        <select [(ngModel)]="searchType" (change)="filterGuardians()">
+          <option value="all">Todos los campos</option>
+          <option value="name">Nombre</option>
+          <option value="identification">Identificación</option>
+          <option value="phone">Teléfono</option>
+          <option value="workplace">Lugar de trabajo</option>
+        </select>
+      </div>
+
+      <button class="btn-clear" *ngIf="searchTerm" (click)="clearSearch()">
+        Limpiar
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper" *ngIf="!loading">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Tutor</th>
+            <th>Identificación</th>
+            <th>Teléfono</th>
+            <th>Lugar de trabajo</th>
+            <th>Hijos</th>
+            <th class="actions">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let guardian of filteredGuardians">
+            <td>
+              <div class="tutor-cell">
+                <div class="avatar">
+                  {{ getInitial(guardian.full_name) }}
+                </div>
+                <span class="name">{{ guardian.full_name }}</span>
+              </div>
+            </td>
+
+            <td>{{ guardian.identification_type }} {{ guardian.identification_number }}</td>
+            <td>{{ guardian.phone_number || '—' }}</td>
+            <td>{{ guardian.workplace || '—' }}</td>
+
+            <td>
+              <span class="badge">
+                {{ guardian.children_count || 0 }} hijo(s)
+              </span>
+            </td>
+
+            <td class="actions">
+              <ion-button fill="clear" size="small" (click)="openActions(guardian)">
+                <ion-icon name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+             
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredGuardians.length === 0">
+            <td colspan="6" class="empty">
+              No se encontraron tutores
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando tutores...</p>
+    </div>
+
+  </div>
+</ion-content>

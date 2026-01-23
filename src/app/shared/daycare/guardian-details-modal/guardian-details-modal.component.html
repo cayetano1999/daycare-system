@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-toolbar class="modal-header">
+    <ion-title>Detalles del Tutor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-bg">
+  <div class="modal-container">
+
+    <!-- Tutor Summary -->
+    <div class="tutor-summary">
+      <div class="avatar-lg">
+        {{ getInitial(guardian.full_name) }}
+      </div>
+
+      <div class="tutor-main">
+        <h2>{{ guardian.full_name }}</h2>
+        <p>{{ guardian.identification_type }}: {{ guardian.identification_number }}</p>
+      </div>
+    </div>
+
+    <!-- Tutor Info -->
+    <div class="info-grid">
+      <div class="info-box">
+        <span>Teléfono</span>
+        <strong>{{ guardian.phone_number || 'No especificado' }}</strong>
+      </div>
+
+      <div class="info-box">
+        <span>Lugar de trabajo</span>
+        <strong>{{ guardian.workplace || 'No especificado' }}</strong>
+      </div>
+
+      <div class="info-box full">
+        <span>Fecha de registro</span>
+        <strong>{{ formatDate(guardian.created_at) }}</strong>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Children -->
+    <div class="section-header">
+      <ion-icon name="people-outline"></ion-icon>
+      <h3>Hijos registrados</h3>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando hijos...</p>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!loading && children.length === 0" class="empty-state">
+      No hay hijos registrados
+    </div>
+
+    <!-- Children Table -->
+    <div *ngIf="!loading && children.length > 0" class="children-table">
+      <div class="child-row" *ngFor="let child of children">
+        <div class="child-main">
+          <div class="avatar-sm">
+            {{ getInitial(child.full_name) }}
+          </div>
+
+          <div>
+            <p class="child-name">{{ child.full_name }}</p>
+            <span class="role">{{ child.relationship }}</span>
+            <span *ngIf="child.is_primary" class="primary">Principal</span>
+          </div>
+        </div>
+
+        <div class="child-info">
+          <div>
+            <span>Edad</span>
+            <strong>{{ calculateAge(child.birth_date) }} años</strong>
+          </div>
+
+          <div>
+            <span>Nacimiento</span>
+            <strong>{{ formatDate(child.birth_date) }}</strong>
+          </div>
+
+          <div>
+            <span>Ciclo</span>
+            <strong>{{ child.ciclo || '—' }}</strong>
+          </div>
+        </div>
+
+        <ion-icon
+          [name]="getGenderIcon(child.gender)"
+          [class]="getGenderColor(child.gender)"
+          class="gender-icon">
+        </ion-icon>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div *ngIf="!loading && children.length > 0" class="summary">
+      Total: {{ children.length }}
+      {{ children.length === 1 ? 'hijo registrado' : 'hijos registrados' }}
+    </div>
+
+  </div>
+</ion-content>

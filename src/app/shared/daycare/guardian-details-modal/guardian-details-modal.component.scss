@@ -1,0 +1,186 @@
+.modal-bg {
+  --background: #f8fafc;
+}
+
+.modal-header {
+  --background: #0f172a;
+  color: white;
+}
+
+.modal-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 24px;
+}
+
+/* Tutor summary */
+.tutor-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.avatar-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutor-main h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.tutor-main p {
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.info-box {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.info-box.full {
+  grid-column: span 2;
+}
+
+.info-box span {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.info-box strong {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+/* Divider */
+.divider {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Section */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+/* Children */
+.children-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.child-row {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 2fr 3fr auto;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.child-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.child-name {
+  font-weight: 600;
+  margin: 0;
+}
+
+.role {
+  font-size: 12px;
+  color: #2563eb;
+  margin-right: 8px;
+}
+
+.primary {
+  font-size: 12px;
+  background: #dcfce7;
+  color: #166534;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.child-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  font-size: 13px;
+}
+
+.child-info span {
+  display: block;
+  color: #64748b;
+}
+
+.gender-icon {
+  font-size: 28px;
+}
+
+/* States */
+.loading,
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: #64748b;
+}
+
+/* Footer */
+.summary {
+  margin-top: 24px;
+  text-align: center;
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}

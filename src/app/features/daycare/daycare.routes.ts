@@ -14,6 +14,8 @@ import { RegisterPage } from "./register/register.page";
 import { InscriptionListComponent } from "src/app/features/daycare/inscription-list/inscription-list.component";
 import { InscriptionEditPage } from "./inscription-edit/inscription-edit.page";
 import { DocumentsPage } from "./documents/documents.page";
+import { GuardiansPage } from "./guardians/guardians.page";
+import { GuardianEditPage } from "./guardian-edit/guardian-edit.page";
 
 
 export const dayCareRoutes: Routes = [
@@ -36,7 +38,7 @@ export const dayCareRoutes: Routes = [
   },
   {
     path: 'daycare/parents-management',
-    component: AuthorizedPickerPage,
+    component: GuardiansPage,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   },
 
@@ -71,6 +73,11 @@ export const dayCareRoutes: Routes = [
   {
     path: 'daycare/documents/:id',
     component: DocumentsPage,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+  {
+    path: 'daycare/guardian-edit/:id',
+    component: GuardianEditPage,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   }
 
