@@ -1,0 +1,197 @@
+<ion-header>
+  <ion-toolbar class="modal-header">
+    <ion-title>Detalles de Inscripción</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div class="details-container">
+
+    <!-- Información del Niño -->
+    <div class="section">
+      <div class="section-header">
+        <ion-icon name="person-outline" color="primary"></ion-icon>
+        <h2>Información del Niño/a</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nombre Completo</label>
+              <p>{{ registration.child?.full_name }}</p>
+            </div>
+            <div class="info-item">
+              <label>Género</label>
+              <p>{{ registration.child?.gender }}</p>
+            </div>
+            <div class="info-item">
+              <label>Fecha de Nacimiento</label>
+              <p *ngIf="registration.child?.birth_date">
+                {{ formatDate(registration.child?.birth_date || '') }}
+              </p>
+            </div>
+            <div class="info-item">
+              <label>Edad</label>
+              <p *ngIf="registration.child?.birth_date">
+                {{ calculateAge(registration.child?.birth_date || '') }}
+              </p>
+            </div>
+            <div class="info-item">
+              <label>Ciclo</label>
+              <p>{{ registration.child?.ciclo || 'No asignado' }}</p>
+            </div>
+            <div class="info-item">
+              <label>Estado</label>
+              <ion-badge [color]="getStatusColor(registration.status)">
+                {{ getStatusLabel(registration.status) }}
+              </ion-badge>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Fechas de Inscripción -->
+    <div class="section">
+      <div class="section-header">
+        <ion-icon name="calendar-outline" color="primary"></ion-icon>
+        <h2>Fechas</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Fecha de Inicio</label>
+              <p>{{ formatDate(registration.start_date) }}</p>
+            </div>
+            <div class="info-item">
+              <label>Fecha de Inscripción</label>
+              <p>{{ formatDate(registration.created_at) }}</p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Padres/Tutores -->
+    <div class="section" *ngIf="registration.legal_parents && registration.legal_parents.length > 0">
+      <div class="section-header">
+        <ion-icon name="people-outline" color="primary"></ion-icon>
+        <h2>Padres/Tutores Legales</h2>
+      </div>
+      <ion-card *ngFor="let parent of registration.legal_parents">
+        <ion-card-content>
+          <div class="parent-header">
+            <strong>{{ parent.full_name }}</strong>
+            <ion-badge *ngIf="parent.is_primary" color="primary">Principal</ion-badge>
+          </div>
+          <div class="parent-details">
+            <div class="detail-row">
+              <span class="label">Relación:</span>
+              <span>{{ parent.relationship }}</span>
+            </div>
+            <div class="detail-row">
+              <ion-icon name="call-outline"></ion-icon>
+              <span>{{ parent.phone_number }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Personas Autorizadas -->
+    <div class="section" *ngIf="registration.authorized_persons && registration.authorized_persons.length > 0">
+      <div class="section-header">
+        <ion-icon name="shield-checkmark-outline" color="primary"></ion-icon>
+        <h2>Personas Autorizadas</h2>
+      </div>
+      <ion-card *ngFor="let person of registration.authorized_persons">
+        <ion-card-content>
+          <strong class="person-name">{{ person.full_name }}</strong>
+          <div class="person-details">
+            <div class="detail-row">
+              <span class="label">Relación:</span>
+              <span>{{ person.children_relationship }}</span>
+            </div>
+            <div class="detail-row">
+              <ion-icon name="call-outline"></ion-icon>
+              <span>{{ person.phone_number }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Información Médica -->
+    <div class="section" *ngIf="registration.medical_info">
+      <div class="section-header">
+        <ion-icon name="heart-outline" color="primary"></ion-icon>
+        <h2>Información Médica</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="medical-info">
+            <div class="info-item">
+              <label>Centro Médico Preferido</label>
+              <p>{{ registration.medical_info.preferred_medical_center }}</p>
+            </div>
+
+            <div class="info-item" *ngIf="registration.medical_info.has_medical_condition">
+              <label>Condición Médica</label>
+              <p>{{ registration.medical_info.medical_condition_details }}</p>
+            </div>
+
+            <div class="info-item" *ngIf="registration.medical_info.takes_medication">
+              <label>Medicamentos</label>
+              <p>{{ registration.medical_info.medication_details }}</p>
+            </div>
+
+            <div class="info-item" *ngIf="registration.medical_info.allergies">
+              <label>Alergias</label>
+              <p>{{ registration.medical_info.allergies }}</p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Términos y Condiciones -->
+    <div class="section" *ngIf="registration.terms">
+      <div class="section-header">
+        <ion-icon name="document-text-outline" color="primary"></ion-icon>
+        <h2>Autorizaciones</h2>
+      </div>
+      <ion-card>
+        <ion-card-content>
+          <div class="terms-info">
+            <div class="term-row">
+              <span>Publicación en Redes Sociales</span>
+              <ion-badge [color]="registration.terms.post_pictures_social_media ? 'success' : 'danger'">
+                {{ registration.terms.post_pictures_social_media ? 'Autorizado' : 'No Autorizado' }}
+              </ion-badge>
+            </div>
+            <p class="terms-date">
+              Aceptado el {{ formatDate(registration.terms.accepted_at) }}
+            </p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="dismiss()">
+        Cerrar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

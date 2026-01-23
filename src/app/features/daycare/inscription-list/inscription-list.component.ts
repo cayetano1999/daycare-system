@@ -7,6 +7,9 @@ import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { calculateAgeToString } from 'src/app/core/constants/constants';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular/standalone';
+import { InscriptionDetailModalComponent } from 'src/app/shared/daycare/inscription-detail-modal/inscription-detail-modal.component';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 
 interface RegistrationWithDetails {
   id: string;
@@ -34,12 +37,16 @@ interface RegistrationWithDetails {
   templateUrl: './inscription-list.component.html',
   styleUrls: ['./inscription-list.component.scss'],
   standalone: true,
-  imports: [...StandAloneModules]
+  imports: [...StandAloneModules],
+  providers: [ModalController]
+
 })
 export class InscriptionListComponent implements OnInit {
 
   supabaseService = inject(SupabaseService);
   router = inject(Router);
+  modalController = inject(ModalController);
+  alertController = inject(AlertControllerService);
 
   @Output() editRegistration = new EventEmitter<RegistrationWithDetails>();
   @Output() viewDetails = new EventEmitter<RegistrationWithDetails>();
@@ -185,9 +192,26 @@ export class InscriptionListComponent implements OnInit {
     this.router.navigate(['/daycare/inscription-new']);
   }
 
-  onViewDetails(registration: RegistrationWithDetails) {
-    this.viewDetails.emit(registration);
-    this.openMenuId = null;
+  async onViewDetails(registration: RegistrationWithDetails) {
+    try {
+      // Cargar detalles completos
+       this.alertController.openFestivaAlert('loading', 'Cargando detalles de la inscripción...', 'por favor, espere');
+      const fullDetails = await this.getRegistrationById(registration.id);
+      if (fullDetails) {
+        const modal = await this.modalController.create({
+          component: InscriptionDetailModalComponent,
+          componentProps: {
+            registration: fullDetails
+          },
+          cssClass: 'details-modal'
+        });
+        await modal.present();
+        await this.alertController.dismiss();
+      }
+    } catch (error) {
+      console.error('Error loading registration details:', error);
+      alert('Error al cargar los detalles de la inscripción');
+    }
   }
 
   onViewDocuments(registration: RegistrationWithDetails) {
@@ -219,5 +243,114 @@ export class InscriptionListComponent implements OnInit {
 
   getAvatarInitial(name?: string): string {
     return name ? name.charAt(0).toUpperCase() : '?';
+  }
+
+    private async getRegistrationById(id: string): Promise<RegistrationWithDetails | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('registration')
+        .select(`
+          *,
+          child:children(id, full_name, birth_date, gender, ciclo, avatar_url, address, schedule_id),
+          profile:user_profiles(id, full_name)
+        `)
+        .eq('id', id)
+        .maybeSingle();
+
+       console.log('Error fetching registration:', error); 
+      if (error) throw error;
+      if (!data) return null;
+
+      const registration = data as any;
+      console.log('Base registration data:', registration);
+
+      // Cargar relaciones adicionales
+      const [legalParentsResult, authorizedResult, medicalResult, termsResult] = await Promise.all([
+        this.getLegalParentsByChild(registration.children_id),
+        this.getAuthorizedPersonsByChild(registration.children_id),
+        this.getMedicalInfoByRegistration(id),
+        this.getTermsByRegistration(id)
+      ]);
+
+      return {
+        ...registration,
+        legal_parents: legalParentsResult,
+        authorized_persons: authorizedResult,
+        medical_info: medicalResult,
+        terms: termsResult
+      };
+    } catch (error) {
+      console.error('Error fetching registration details:', error);
+      return null;
+    }
+  }
+
+  private async getLegalParentsByChild(childId: string) {
+    const { data, error } = await this.supabase
+      .from('children_legal_parents')
+      .select(`
+        id,
+        relationship,
+        is_primary,
+        legal_parent:legal_parents(id, full_name, phone_number)
+      `)
+      .eq('children_id', childId);
+
+    if (error) {
+      console.error('Error fetching legal parents:', error);
+      return [];
+    }
+
+    return data.map((item: any) => ({
+      id: item.legal_parent.id,
+      full_name: item.legal_parent.full_name,
+      phone_number: item.legal_parent.phone_number,
+      relationship: item.relationship,
+      is_primary: item.is_primary
+    }));
+  }
+
+  private async getAuthorizedPersonsByChild(childId: string) {
+    const { data, error } = await this.supabase
+      .from('authorized_pickup')
+      .select('*')
+      .eq('children_id', childId);
+
+    if (error) {
+      console.error('Error fetching authorized persons:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  private async getMedicalInfoByRegistration(registrationId: string) {
+    const { data, error } = await this.supabase
+      .from('medical_info')
+      .select('*')
+      .eq('registration_id', registrationId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching medical info:', error);
+      return null;
+    }
+
+    return data;
+  }
+
+  private async getTermsByRegistration(registrationId: string) {
+    const { data, error } = await this.supabase
+      .from('terms_condition')
+      .select('*')
+      .eq('registration_id', registrationId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching terms:', error);
+      return null;
+    }
+
+    return data;
   }
 }
