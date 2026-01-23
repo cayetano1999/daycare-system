@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
@@ -41,12 +41,13 @@ interface RegistrationWithDetails {
   providers: [ModalController]
 
 })
-export class InscriptionListComponent implements OnInit {
+export class InscriptionListComponent   {
 
   supabaseService = inject(SupabaseService);
   router = inject(Router);
   modalController = inject(ModalController);
   alertController = inject(AlertControllerService);
+  actionSheerCtrl = inject(ActionSheetController);
 
   @Output() editRegistration = new EventEmitter<RegistrationWithDetails>();
   @Output() viewDetails = new EventEmitter<RegistrationWithDetails>();
@@ -64,7 +65,9 @@ export class InscriptionListComponent implements OnInit {
   private supabase!: SupabaseClient;
 
 
-  ngOnInit() {
+
+
+  ionViewWillEnter() {
     this.initSupabase();
     this.loadRegistrations();
   }
@@ -199,7 +202,7 @@ export class InscriptionListComponent implements OnInit {
 
     try {
       // Cargar detalles completos
-       this.alertController.openFestivaAlert('loading', 'Cargando detalles de la inscripción...', 'por favor, espere');
+      this.alertController.openFestivaAlert('loading', 'Cargando detalles de la inscripción...', 'por favor, espere');
       const fullDetails = await this.getRegistrationById(registration.id);
       if (fullDetails) {
         const modal = await this.modalController.create({
@@ -218,7 +221,59 @@ export class InscriptionListComponent implements OnInit {
     }
   }
 
-async onViewDocuments(registration: RegistrationWithDetails) {
+  async openActions(ev: Event, registration: any) {
+    const actionSheet = await this.actionSheerCtrl.create({
+      header: 'Acciones',
+      cssClass: 'custom-action-sheet',
+      buttons: [
+        {
+          text: 'Ver Detalles',
+          icon: 'eye',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            this.onViewDetails(registration);
+          }
+        },
+        {
+          text: 'Ver Documentos',
+          icon: 'document-text',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            this.onViewDocuments(registration);
+          }
+        },
+        {
+          text: 'Editar Inscripción',
+          icon: 'create',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            this.onEditRegistration(registration);
+          }
+        },
+        {
+          text: 'Eliminar Inscripción',
+          role: 'destructive',
+          icon: 'trash',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            this.onDelete(registration);
+          }
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            // Acción de cancelar
+          }
+        }
+      ]
+    });
+
+    await actionSheet.present();
+  }
+
+  async onViewDocuments(registration: RegistrationWithDetails) {
     this.openMenuId = null;
     console.log('View documents:', registration);
     this.router.navigate(['/daycare/documents', registration.id]);
@@ -250,7 +305,7 @@ async onViewDocuments(registration: RegistrationWithDetails) {
     return name ? name.charAt(0).toUpperCase() : '?';
   }
 
-    private async getRegistrationById(id: string): Promise<RegistrationWithDetails | null> {
+  private async getRegistrationById(id: string): Promise<RegistrationWithDetails | null> {
     try {
       const { data, error } = await this.supabase
         .from('registration')
@@ -262,7 +317,7 @@ async onViewDocuments(registration: RegistrationWithDetails) {
         .eq('id', id)
         .maybeSingle();
 
-       console.log('Error fetching registration:', error); 
+      console.log('Error fetching registration:', error);
       if (error) throw error;
       if (!data) return null;
 

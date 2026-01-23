@@ -9,389 +9,469 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="">
-  <div class="bg-gradient-to-br from-slate-50 to-slate-100">
-    <div class="p-6 max-w-7xl mx-auto">
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-4xl font-bold text-slate-800 mb-2">Gestión de Documentos</h1>
-        <p class="text-slate-600">Visualiza y descarga los documentos de inscripción</p>
-      </div>
+<ion-content class="bg-gradient-to-br from-slate-50 to-slate-100">
+  <div class="p-6 max-w-full mx-auto">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-4xl font-bold text-slate-800 mb-2">Gestión de Documentos</h1>
+      <p class="text-slate-600">Visualiza y descarga los documentos de inscripción</p>
+    </div>
 
-      <!-- Buscador de Niños -->
-      <div class="mb-6">
-        <ion-card class="shadow-lg">
-          <ion-card-header class="bg-slate-800">
-            <ion-card-title class="text-white text-2xl font-bold">
-              <ion-icon name="search-outline" class="mr-2"></ion-icon>
-              Buscar Documentos por Niño
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="space-y-5 px-3">
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">
-                  Selecciona un niño para ver sus documentos
-                </label>
-                <div class="relative">
-                  <input
-                    type="text"
-                    [(ngModel)]="searchTerm"
-                    (input)="filterChildren()"
-                    (focus)="showDropdown = true"
-                    placeholder="Buscar por nombre del niño..."
-                    class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+    <!-- Main Layout Grid -->
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <!-- Left Column: Search Section (7 cols) -->
+        <ion-col size="12" sizeLg="7" class="ion-no-padding pr-0 lg:pr-3">
+          <ion-card class="shadow-xl h-full sticky-card" style="margin: 0;">
+            <ion-card-header class="bg-gradient-to-r from-slate-800 to-slate-900">
+              <ion-card-title class="text-white text-2xl font-bold flex items-center">
+                <ion-icon name="search-outline" class="mr-3 text-3xl"></ion-icon>
+                Buscar Documentos por Niño
+              </ion-card-title>
+              <p class="text-slate-300 mt-2 text-sm">Selecciona un niño de la lista para ver sus documentos</p>
+            </ion-card-header>
 
-                  <!-- Dropdown -->
-                  <div
-                    *ngIf="showDropdown && filteredChildren.length > 0"
-                    class="absolute z-50 w-full mt-2 bg-white border rounded-lg shadow-xl max-h-64 overflow-y-auto">
+            <ion-card-content class="p-6">
+              <div class="space-y-6">
+                <!-- Search Input -->
+                <div>
+                  <label class="block text-sm font-bold text-slate-700 mb-3 text-base">
+                    <ion-icon name="person-outline" class="mr-2"></ion-icon>
+                    Buscar por nombre del niño
+                  </label>
+                  <div class="relative search-container">
+                    <ion-icon
+                      name="search-outline"
+                      class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg z-10">
+                    </ion-icon>
+                    <input
+                      type="text"
+                      [(ngModel)]="searchTerm"
+                      (input)="filterChildren()"
+                      (focus)="showDropdown = true"
+                      placeholder="Escribe el nombre del niño..."
+                      class="w-full pl-10 pr-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-200 focus:border-purple-500 transition-all text-base font-medium"
+                      style="background-color: white;">
+
+                    <!-- Dropdown -->
                     <div
-                      *ngFor="let child of filteredChildren"
-                      (click)="selectChild(child)"
-                      class="px-4 py-3 hover:bg-purple-50 cursor-pointer border-b last:border-b-0 transition-colors">
-                      <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                          {{ getInitial(child.full_name) }}
-                        </div>
-                        <div>
-                          <p class="font-semibold text-slate-800">{{ child.full_name }}</p>
-                          <p class="text-sm text-slate-500">{{ child.ciclo || 'Sin ciclo asignado' }}</p>
+                      *ngIf="showDropdown && filteredChildren.length > 0"
+                      class="absolute z-50 w-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-2xl max-h-60 overflow-y-auto dropdown-scroll">
+                      <div
+                        *ngFor="let child of filteredChildren; let i = index"
+                        (click)="selectChild(child)"
+                        class="px-3 py-2.5 hover:bg-purple-50 cursor-pointer border-b last:border-b-0 transition-all duration-200"
+                        [class.border-b-purple-200]="i < filteredChildren.length - 1">
+                        <div class="flex items-center gap-3">
+                          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-base shadow-md flex-shrink-0">
+                            {{ getInitial(child.full_name) }}
+                          </div>
+                          <div class="flex-1 min-w-0">
+                            <p class="font-bold text-slate-800 text-base truncate">{{ child.full_name }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+                              <ion-icon name="school-outline" style="font-size: 12px;"></ion-icon>
+                              {{ child.ciclo || 'Sin ciclo asignado' }}
+                            </p>
+                          </div>
+                          <ion-icon name="chevron-forward" class="text-slate-400 text-base flex-shrink-0"></ion-icon>
                         </div>
                       </div>
                     </div>
+
+                    <!-- No results -->
+                    <div
+                      *ngIf="showDropdown && searchTerm && filteredChildren.length === 0"
+                      class="absolute z-50 w-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-2xl p-4 text-center">
+                      <ion-icon name="search-outline" class="text-4xl text-slate-300 mb-2"></ion-icon>
+                      <p class="text-slate-600 text-sm font-medium">No se encontraron niños con ese nombre</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Selected Child Card -->
+                <div *ngIf="selectedChild" class="bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 p-6 rounded-2xl border-2 border-purple-200 shadow-lg animate-fadeIn">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-4 flex-1">
+                      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 flex items-center justify-center text-white font-bold text-2xl shadow-xl">
+                        {{ getInitial(selectedChild.full_name) }}
+                      </div>
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                          <ion-icon name="checkmark-circle" class="text-green-500 text-xl"></ion-icon>
+                          <span class="text-xs font-bold text-green-600 uppercase tracking-wide">Seleccionado</span>
+                        </div>
+                        <p class="font-bold text-slate-800 text-xl mb-1">{{ selectedChild.full_name }}</p>
+                        <p class="text-sm text-slate-600 flex items-center gap-1">
+                          <ion-icon name="school" class="text-purple-500"></ion-icon>
+                          {{ selectedChild.ciclo || 'Sin ciclo asignado' }}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      (click)="clearSelection()"
+                      class="ml-3 text-red-500 hover:text-red-700 hover:bg-red-100 p-2 rounded-lg transition-all duration-200">
+                      <ion-icon name="close-circle" class="text-3xl"></ion-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Instructions when no child selected -->
+                <div *ngIf="!selectedChild" class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 text-center">
+                  <ion-icon name="information-circle" class="text-5xl text-blue-400 mb-3"></ion-icon>
+                  <p class="text-blue-800 font-semibold text-lg mb-2">¿Cómo buscar documentos?</p>
+                  <ol class="text-left text-blue-700 space-y-2 mt-4">
+                    <li class="flex items-start gap-2">
+                      <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">1</span>
+                      <span>Escribe el nombre del niño en el campo de búsqueda</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">2</span>
+                      <span>Selecciona el niño de la lista desplegable</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">3</span>
+                      <span>Los documentos aparecerán automáticamente</span>
+                    </li>
+                  </ol>
+                </div>
+
+                <!-- Loading State -->
+                <div *ngIf="loading" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-8 text-center">
+                  <ion-spinner name="crescent" class="text-purple-500 mb-4" style="width: 48px; height: 48px;"></ion-spinner>
+                  <p class="text-slate-600 font-semibold text-lg">Cargando documentos...</p>
+                  <p class="text-slate-500 text-sm mt-2">Por favor espera un momento</p>
+                </div>
+
+                <!-- Stats when child selected -->
+                <div *ngIf="selectedChild && documents && !loading" class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6">
+                  <div class="flex items-center gap-3 mb-4">
+                    <ion-icon name="stats-chart" class="text-3xl text-green-600"></ion-icon>
+                    <h3 class="font-bold text-green-900 text-lg">Resumen de Documentos</h3>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm">
+                      <p class="text-3xl font-bold text-green-600">{{ countDocuments() }}</p>
+                      <p class="text-sm text-slate-600 mt-1">Documentos</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm">
+                      <ion-icon name="checkmark-circle" class="text-4xl text-green-500"></ion-icon>
+                      <p class="text-sm text-slate-600 mt-1">Disponibles</p>
+                    </div>
                   </div>
                 </div>
               </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
 
-              <!-- Niño Seleccionado -->
-              <div *ngIf="selectedChild" class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
-                      {{ getInitial(selectedChild.full_name) }}
-                    </div>
-                    <div>
-                      <p class="font-bold text-slate-800 text-lg">{{ selectedChild.full_name }}</p>
-                      <p class="text-sm text-slate-600">{{ selectedChild.ciclo || 'Sin ciclo asignado' }}</p>
-                    </div>
-                  </div>
-                  <button
-                    (click)="clearSelection()"
-                    class="text-red-500 hover:text-red-700 transition-colors">
-                    <ion-icon name="close-circle" class="text-2xl"></ion-icon>
-                  </button>
-                </div>
+        <!-- Right Column: Documents Section (5 cols) -->
+        <ion-col size="12" sizeLg="5" class="ion-no-padding pl-0 lg:pl-3 mt-4 lg:mt-0">
+          <div class="documents-container">
+            <!-- No child selected message -->
+            <div *ngIf="!selectedChild && !loading" class="text-center py-16 px-6">
+              <div class="bg-white rounded-3xl shadow-xl p-12">
+                <ion-icon name="document-text-outline" class="text-8xl text-slate-300 mb-6"></ion-icon>
+                <h3 class="text-2xl font-bold text-slate-700 mb-3">Selecciona un niño</h3>
+                <p class="text-slate-500 text-lg">Para ver los documentos, primero selecciona un niño de la lista de búsqueda</p>
               </div>
             </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
 
-      <!-- Loading -->
-      <div *ngIf="loading" class="flex items-center justify-center py-12">
-        <ion-spinner name="crescent" class="text-purple-500"></ion-spinner>
-        <p class="ml-4 text-slate-600">Cargando documentos...</p>
-      </div>
+            <!-- No documents for selected child -->
+            <div *ngIf="!loading && selectedChild && !documents" class="text-center py-16 px-6">
+              <div class="bg-white rounded-3xl shadow-xl p-12">
+                <ion-icon name="alert-circle-outline" class="text-8xl text-orange-300 mb-6"></ion-icon>
+                <h3 class="text-2xl font-bold text-slate-700 mb-3">Sin documentos</h3>
+                <p class="text-slate-500 text-lg">No hay documentos disponibles para <strong>{{ selectedChild.full_name }}</strong></p>
+              </div>
+            </div>
 
-      <!-- No documents message -->
-      <div *ngIf="!loading && !selectedChild" class="text-center py-12">
-        <ion-icon name="document-text-outline" class="text-6xl text-slate-300 mb-4"></ion-icon>
-        <p class="text-slate-500 text-lg">Selecciona un niño para ver sus documentos</p>
-      </div>
+            <!-- Documents Grid -->
+            <div *ngIf="!loading && documents" class="space-y-4">
+              <!-- Birth Certificate -->
+              <div *ngIf="documents.birth_certificate" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="document-text" class="mr-2"></ion-icon>
+                      Acta de Nacimiento
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.birth_certificate, 'Acta de Nacimiento')">
+                      <img
+                        *ngIf="isImage(documents.birth_certificate)"
+                        [src]="documents.birth_certificate"
+                        alt="Acta de Nacimiento"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                      <div
+                        *ngIf="isPdf(documents.birth_certificate)"
+                        class="w-full h-40 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                        <ion-icon name="document" class="text-5xl text-red-500 mb-2"></ion-icon>
+                        <p class="text-red-700 font-semibold">PDF</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.birth_certificate, 'Acta de Nacimiento')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.birth_certificate, 'Acta_Nacimiento')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
 
-      <!-- No documents for selected child -->
-      <div *ngIf="!loading && selectedChild && !documents" class="text-center py-12">
-        <ion-icon name="alert-circle-outline" class="text-6xl text-orange-300 mb-4"></ion-icon>
-        <p class="text-slate-500 text-lg">No hay documentos disponibles para este niño</p>
-      </div>
+              <!-- ID Copies -->
+              <div *ngIf="documents.legal_parents_identification" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="card" class="mr-2"></ion-icon>
+                      Cédulas de Padres
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.legal_parents_identification, 'Cédulas de Padres')">
+                      <img
+                        *ngIf="isImage(documents.legal_parents_identification)"
+                        [src]="documents.legal_parents_identification"
+                        alt="Cédulas"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                      <div
+                        *ngIf="isPdf(documents.legal_parents_identification)"
+                        class="w-full h-40 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                        <ion-icon name="document" class="text-5xl text-red-500 mb-2"></ion-icon>
+                        <p class="text-red-700 font-semibold">PDF</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.legal_parents_identification, 'Cédulas de Padres')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.legal_parents_identification, 'Cedulas_Padres')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
 
-      <!-- Documents Grid -->
-      <div *ngIf="!loading && documents" class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Birth Certificate -->
-          <div *ngIf="documents.birth_certificate" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="document-text" class="mr-2"></ion-icon>
-                  Acta de Nacimiento
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.birth_certificate, 'Acta de Nacimiento')">
-                  <img
-                    *ngIf="isImage(documents.birth_certificate)"
-                    [src]="documents.birth_certificate"
-                    alt="Acta de Nacimiento"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                  <div
-                    *ngIf="isPdf(documents.birth_certificate)"
-                    class="w-full h-48 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
-                    <ion-icon name="document" class="text-6xl text-red-500 mb-2"></ion-icon>
-                    <p class="text-red-700 font-semibold">PDF</p>
-                  </div>
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.birth_certificate, 'Acta de Nacimiento')"
-                    class="flex-1 bg-black px-4 text-white rounded-lg flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.birth_certificate, 'Acta_Nacimiento')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
+              <!-- Medical Certificate -->
+              <div *ngIf="documents.medical_certificate" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="medical" class="mr-2"></ion-icon>
+                      Certificado Médico
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.medical_certificate, 'Certificado Médico')">
+                      <img
+                        *ngIf="isImage(documents.medical_certificate)"
+                        [src]="documents.medical_certificate"
+                        alt="Certificado Médico"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                      <div
+                        *ngIf="isPdf(documents.medical_certificate)"
+                        class="w-full h-40 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                        <ion-icon name="document" class="text-5xl text-red-500 mb-2"></ion-icon>
+                        <p class="text-red-700 font-semibold">PDF</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.medical_certificate, 'Certificado Médico')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.medical_certificate, 'Certificado_Medico')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+
+              <!-- Vaccination Card -->
+              <div *ngIf="documents.vaccination_card" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="fitness" class="mr-2"></ion-icon>
+                      Tarjeta de Vacunas
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.vaccination_card, 'Tarjeta de Vacunas')">
+                      <img
+                        *ngIf="isImage(documents.vaccination_card)"
+                        [src]="documents.vaccination_card"
+                        alt="Tarjeta de Vacunas"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                      <div
+                        *ngIf="isPdf(documents.vaccination_card)"
+                        class="w-full h-40 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                        <ion-icon name="document" class="text-5xl text-red-500 mb-2"></ion-icon>
+                        <p class="text-red-700 font-semibold">PDF</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.vaccination_card, 'Tarjeta de Vacunas')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.vaccination_card, 'Tarjeta_Vacunas')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+
+              <!-- Photo -->
+              <div *ngIf="documents.picture_5x2" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="image" class="mr-2"></ion-icon>
+                      Foto
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.picture_5x2, 'Foto')">
+                      <img
+                        *ngIf="isImage(documents.picture_5x2)"
+                        [src]="documents.picture_5x2"
+                        alt="Foto"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.picture_5x2, 'Foto')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.picture_5x2, 'Foto')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+
+              <!-- Health Insurance -->
+              <div *ngIf="documents.health_insurance" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="shield-checkmark" class="mr-2"></ion-icon>
+                      Seguro Médico
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.health_insurance, 'Seguro Médico')">
+                      <img
+                        *ngIf="isImage(documents.health_insurance)"
+                        [src]="documents.health_insurance"
+                        alt="Seguro Médico"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                      <div
+                        *ngIf="isPdf(documents.health_insurance)"
+                        class="w-full h-40 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                        <ion-icon name="document" class="text-5xl text-red-500 mb-2"></ion-icon>
+                        <p class="text-red-700 font-semibold">PDF</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.health_insurance, 'Seguro Médico')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.health_insurance, 'Seguro_Medico')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+
+              <!-- Authorized Person ID -->
+              <div *ngIf="documents.pickuper_identification" class="document-card">
+                <ion-card class="shadow-lg m-0">
+                  <ion-card-header class="bg-black">
+                    <ion-card-title class="text-white text-base font-bold flex items-center">
+                      <ion-icon name="people" class="mr-2"></ion-icon>
+                      ID Persona Autorizada
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="p-0">
+                    <div class="document-preview" (click)="viewDocument(documents.pickuper_identification, 'ID Persona Autorizada')">
+                      <img
+                        *ngIf="isImage(documents.pickuper_identification)"
+                        [src]="documents.pickuper_identification"
+                        alt="ID Persona Autorizada"
+                        class="w-full h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity">
+                      <div
+                        *ngIf="isPdf(documents.pickuper_identification)"
+                        class="w-full h-40 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                        <ion-icon name="document" class="text-5xl text-red-500 mb-2"></ion-icon>
+                        <p class="text-red-700 font-semibold">PDF</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex gap-2">
+                      <button
+                        (click)="viewDocument(documents.pickuper_identification, 'ID Persona Autorizada')"
+                        class="flex-1 bg-black py-2 px-3 text-white text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        Ver
+                      </button>
+                      <button
+                        (click)="downloadDocument(documents.pickuper_identification, 'ID_Persona_Autorizada')"
+                        class="flex-1 bg-green-500 text-white py-2 px-3 text-sm rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Descargar
+                      </button>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+            </div>
           </div>
-
-          <!-- ID Copies -->
-          <div *ngIf="documents.legal_parents_identification" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="card" class="mr-2"></ion-icon>
-                  Cédulas de Padres
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.legal_parents_identification, 'Cédulas de Padres')">
-                  <img
-                    *ngIf="isImage(documents.legal_parents_identification)"
-                    [src]="documents.legal_parents_identification"
-                    alt="Cédulas"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                  <div
-                    *ngIf="isPdf(documents.legal_parents_identification)"
-                    class="w-full h-48 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
-                    <ion-icon name="document" class="text-6xl text-red-500 mb-2"></ion-icon>
-                    <p class="text-red-700 font-semibold">PDF</p>
-                  </div>
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.legal_parents_identification, 'Cédulas de Padres')"
-                    class="flex-1 bg-black py-2 px-4 text-white rounded-lg flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.legal_parents_identification, 'Cedulas_Padres')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-
-          <!-- Medical Certificate -->
-          <div *ngIf="documents.medical_certificate" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="medical" class="mr-2"></ion-icon>
-                  Certificado Médico
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.medical_certificate, 'Certificado Médico')">
-                  <img
-                    *ngIf="isImage(documents.medical_certificate)"
-                    [src]="documents.medical_certificate"
-                    alt="Certificado Médico"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                  <div
-                    *ngIf="isPdf(documents.medical_certificate)"
-                    class="w-full h-48 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
-                    <ion-icon name="document" class="text-6xl text-red-500 mb-2"></ion-icon>
-                    <p class="text-red-700 font-semibold">PDF</p>
-                  </div>
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.medical_certificate, 'Certificado Médico')"
-                    class="flex-1 bg-black px-4 rounded-lg text-white flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.medical_certificate, 'Certificado_Medico')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-
-          <!-- Vaccination Card -->
-          <div *ngIf="documents.vaccination_card" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="fitness" class="mr-2"></ion-icon>
-                  Tarjeta de Vacunas
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.vaccination_card, 'Tarjeta de Vacunas')">
-                  <img
-                    *ngIf="isImage(documents.vaccination_card)"
-                    [src]="documents.vaccination_card"
-                    alt="Tarjeta de Vacunas"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                  <div
-                    *ngIf="isPdf(documents.vaccination_card)"
-                    class="w-full h-48 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
-                    <ion-icon name="document" class="text-6xl text-red-500 mb-2"></ion-icon>
-                    <p class="text-red-700 font-semibold">PDF</p>
-                  </div>
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.vaccination_card, 'Tarjeta de Vacunas')"
-                    class="flex-1 bg-black px-4 rounded-lg text-white flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.vaccination_card, 'Tarjeta_Vacunas')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-
-          <!-- Photo -->
-          <div *ngIf="documents.picture_5x2" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="image" class="mr-2"></ion-icon>
-                  Foto
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.picture_5x2, 'Foto')">
-                  <img
-                    *ngIf="isImage(documents.picture_5x2)"
-                    [src]="documents.picture_5x2"
-                    alt="Foto"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.picture_5x2, 'Foto')"
-                    class="flex-1 bg-black px-4 rounded-lg  text-white flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.picture_5x2, 'Foto')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-
-          <!-- Health Insurance -->
-          <div *ngIf="documents.health_insurance" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="shield-checkmark" class="mr-2"></ion-icon>
-                  Seguro Médico
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.health_insurance, 'Seguro Médico')">
-                  <img
-                    *ngIf="isImage(documents.health_insurance)"
-                    [src]="documents.health_insurance"
-                    alt="Seguro Médico"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                  <div
-                    *ngIf="isPdf(documents.health_insurance)"
-                    class="w-full h-48 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
-                    <ion-icon name="document" class="text-6xl text-red-500 mb-2"></ion-icon>
-                    <p class="text-red-700 font-semibold">PDF</p>
-                  </div>
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.health_insurance, 'Seguro Médico')"
-                    class="flex-1 bg-black px-4 rounded-lg text-white flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.health_insurance, 'Seguro_Medico')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-
-          <!-- Authorized Person ID -->
-          <div *ngIf="documents.pickuper_identification" class="document-card">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-black">
-                <ion-card-title class="text-white text-lg font-bold flex items-center">
-                  <ion-icon name="people" class="mr-2"></ion-icon>
-                  ID Persona Autorizada
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="p-0">
-                <div class="document-preview" (click)="viewDocument(documents.pickuper_identification, 'ID Persona Autorizada')">
-                  <img
-                    *ngIf="isImage(documents.pickuper_identification)"
-                    [src]="documents.pickuper_identification"
-                    alt="ID Persona Autorizada"
-                    class="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity">
-                  <div
-                    *ngIf="isPdf(documents.pickuper_identification)"
-                    class="w-full h-48 bg-red-50 flex flex-col items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
-                    <ion-icon name="document" class="text-6xl text-red-500 mb-2"></ion-icon>
-                    <p class="text-red-700 font-semibold">PDF</p>
-                  </div>
-                </div>
-                <div class="p-4 flex gap-2">
-                  <button
-                    (click)="viewDocument(documents.pickuper_identification, 'ID Persona Autorizada')"
-                    class="flex-1 bg-black px-4 rounded-lg text-white flex items-center justify-center gap-2">
-                    <ion-icon name="eye-outline"></ion-icon>
-                    Ver
-                  </button>
-                  <button
-                    (click)="downloadDocument(documents.pickuper_identification, 'ID_Persona_Autorizada')"
-                    class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
-                    <ion-icon name="download-outline"></ion-icon>
-                    Descargar
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-        </div>
-      </div>
-    </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 
   <!-- Document Viewer Modal -->

@@ -42,15 +42,15 @@
                       <div class="relative">
                         <div
                           class="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 cursor-pointer hover:border-blue-600 transition-colors shadow-lg"
-                          (click)="onAvatarClick()">
-                          <img [src]="avatarPreview" alt="Avatar" class="w-full h-full object-cover">
+                          >
+                          <img [src]="inscriptionForm.get('childData.avatar_url')?.value || avatarPreview" alt="Avatar" class="w-full h-full object-cover">
                         </div>
-                        <button
+                        <!-- <button
                           type="button"
                           class="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 shadow-lg"
                           (click)="onAvatarClick()">
                           <ion-icon name="camera-outline" class="text-xl"></ion-icon>
-                        </button>
+                        </button> -->
                       </div>
                     </div>
 

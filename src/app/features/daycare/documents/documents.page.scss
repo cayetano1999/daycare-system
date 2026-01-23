@@ -6,16 +6,14 @@ ion-card {
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   transition: all 0.3s ease;
-  margin: 0;
 
   &:hover {
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    transform: translateY(-2px);
   }
 }
 
 ion-card-header {
-  padding: 1rem;
+  padding: 1.25rem;
 }
 
 ion-card-content {
@@ -60,9 +58,23 @@ input {
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
 .document-preview {
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 
   &::after {
     content: '';
@@ -73,6 +85,12 @@ input {
     bottom: 0;
     background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
     pointer-events: none;
+  }
+
+  &:hover {
+    &::after {
+      background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+    }
   }
 }
 
@@ -98,6 +116,221 @@ ion-modal {
   }
 }
 
-input {
-  background-color: white !important;
+.sticky-card {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+.documents-container {
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding-right: 4px;
+
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+/* Tailwind-like utilities for better spacing */
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.space-y-5 > * + * {
+  margin-top: 1.25rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .sticky-card {
+    position: relative;
+    max-height: none;
+  }
+
+  .documents-container {
+    max-height: none;
+  }
+}
+
+/* Hover effects for buttons */
+button {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced card hover effects */
+.document-card {
+  ion-card {
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+}
+
+/* Better focus states */
+input:focus {
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
+}
+
+/* Smooth transitions for dropdown */
+.absolute {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dropdown scroll styling */
+.dropdown-scroll {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+/* Search container for click outside detection */
+.search-container {
+  position: relative;
+}
+
+/* Loading spinner styling */
+ion-spinner {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Badge and tag styling */
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+/* Utility classes for better layout */
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+/* Grid utilities */
+.grid {
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Responsive utilities */
+@media (min-width: 992px) {
+  ion-col[sizeLg="7"] {
+    max-width: 58.333333%;
+    flex: 0 0 58.333333%;
+  }
+
+  ion-col[sizeLg="5"] {
+    max-width: 41.666667%;
+    flex: 0 0 41.666667%;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sticky-card {
+    position: relative;
+  }
+
+  ion-header,
+  button {
+    display: none;
+  }
 }

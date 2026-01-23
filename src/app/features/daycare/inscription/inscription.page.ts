@@ -84,7 +84,7 @@ export class InscriptionPage implements OnInit {
   @ViewChild('printSection') printSection!: InscriptionDetailPrintComponent;
 
   inscriptionForm!: FormGroup;
-  avatarPreview: string = 'https://via.placeholder.com/150';
+  avatarPreview: string = '';
   cicloResult: CicloResult = { ciclo: '', curso: '', fecha: '' };
   documents = {
     birthCertificate: { file: null as File | null, preview: '', label: 'Acta de Nacimiento', folderName: 'birth_certificates' },
@@ -220,6 +220,15 @@ export class InscriptionPage implements OnInit {
        this.cicloResult.fecha = this.calculateAge(value); 
        this.inscriptionForm.get('childData.ciclo')?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
       console.log('Ciclo y curso calculado:', this.cicloResult);
+    });
+
+    //insribirme al genero para cambiar la imagen del avatar
+    this.inscriptionForm.get('childData.gender')?.valueChanges.subscribe(value => { 
+      this.avatarPreview = value === 'M'
+        ? 'assets/img/masculino.png'
+        : value === 'F'
+        ? 'assets/img/femenino.png'
+        : this.avatarPreview;
     });
   }
 
@@ -388,7 +397,7 @@ export class InscriptionPage implements OnInit {
         const dataToSupabase = { ...formData };
         // Remove file previews before sending to Supabase
         delete dataToSupabase.documents;
-        dataToSupabase.childData.avatar_url = 'no_haya_url';
+        dataToSupabase.childData.avatar_url = this.avatarPreview || 'not_provided';
 
         if(this.cicloResult?.ciclo == '' && this.cicloResult?.ciclo?.toLowerCase().includes('fuera de rango')){ 
           await this.alertService.dismiss();

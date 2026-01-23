@@ -126,12 +126,13 @@
 }
 
 .table-container {
-  overflow-x: auto;
+  overflow-x: scroll;
 }
 
 .inscriptions-table {
   width: 100%;
   border-collapse: collapse;
+  overflow-x: scroll;
 
   thead {
     background: #1e293b;

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -24,11 +24,18 @@ import {
   closeCircle,
   close,
   alertCircleOutline,
+  checkmarkCircle,
+  informationCircle,
+  statsChart,
+  personOutline,
+  schoolOutline,
+  chevronForward,
+  school,
 } from 'ionicons/icons';
 import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { PipesModule } from "../../../shared/pipes/pipes.module";
-
+import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 
 interface Child {
   id: string;
@@ -55,10 +62,10 @@ interface Documents {
   templateUrl: './documents.page.html',
   styleUrls: ['./documents.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, PipesModule],
+  imports: [...StandAloneModules],
   providers: [SafeHtmlPipe]
 })
-export class DocumentsPage implements OnInit {
+export class DocumentsPage implements OnInit, OnDestroy {
   supabaseService = inject(SupabaseService);
   supabaseStorageService = inject(SupabaseStorageService);
   alertService = inject(AlertControllerService);
@@ -81,6 +88,15 @@ export class DocumentsPage implements OnInit {
   viewerTitle: string = '';
   originalUrl: string = '';
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const searchContainer = document.querySelector('.search-container');
+
+    if (searchContainer && !searchContainer.contains(target)) {
+      this.showDropdown = false;
+    }
+  }
 
   constructor() {
     addIcons({
@@ -99,6 +115,13 @@ export class DocumentsPage implements OnInit {
       closeCircle,
       close,
       alertCircleOutline,
+      checkmarkCircle,
+      informationCircle,
+      statsChart,
+      personOutline,
+      schoolOutline,
+      chevronForward,
+      school,
     });
   }
 
@@ -110,13 +133,10 @@ export class DocumentsPage implements OnInit {
         await this.loadDocumentsByRegistrationId(params['id']);
       }
     });
+  }
 
-    // document.addEventListener('click', (e) => {
-    //   const target = e.target as HTMLElement;
-    //   if (!target.closest('input') && !target.closest('.absolute')) {
-    //     this.showDropdown = false;
-    //   }
-    // });
+  ngOnDestroy() {
+    // Cleanup if needed
   }
 
   async loadChildren() {
@@ -191,7 +211,7 @@ export class DocumentsPage implements OnInit {
     this.loading = true;
     try {
       const supabase = this.supabaseService.getSupabase();
-      debugger
+
       const { data: registration, error: regError } = await supabase
         .from('registration')
         .select('children_id, children(id, full_name, ciclo)')
@@ -320,27 +340,44 @@ export class DocumentsPage implements OnInit {
     this.location.back();
   }
 
-  async completeSupabaseURlForDocuments(){
+  countDocuments(): number {
+    if (!this.documents) return 0;
 
+    let count = 0;
+    const docKeys: (keyof Documents)[] = [
+      'birth_certificate',
+      'legal_parents_identification',
+      'medical_certificate',
+      'vaccination_card',
+      'picture_5x2',
+      'health_insurance',
+      'pickuper_identification'
+    ];
+
+    docKeys.forEach(key => {
+      if (this.documents![key]) count++;
+    });
+
+    return count;
+  }
+
+  async completeSupabaseURlForDocuments() {
     if (!this.documents) return;
 
-    // Recorre cada propiedad del objeto documents (excepto id, registration_id y created_at)
     const docKeys = Object.keys(this.documents).filter(
       key =>
-      !['id', 'registration_id', 'created_at'].includes(key) &&
-      this.documents![key as keyof Documents]
+        !['id', 'registration_id', 'created_at'].includes(key) &&
+        this.documents![key as keyof Documents]
     );
 
     for (const key of docKeys) {
       const path = this.documents![key as keyof Documents] as string | null;
       if (path) {
-      // getSignedUrl espera el path como argumento
-      const signedUrl = await this.supabaseStorageService.getSignedUrl(path);
-      this.documents![key as keyof Documents] = signedUrl;
+        const signedUrl = await this.supabaseStorageService.getSignedUrl(path);
+        this.documents![key as keyof Documents] = signedUrl;
       }
     }
 
     console.log('Documents with signed URLs:', this.documents);
-
   }
 }

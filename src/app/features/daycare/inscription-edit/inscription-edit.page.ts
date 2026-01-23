@@ -88,7 +88,7 @@ export class InscriptionEditPage implements OnInit {
   location = inject(Location);
 
   inscriptionForm!: FormGroup;
-  avatarPreview: string = 'https://via.placeholder.com/150';
+  avatarPreview: string = '';
   cicloResult: CicloResult = { ciclo: '', curso: '', fecha: '' };
 
   ciclosDropdown = CICLOS_CURSOS_DROPDOWN;
@@ -234,6 +234,15 @@ export class InscriptionEditPage implements OnInit {
       this.cicloResult = this.obtenerCicloPorFecha(fechaNacimiento);
       this.cicloResult.fecha = this.calculateAge(value);
       this.inscriptionForm.get('childData.ciclo')?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
+    });
+
+     //insribirme al genero para cambiar la imagen del avatar
+    this.inscriptionForm.get('childData.gender')?.valueChanges.subscribe(value => { 
+      this.avatarPreview = value === 'M'
+        ? 'assets/img/masculino.png'
+        : value === 'F'
+        ? 'assets/img/femenino.png'
+        : this.avatarPreview;
     });
   }
 
@@ -423,6 +432,7 @@ export class InscriptionEditPage implements OnInit {
     try {
       const supabase = this.supabaseService.getSupabase();
       const formData = this.inscriptionForm.value;
+      formData.childData.avatar_url = this.avatarPreview || formData.childData.avatar_url;
 
       await supabase
         .from('children')
@@ -432,7 +442,8 @@ export class InscriptionEditPage implements OnInit {
           gender: formData.childData.gender,
           address: formData.childData.address,
           schedule_id: formData.childData.schedule_id,
-          ciclo: formData.childData.ciclo
+          ciclo: formData.childData.ciclo,
+          avatar_url: formData.childData.avatar_url
         })
         .eq('id', this.childId);
 
@@ -512,6 +523,7 @@ export class InscriptionEditPage implements OnInit {
       );
 
       this.inscriptionForm.markAsPristine();
+      this.router.navigate(['/daycare/inscription']);
 
     } catch (error) {
       console.error('Error updating inscription:', error);

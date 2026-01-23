@@ -141,7 +141,7 @@ ion-menu {
 .menu-header {
   padding: 2rem 1.5rem 1.5rem;
   text-align: center;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(135deg, #eb445a, #3880ff);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 1rem;
@@ -396,7 +396,7 @@ ion-menu {
 }
 
 .menu-footer {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+  background: linear-gradient(135deg, #000000, #000000);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0;

@@ -101,7 +101,7 @@
             <tr *ngFor="let registration of filteredRegistrations" class="data-row">
               <td>
                 <div class="avatar-container">
-                  <img *ngIf="registration.child?.avatar_url" [src]="registration.child?.avatar_url"
+                  <img *ngIf="registration.child?.avatar_url" [src]="registration?.child?.gender === 'M' ? 'assets/img/masculino.png' : 'assets/img/femenino.png'"
                     [alt]="registration.child?.full_name" class="avatar-img">
                   <div *ngIf="!registration.child?.avatar_url" class="avatar-placeholder">
                     {{ getAvatarInitial(registration.child?.full_name) }}
@@ -131,33 +131,12 @@
               </td>
               <td class="actions-column">
                 <div class="actions-container">
-                  <ion-button fill="clear" size="small" (click)="toggleMenu(registration.id, $event)">
+                  <ion-button fill="clear" size="small" (click)="openActions($event, registration)">
                     <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
                   </ion-button>
 
                   <!-- Actions Menu -->
-                  <div *ngIf="openMenuId === registration.id" class="actions-menu">
-                    <div class="menu-backdrop" (click)="openMenuId = null"></div>
-                    <div class="menu-content">
-                      <button class="menu-item" (click)="onViewDetails(registration)">
-                        <ion-icon name="eye-outline"></ion-icon>
-                        <span>Ver detalles</span>
-                      </button>
-                      <button class="menu-item" (click)="onEditRegistration(registration)">
-                        <ion-icon name="create-outline"></ion-icon>
-                        <span>Editar</span>
-                      </button>
-                      <button class="menu-item" (click)="onViewDocuments(registration)">
-                        <ion-icon name="document-text-outline"></ion-icon>
-                        <span>Ver documentos</span>
-                      </button>
-                      <hr class="menu-divider">
-                      <button class="menu-item danger" (click)="onDelete(registration)">
-                        <ion-icon name="trash-outline"></ion-icon>
-                        <span>Eliminar</span>
-                      </button>
-                    </div>
-                  </div>
+                  
                 </div>
               </td>
             </tr>
