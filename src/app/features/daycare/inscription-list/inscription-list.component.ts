@@ -207,7 +207,7 @@ export class InscriptionListComponent implements OnInit {
           componentProps: {
             registration: fullDetails
           },
-          cssClass: 'details-modal'
+          cssClass: 'details-modal full-modal'
         });
         await modal.present();
         await this.alertController.dismiss();
@@ -219,6 +219,7 @@ export class InscriptionListComponent implements OnInit {
   }
 
 async onViewDocuments(registration: RegistrationWithDetails) {
+    this.openMenuId = null;
     console.log('View documents:', registration);
     this.router.navigate(['/daycare/documents', registration.id]);
   }

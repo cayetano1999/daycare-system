@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     // Properties
     public version = environment.APP_VERSION;
     public menuOptions = [
-         {
+        {
             title: 'Gestión de Incripciones',
             menu: true,
             icon: 'document-text-outline',
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
             icon: 'accessibility-outline',
             url: 'daycare/child-management'
         },
-         {
+        {
             title: 'Gestión de Tandas',
             menu: true,
             icon: 'time-outline',
@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
             url: 'daycare/register'
         }
 
-       
+
     ]  //remoteConfig.OPTIONS_ITEMS.options as any;
     public availableMenu = true;
     public loadingAds = false;
@@ -109,15 +109,15 @@ export class AppComponent implements OnInit {
     }
 
     async setStatusBar() {
-    try {
-      await StatusBar.setStyle({ style: Style.Dark }); // O Style.Dark
-      await StatusBar.show(); // Para asegurarse que sea visible
-      // Puedes ajustar el color de fondo si es necesario
-      await StatusBar.setBackgroundColor({ color: '#000000' });
-    } catch (error) {
-      console.error('Error al configurar la barra de estado', error);
+        try {
+            await StatusBar.setStyle({ style: Style.Dark }); // O Style.Dark
+            await StatusBar.show(); // Para asegurarse que sea visible
+            // Puedes ajustar el color de fondo si es necesario
+            await StatusBar.setBackgroundColor({ color: '#000000' });
+        } catch (error) {
+            console.error('Error al configurar la barra de estado', error);
+        }
     }
-  }
 
 
     async ngOnInit() {
@@ -142,7 +142,7 @@ export class AppComponent implements OnInit {
         this.communicationService.message$.subscribe(() => this.availableMenu = true);
         this.loadFingerprint();
         await this.fcm.initializeFirebaseMessaging();
-        
+
         await this.checkSession();
 
 
@@ -242,6 +242,16 @@ export class AppComponent implements OnInit {
         if (window.location.href.includes('access_token')) {
             this.onGoogleAuthentication(window.location.href);
         }
+    }
+
+ 
+
+    getDescription(title: string): string {
+        return 'Gestión y administración';
+    }
+
+    getIconColor(icon: string): string {
+        return icon;
     }
 
     //validate if onboarding is complete and redirect
