@@ -13,6 +13,7 @@ import { ScheduleManagementComponent } from "./schedule-management/schedule-mana
 import { RegisterPage } from "./register/register.page";
 import { InscriptionListComponent } from "src/app/features/daycare/inscription-list/inscription-list.component";
 import { InscriptionEditPage } from "./inscription-edit/inscription-edit.page";
+import { DocumentsPage } from "./documents/documents.page";
 
 
 export const dayCareRoutes: Routes = [
@@ -67,6 +68,11 @@ export const dayCareRoutes: Routes = [
     component: RegisterPage,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   },
+  {
+    path: 'daycare/documents/:id',
+    component: DocumentsPage,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  }
 
 
 ]

@@ -1,0 +1,103 @@
+ion-content {
+  --background: linear-gradient(to bottom right, rgb(248 250 252), rgb(241 245 249));
+}
+
+ion-card {
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+  margin: 0;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+ion-card-header {
+  padding: 1rem;
+}
+
+ion-card-content {
+  padding: 0;
+}
+
+ion-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+ion-button {
+  --border-radius: 0.5rem;
+  text-transform: none;
+  font-weight: 600;
+}
+
+ion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  &:focus {
+    outline: none;
+  }
+}
+
+.document-card {
+  animation: fadeInUp 0.3s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.document-preview {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+    pointer-events: none;
+  }
+}
+
+.viewer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+}
+
+ion-modal {
+  --background: rgba(0, 0, 0, 0.9);
+
+  ion-content {
+    --background: #1e293b;
+  }
+}
+
+input {
+  background-color: white !important;
+}

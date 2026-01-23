@@ -20,7 +20,7 @@ export class SafeHtmlPipe implements PipeTransform {
       case 'script':
         return this.sanitizer.bypassSecurityTrustScript(value);
       case 'url':
-        return this.sanitizer.bypassSecurityTrustUrl(value);
+        return this.sanitizer.bypassSecurityTrustResourceUrl(value);
       case 'resourceUrl':
         return this.sanitizer.bypassSecurityTrustResourceUrl(value);
     }

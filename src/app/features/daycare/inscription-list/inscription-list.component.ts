@@ -186,13 +186,17 @@ export class InscriptionListComponent implements OnInit {
   async onEditRegistration(registration: RegistrationWithDetails) {
     console.log('Edit registration:', registration);
     this.router.navigate(['/daycare/inscription', registration.id]);
+    this.openMenuId = null;
   }
 
   redirectToNewInscription() {
+    this.openMenuId = null;
     this.router.navigate(['/daycare/inscription-new']);
   }
 
   async onViewDetails(registration: RegistrationWithDetails) {
+    this.openMenuId = null;
+
     try {
       // Cargar detalles completos
        this.alertController.openFestivaAlert('loading', 'Cargando detalles de la inscripción...', 'por favor, espere');
@@ -214,9 +218,9 @@ export class InscriptionListComponent implements OnInit {
     }
   }
 
-  onViewDocuments(registration: RegistrationWithDetails) {
-    this.viewDocuments.emit(registration);
-    this.openMenuId = null;
+async onViewDocuments(registration: RegistrationWithDetails) {
+    console.log('View documents:', registration);
+    this.router.navigate(['/daycare/documents', registration.id]);
   }
 
   async onDelete(registration: RegistrationWithDetails) {

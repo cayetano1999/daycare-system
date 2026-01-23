@@ -410,7 +410,7 @@ export class InscriptionPage implements OnInit {
           return;
         }
 
-        await this.uploadAllDocuments(response.data.child?.id, response.data.child?.full_name.replace(/\s+/g, '_'));
+        await this.uploadAllDocuments(response.data?.registration_id, response.data.child?.id, response.data.child?.full_name.replace(/\s+/g, '_'));
         await this.alertService.openFestivaAlert('success', 'Datos guardados', 'El formulario de inscripción ha sido guardado exitosamente.');
         this.showPrintSection = true;
 
@@ -536,7 +536,8 @@ export class InscriptionPage implements OnInit {
   }
 
   async uploadAllDocuments(
-  inscriptionId: string,
+  registrationId: string,
+  childId: string,
   childName: string
 ): Promise<Record<string, string>> {
 
@@ -551,14 +552,14 @@ export class InscriptionPage implements OnInit {
     const result = isImage
       ? await this.supabaseStorage.uploadImage(doc.file, {
           bucket: 'babyhouse',
-          folder: `inscriptions/${inscriptionId}/${doc.folderName}`,
+          folder: `inscriptions/${childId}/${doc.folderName}`,
           userId: childName,
           toWebp: key === 'photo',
           maxSizeMB: 0.8
         })
       : await this.supabaseStorage.uploadDocument(doc.file, {
           bucket: 'babyhouse',
-          folder: `inscriptions/${inscriptionId}/${doc.folderName}`,
+          folder: `inscriptions/${childId}/${doc.folderName}`,
           userId: childName
         });
 
@@ -566,7 +567,22 @@ export class InscriptionPage implements OnInit {
   }
     await this.alertService.dismiss();
   console.log('Uploaded document paths:', uploadedPaths);
+
+  const resultAddDocuments = await this.supabaseService.createRecord('documents', {
+    registration_id: registrationId,
+    birth_certificate: uploadedPaths['birthCertificate'] || null,
+    legal_parents_identification: uploadedPaths['idCopies'] || null,
+    medical_certificate: uploadedPaths['medicalCertificate'] || null,
+    vaccination_card: uploadedPaths['vaccineCard'] || null,
+    picture_2x2: uploadedPaths['photo'] || null,
+    health_insurance: uploadedPaths['medicalInsurance'] || null,
+    pickuper_identification: uploadedPaths['authorizedPersonId'] || null
+  });
+  console.log('Result adding document records to Supabase:', resultAddDocuments);
   return uploadedPaths;
+
+
+
 }
 
 
