@@ -1,0 +1,187 @@
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="--background: #000;">
+    <ion-title class="ion-text-center" style="color: #fff;">Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="inscriptions-content">
+  <div class="container">
+    <!-- Header -->
+    <div class="header-section">
+      <h1>Gestión de Inscripciones</h1>
+      <p>Administra y consulta todas las inscripciones registradas</p>
+    </div>
+
+    <!-- Filters Card -->
+    <ion-card class="filters-card">
+      <ion-card-content>
+
+        <ion-row>
+          <ion-col size="12">
+            <ion-button (click)="redirectToNewInscription()" expand="block" fill="clear" shape="round">
+              Nueva Inscripción
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <div class="filters-grid">
+          <!-- Search -->
+          <div class="filter-item search-item">
+            <ion-searchbar
+              [(ngModel)]="searchTerm"
+              (ionInput)="onSearchChange()"
+              placeholder="Buscar por nombre del niño..."
+              animated
+              mode="md">
+            </ion-searchbar>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="filter-item">
+            <ion-select
+              [(ngModel)]="statusFilter"
+              (ionChange)="onStatusFilterChange()"
+              placeholder="Estado"
+              interface="popover"
+              mode="md">
+              <ion-select-option value="ALL">Todos los estados</ion-select-option>
+              <ion-select-option value="ACTIVE">Activos</ion-select-option>
+              <ion-select-option value="PENDING">Pendientes</ion-select-option>
+              <ion-select-option value="INACTIVE">Inactivos</ion-select-option>
+            </ion-select>
+          </div>
+
+          <!-- Date Filters -->
+          <div class="filter-item date-filters">
+            <ion-input
+              [(ngModel)]="dateFilterStart"
+              (ionChange)="onDateFilterChange()"
+              type="date"
+              placeholder="Desde"
+              mode="md">
+            </ion-input>
+            <ion-input
+              [(ngModel)]="dateFilterEnd"
+              (ionChange)="onDateFilterChange()"
+              type="date"
+              placeholder="Hasta"
+              mode="md">
+            </ion-input>
+          </div>
+        </div>
+
+        <!-- Filter Summary -->
+        <div class="filter-summary">
+          <span>
+            Mostrando <strong>{{ filteredRegistrations.length }}</strong> de <strong>{{ registrations.length }}</strong> inscripciones
+          </span>
+          <ion-button fill="clear" size="small" (click)="clearFilters()">
+            Limpiar filtros
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando inscripciones...</p>
+    </div>
+
+    <!-- Table Card -->
+    <ion-card *ngIf="!loading" class="table-card">
+      <div class="table-container">
+        <table class="inscriptions-table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Niño/a</th>
+              <th>Edad</th>
+              <th>Ciclo</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Inscripción</th>
+              <th>Estado</th>
+              <th class="actions-column">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="filteredRegistrations.length === 0">
+              <td colspan="8" class="no-results">
+                <ion-icon name="search-outline"></ion-icon>
+                <p>No se encontraron inscripciones</p>
+              </td>
+            </tr>
+            <tr *ngFor="let registration of filteredRegistrations" class="data-row">
+              <td>
+                <div class="avatar-container">
+                  <img
+                    *ngIf="registration.child?.avatar_url"
+                    [src]="registration.child?.avatar_url"
+                    [alt]="registration.child?.full_name"
+                    class="avatar-img">
+                  <div *ngIf="!registration.child?.avatar_url" class="avatar-placeholder">
+                    {{ getAvatarInitial(registration.child?.full_name) }}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="child-info">
+                  <div class="child-name">{{ registration.child?.full_name }}</div>
+                  <div class="child-gender">{{ registration.child?.gender === 'M' ? 'Masculino' : 'Femenino' }}</div>
+                </div>
+              </td>
+              <td>
+                <span *ngIf="registration.child?.birth_date">
+                  {{ calculateAge(registration.child?.birth_date || '') }}
+                </span>
+              </td>
+              <td>
+                <span class="ciclo-text">{{ registration.child?.ciclo || 'No asignado' }}</span>
+              </td>
+              <td>{{ formatDate(registration.start_date) }}</td>
+              <td>{{ formatDate(registration.created_at) }}</td>
+              <td>
+                <ion-badge [color]="getStatusColor(registration.status)">
+                  {{ getStatusLabel(registration.status) }}
+                </ion-badge>
+              </td>
+              <td class="actions-column">
+                <div class="actions-container">
+                  <ion-button
+                    fill="clear"
+                    size="small"
+                    (click)="toggleMenu(registration.id, $event)">
+                    <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                  </ion-button>
+
+                  <!-- Actions Menu -->
+                  <div *ngIf="openMenuId === registration.id" class="actions-menu">
+                    <div class="menu-backdrop" (click)="openMenuId = null"></div>
+                    <div class="menu-content">
+                      <button class="menu-item" (click)="onViewDetails(registration)">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        <span>Ver detalles</span>
+                      </button>
+                      <button class="menu-item" (click)="onEditRegistration(registration)">
+                        <ion-icon name="create-outline"></ion-icon>
+                        <span>Editar</span>
+                      </button>
+                      <button class="menu-item" (click)="onViewDocuments(registration)">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                        <span>Ver documentos</span>
+                      </button>
+                      <hr class="menu-divider">
+                      <button class="menu-item danger" (click)="onDelete(registration)">
+                        <ion-icon name="trash-outline"></ion-icon>
+                        <span>Eliminar</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ion-card>
+  </div>
+</ion-content>

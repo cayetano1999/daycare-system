@@ -133,11 +133,14 @@ export class AlertControllerService {
     }
 
     async dismiss() {
-        const loadingModal = document.getElementById('modal-loading');
-        if (loadingModal) {
-            loadingModal.remove();
-        }
+        const loadingModals = document.querySelectorAll('#modal-loading');
+        loadingModals.forEach(modal => modal.remove());
         //remove the loading modal if exists
+
+        const custom_dialog_system = document.querySelectorAll('#custom-dialog-system');
+        if (custom_dialog_system) {
+            custom_dialog_system.forEach(modal => modal.remove());
+        }
 
     }
 
@@ -235,10 +238,11 @@ export class AlertControllerService {
         await alert.present();
     }
 
-    public async openFestivaAlert(type: 'success' | 'warning' | 'question' | 'danger' = 'success', title: string, message: string, showCancel: boolean = false, cancelText?: string, confirmText?: string) {
+    public async openFestivaAlert(type: 'success' | 'warning' | 'question' | 'danger' | 'loading' = 'success', title: string, message: string, showCancel: boolean = false, cancelText?: string, confirmText?: string) {
 
         const modal = await this.modalCtrl.create({
             component: CustomDialogComponent,
+            id: 'custom-dialog-system',
             cssClass: 'backdrop-modal',
             componentProps: {
             type,

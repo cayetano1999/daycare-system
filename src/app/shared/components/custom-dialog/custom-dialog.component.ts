@@ -11,7 +11,7 @@ import { StandAloneModules } from '../../stand-alone-module';
 export class CustomDialogComponent  implements OnInit {
 
   // Dialog type: 'success', 'warning', 'question', 'danger'
-  @Input() type: 'success' | 'warning' | 'question' | 'danger' = 'success';
+  @Input() type: 'success' | 'warning' | 'question' | 'danger' | 'loading' = 'success';
   // Dialog title
   @Input() title: string = '';
   // Dialog message

@@ -1,0 +1,282 @@
+<div class="print-container" id="form-print">
+  <!-- Print Button (hidden when printing) -->
+  <div class="print-actions no-print">
+    <ion-button (click)="onPrint()" color="dark">
+      <ion-icon slot="start" name="print-outline"></ion-icon>
+      Imprimir Formulario
+    </ion-button>
+  </div>
+
+  <!-- Print Content -->
+  <div class="print-content" *ngIf="inscriptionData">
+
+    <!-- Header -->
+    <div class="document-header">
+
+      <ion-row>
+        <ion-col size="12" style="display: flex; justify-content: center; align-items: center;">
+           <img style="width: 20%;" src="assets/img/baby-house.jpeg" alt="">
+        </ion-col>
+      </ion-row>
+      <div class="institution-info">
+       
+        <h1 class="institution-name">Baby House</h1>
+        <p class="institution-subtitle">Centro de Cuidado Infantil</p>
+      </div>
+      <div class="document-title">
+        <h2>Formulario de Inscripción</h2>
+        <p class="document-date">Fecha de Inscripción: {{ formatDate(inscriptionData.signature.signature_date) }}</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Child Information Section -->
+    <div class="section">
+      <h3 class="section-title">1. Datos del Niño/a</h3>
+
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-item full-width">
+            <span class="label">Nombre Completo:</span>
+            <span class="value">{{ inscriptionData.childData.full_name }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">Fecha de Nacimiento:</span>
+            <span class="value">{{ formatDate(inscriptionData.childData.birth_date) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Edad:</span>
+            <span class="value">{{ calculateAge(inscriptionData.childData.birth_date) }} años</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Género:</span>
+            <span class="value">{{ getGenderText(inscriptionData.childData.gender) }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">Tanda:</span>
+            <span class="value">{{ scheduleDescription || inscriptionData.childData.schedule }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Fecha de Inicio:</span>
+            <span class="value">{{ formatDate(inscriptionData.signature.start_date) }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item full-width">
+            <span class="label">Dirección:</span>
+            <span class="value">{{ inscriptionData.childData.address }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- First Guardian Section -->
+    <div class="section">
+      <h3 class="section-title">2. Primer Tutor Legal</h3>
+
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-item full-width">
+            <span class="label">Nombre Completo:</span>
+            <span class="value">{{ inscriptionData.firstGuardian.full_name }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">Tipo de Identificación:</span>
+            <span class="value">{{ inscriptionData.firstGuardian.identification_type }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Número:</span>
+            <span class="value">{{ inscriptionData.firstGuardian.identification_number }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">Teléfono:</span>
+            <span class="value">{{ inscriptionData.firstGuardian.phone_number }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Lugar de Trabajo:</span>
+            <span class="value">{{ inscriptionData.firstGuardian.workplace }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Guardian Section (if exists) -->
+    <div class="section" *ngIf="inscriptionData.secondGuardian?.full_name">
+      <h3 class="section-title">3. Segundo Tutor Legal</h3>
+
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-item full-width">
+            <span class="label">Nombre Completo:</span>
+            <span class="value">{{ inscriptionData.secondGuardian?.full_name }}</span>
+          </div>
+        </div>
+
+        <div class="info-row" *ngIf="inscriptionData.secondGuardian?.identification_number">
+          <div class="info-item">
+            <span class="label">Tipo de Identificación:</span>
+            <span class="value">{{ inscriptionData.secondGuardian?.identification_type }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Número:</span>
+            <span class="value">{{ inscriptionData.secondGuardian?.identification_number }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item" *ngIf="inscriptionData.secondGuardian?.phone_number">
+            <span class="label">Teléfono:</span>
+            <span class="value">{{ inscriptionData.secondGuardian?.phone_number }}</span>
+          </div>
+          <div class="info-item" *ngIf="inscriptionData.secondGuardian?.workplace">
+            <span class="label">Lugar de Trabajo:</span>
+            <span class="value">{{ inscriptionData.secondGuardian?.workplace }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Medical Information Section -->
+    <div class="section">
+      <h3 class="section-title">{{ inscriptionData.secondGuardian?.full_name ? '4' : '3' }}. Información Médica</h3>
+
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">¿Tiene condición médica?</span>
+            <span class="value">{{ getBooleanText(inscriptionData.medicalInfo.has_medical_condition) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">¿Toma medicamentos?</span>
+            <span class="value">{{ getBooleanText(inscriptionData.medicalInfo.takes_medication) }}</span>
+          </div>
+        </div>
+
+        <div class="info-row" *ngIf="inscriptionData.medicalInfo.has_medical_condition && inscriptionData.medicalInfo.medical_condition_details">
+          <div class="info-item full-width">
+            <span class="label">Detalles de la Condición Médica:</span>
+            <span class="value">{{ inscriptionData.medicalInfo.medical_condition_details }}</span>
+          </div>
+        </div>
+
+        <div class="info-row" *ngIf="inscriptionData.medicalInfo.takes_medication && inscriptionData.medicalInfo.medication_details">
+          <div class="info-item full-width">
+            <span class="label">Medicamentos que Toma:</span>
+            <span class="value">{{ inscriptionData.medicalInfo.medication_details }}</span>
+          </div>
+        </div>
+
+        <div class="info-row" *ngIf="inscriptionData.medicalInfo.allergies">
+          <div class="info-item full-width">
+            <span class="label">Alergias Conocidas:</span>
+            <span class="value">{{ inscriptionData.medicalInfo.allergies }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item full-width">
+            <span class="label">Centro Médico Preferido en Emergencias:</span>
+            <span class="value">{{ inscriptionData.medicalInfo.preferred_medical_center }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Authorized Person Section -->
+    <div class="section">
+      <h3 class="section-title">{{ inscriptionData.secondGuardian?.full_name ? '5' : '4' }}. Persona Autorizada para Recoger al Niño/a</h3>
+
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">Nombre Completo:</span>
+            <span class="value">{{ inscriptionData.authorizedPerson.full_name }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Relación:</span>
+            <span class="value">{{ inscriptionData.authorizedPerson.relationship }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="label">Teléfono:</span>
+            <span class="value">{{ inscriptionData.authorizedPerson.phone_number }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Authorizations Section -->
+    <div class="section">
+      <h3 class="section-title">{{ inscriptionData.secondGuardian?.full_name ? '6' : '5' }}. Autorizaciones</h3>
+
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-item full-width">
+            <span class="label">¿Autoriza publicación de fotos/videos en redes sociales?</span>
+            <span class="value">{{ getBooleanText(inscriptionData.authorizations.post_pictures_social_network) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Declaration -->
+    <div class="section">
+      <div class="declaration-box">
+        <p class="declaration-text">
+          Declaro que la información proporcionada es verdadera y autorizo a <strong>Baby House</strong>
+          a tomar las medidas necesarias para la seguridad y bienestar de mi hijo/a.
+        </p>
+      </div>
+    </div>
+
+    <!-- Signature Section -->
+    <div class="signature-section">
+      <div class="signature-box">
+        <div class="signature-line">
+          <span class="signature-text">{{ inscriptionData.signature.signature_text }}</span>
+        </div>
+        <p class="signature-label">Firma del Padre/Madre/Tutor</p>
+      </div>
+
+      <div class="signature-box">
+        <div class="signature-line">
+          <span class="signature-text">{{ formatDate(inscriptionData.signature.signature_date) }}</span>
+        </div>
+        <p class="signature-label">Fecha</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="document-footer">
+      <p>Este documento es un registro oficial de inscripción en Baby House</p>
+      <p class="footer-small">Para cualquier consulta o modificación, favor contactar a la administración</p>
+    </div>
+
+  </div>
+</div>

@@ -11,6 +11,8 @@ import { PaymentManagementComponent } from "./payment-management/payment-managem
 import { AuthorizedPickerPage } from "./authorized-picker/authorized-picker.page";
 import { ScheduleManagementComponent } from "./schedule-management/schedule-management.component";
 import { RegisterPage } from "./register/register.page";
+import { InscriptionListComponent } from "src/app/features/daycare/inscription-list/inscription-list.component";
+import { InscriptionEditPage } from "./inscription-edit/inscription-edit.page";
 
 
 export const dayCareRoutes: Routes = [
@@ -18,6 +20,16 @@ export const dayCareRoutes: Routes = [
   //Authentication routes
   {
     path: 'daycare/inscription',
+    component: InscriptionListComponent,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+  {
+    path: 'daycare/inscription/:id',
+    component: InscriptionEditPage,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+    {
+    path: 'daycare/inscription-new',
     component: InscriptionPage,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   },

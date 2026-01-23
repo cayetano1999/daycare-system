@@ -105,4 +105,42 @@ export function sanitizeForBucket(
   return s;
 }
 
+export function calculateAgeToString(birthDate: string): string {
+    const today = new Date();
+    const birth = new Date(birthDate);
+
+    let years = today.getFullYear() - birth.getFullYear();
+    let months = today.getMonth() - birth.getMonth();
+    let days = today.getDate() - birth.getDate();
+
+    if (days < 0) {
+      months--;
+      // Get days in previous month
+      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    // Calculate weeks and remaining days
+    let weeks = Math.floor(days / 7);
+    let remainingDays = days % 7;
+
+    const parts: string[] = [];
+    if (years > 0) parts.push(`${years} año${years > 1 ? 's' : ''}`);
+    if (months > 0) parts.push(`${months} mes${months > 1 ? 'es' : ''}`);
+    if (weeks > 0) parts.push(`${weeks} semana${weeks > 1 ? 's' : ''}`);
+    if (remainingDays > 0) parts.push(`${remainingDays} día${remainingDays > 1 ? 's' : ''}`);
+
+    // If all are zero (newborn), show "0 días"
+    if (parts.length === 0) {
+      parts.push('0 días');
+    }
+
+    return parts.join(', ');
+  }
+
 

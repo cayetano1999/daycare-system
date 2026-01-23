@@ -44,9 +44,7 @@ ion-icon {
   justify-content: center;
 }
 
-.font-signature {
-  font-family: 'Brush Script MT', cursive;
-}
+
 
 input,
 select,
@@ -112,7 +110,7 @@ textarea {
 }
 
 input {
-    background-color: white!important;
+  background-color: white !important;
 }
 
 ion-content {
@@ -162,7 +160,9 @@ ion-icon {
 }
 
 .font-signature {
-  font-family: 'Brush Script MT', cursive;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  letter-spacing: 1px;
 }
 
 input,
@@ -228,9 +228,27 @@ textarea {
   }
 }
 
-  input,
-  select,
-  textarea {
-    border: 1px solid #cbd5e1 !important;
-    background: white !important;
-  }
+input,
+select,
+textarea {
+  border: 1px solid #cbd5e1 !important;
+  background: white !important;
+}
+
+
+.hide-print {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 100%;
+  background: white;
+}
+
+.alert-warning {
+  background-color: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}

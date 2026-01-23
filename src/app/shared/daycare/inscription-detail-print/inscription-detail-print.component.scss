@@ -1,0 +1,263 @@
+.print-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+
+    .print-actions {
+        margin-bottom: 2rem;
+        text-align: center;
+
+        ion-button {
+            --border-radius: 0.5rem;
+            font-weight: 600;
+            text-transform: none;
+        }
+    }
+
+    .print-content {
+        background: white;
+        padding: 2rem;
+        // border: 1px solid #e5e7eb;
+        width: 100%;
+
+        .document-header {
+            margin-bottom: 2rem;
+            text-align: center;
+
+            .institution-info {
+                margin-bottom: 1rem;
+
+                .institution-name {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: #111827;
+                    margin: 0;
+                    letter-spacing: -0.5px;
+                }
+
+                .institution-subtitle {
+                    font-size: 1rem;
+                    color: #6b7280;
+                    margin: 0.25rem 0 0 0;
+                }
+            }
+
+            .document-title {
+                h2 {
+                    font-size: 1.75rem;
+                    font-weight: 600;
+                    color: #374151;
+                    margin: 0;
+                    padding-bottom: 0.5rem;
+                    border-bottom: 2px solid #111827;
+                }
+
+                .document-date {
+                    font-size: 0.95rem;
+                    color: #6b7280;
+                    margin: 0.75rem 0 0 0;
+                }
+            }
+        }
+
+        .divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 1.5rem 0;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+
+            .section-title {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: #111827;
+                margin: 0 0 1rem 0;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid #d1d5db;
+            }
+
+            .info-grid {
+                .info-row {
+                    display: grid;
+                    //   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 1rem;
+                    margin-bottom: 0.75rem;
+
+                    .info-item {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.25rem;
+
+                        &.full-width {
+                            grid-column: 1 / -1;
+                        }
+
+                        .label {
+                            font-size: 0.875rem;
+                            font-weight: 600;
+                            color: #6b7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        }
+
+                        .value {
+                            font-size: 1rem;
+                            color: #111827;
+                            padding: 0.5rem 0;
+                            border-bottom: 1px solid #e5e7eb;
+                            min-height: 2rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        .declaration-box {
+            background: #f9fafb;
+            border: 1px solid #d1d5db;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+
+            .declaration-text {
+                font-size: 0.95rem;
+                color: #374151;
+                line-height: 1.6;
+                margin: 0;
+                text-align: justify;
+            }
+        }
+
+        .signature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0 2rem 0;
+            padding: 0 1rem;
+
+            .signature-box {
+                text-align: center;
+
+                .signature-line {
+                    border-bottom: 2px solid #111827;
+                    padding-bottom: 0.5rem;
+                    min-height: 3rem;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+
+                    .signature-text {
+                        font-size: 1.25rem;
+                        font-weight: 600;
+                        color: #111827;
+                        font-family: 'Brush Script MT', cursive;
+                    }
+                }
+
+                .signature-label {
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: #6b7280;
+                    text-transform: uppercase;
+                    margin: 0.5rem 0 0 0;
+                    letter-spacing: 0.5px;
+                }
+            }
+        }
+
+        .document-footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+
+            p {
+                font-size: 0.875rem;
+                color: #6b7280;
+                margin: 0.25rem 0;
+            }
+
+            .footer-small {
+                font-size: 0.75rem;
+                color: #9ca3af;
+            }
+        }
+    }
+}
+
+// Print-specific styles
+@media print {
+  .info-grid .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columnas fijas */
+    gap: 16px;
+  }
+
+  .info-item.full-width {
+    grid-column: 1 / -1;
+  }
+
+    .document-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .document-title h2 {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+  }
+
+  .print-content {
+    border: none !important;
+    padding: 0 !important;
+  }
+}
+
+// Screen-only styles
+@media screen {
+    .print-content {
+        // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+    .print-container {
+        padding: 1rem;
+
+        .print-content {
+            padding: 1rem;
+
+            .signature-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .info-grid .info-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}
+
+
+#print-form,
+#print-form * {
+    box-sizing: border-box;
+}
+
+#print-form {
+    background: #fff;
+}
+
+
+.section {
+    break-inside: avoid;
+}
+
+.print-content {
+    max-width: 100% !important;
+}

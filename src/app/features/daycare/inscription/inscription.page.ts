@@ -1,35 +1,101 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { cameraOutline, documentOutline, saveOutline, printOutline } from 'ionicons/icons';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { InscriptionDetailPrintComponent } from 'src/app/shared/daycare/inscription-detail-print/inscription-detail-print.component';
 import { InscriptionComponent } from 'src/app/shared/daycare/inscription/inscription.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+export const CICLOS_CURSOS_DROPDOWN = [
+  {
+    label: 'Primer Ciclo - Párvulo I (Lactantes)',
+    ciclo: 'Primer Ciclo',
+    curso: 'Párvulo I - Lactantes',
+    value: 'Primer Ciclo - Párvulo I (Lactantes)',
+    rango: '45 días a 5 meses'
+  },
+  {
+    label: 'Primer Ciclo - Párvulo I',
+    ciclo: 'Primer Ciclo',
+    curso: 'Párvulo I',
+    value: 'Primer Ciclo - Párvulo I',
+    rango: '6 meses a 11 meses'
+  },
+  {
+    label: 'Primer Ciclo - Párvulo II',
+    ciclo: 'Primer Ciclo',
+    curso: 'Párvulo II',
+    value: 'Primer Ciclo - Párvulo II',
+    rango: '1 año a 1 año y 11 meses'
+  },
+  {
+    label: 'Primer Ciclo - Párvulo III',
+    ciclo: 'Primer Ciclo',
+    curso: 'Párvulo III',
+    value: 'Primer Ciclo - Párvulo III',
+    rango: '2 años a 2 años y 11 meses'
+  },
+  {
+    label: 'Segundo Ciclo - Prekinder',
+    ciclo: 'Segundo Ciclo',
+    curso: 'Prekinder',
+    value: 'Segundo Ciclo - Prekinder',
+    rango: '3 años a 3 años y 11 meses'
+  },
+  {
+    label: 'Segundo Ciclo - Kinder',
+    ciclo: 'Segundo Ciclo',
+    curso: 'Kinder',
+    value: 'Segundo Ciclo - Kinder',
+    rango: '4 años a 4 años y 11 meses'
+  },
+  {
+    label: 'Segundo Ciclo - Preprimario',
+    ciclo: 'Segundo Ciclo',
+    curso: 'Preprimario',
+    value: 'Segundo Ciclo - Preprimario',
+    rango: '5 años a 5 años y 11 meses'
+  }
+];
+
+interface CicloResult {
+  ciclo: string;
+  curso: string;
+  fecha: string;
+}
 
 @Component({
   selector: 'app-inscription-page',
   templateUrl: './inscription.page.html',
   styleUrls: ['./inscription.page.scss'],
   standalone: true,
-  imports: [InscriptionComponent, ...StandAloneModules],
+  imports: [InscriptionDetailPrintComponent, ...StandAloneModules],
 })
 export class InscriptionPage implements OnInit {
 
   //services
   supabaseService = inject(SupabaseService);
+  alertService = inject(AlertControllerService);
+  supabaseStorage = inject(SupabaseStorageService);
+
+  //Childs
+  @ViewChild('printSection') printSection!: InscriptionDetailPrintComponent;
 
   inscriptionForm!: FormGroup;
   avatarPreview: string = 'https://via.placeholder.com/150';
-
+  cicloResult: CicloResult = { ciclo: '', curso: '', fecha: '' };
   documents = {
-    birthCertificate: { file: null as File | null, preview: '' },
-    idCopies: { file: null as File | null, preview: '' },
-    medicalCertificate: { file: null as File | null, preview: '' },
-    vaccineCard: { file: null as File | null, preview: '' },
-    photo: { file: null as File | null, preview: '' },
-    medicalInsurance: { file: null as File | null, preview: '' },
-    authorizedPersonId: { file: null as File | null, preview: '' }
+    birthCertificate: { file: null as File | null, preview: '', label: 'Acta de Nacimiento', folderName: 'birth_certificates' },
+    idCopies: { file: null as File | null, preview: '', label: 'Cédulas de los Padres', folderName: 'id_copies' },
+    medicalCertificate: { file: null as File | null, preview: '', label: 'Certificado Médico', folderName: 'medical_certificates' },
+    vaccineCard: { file: null as File | null, preview: '', label: 'Tarjeta de Vacunas', folderName: 'vaccine_cards' },
+    photo: { file: null as File | null, preview: '', label: 'Foto', folderName: 'photos' },
+    medicalInsurance: { file: null as File | null, preview: '', label: 'Seguro Médico', folderName: 'medical_insurances' },
+    authorizedPersonId: { file: null as File | null, preview: '', label: 'Identificación de Persona Autorizada', folderName: 'authorized_person_ids' }
   };
+  ciclosDropdown = CICLOS_CURSOS_DROPDOWN;
 
   scheduleOptions: any[] = [];
 
@@ -50,13 +116,10 @@ export class InscriptionPage implements OnInit {
     'Otro familiar'
   ];
 
+  showPrintSection: boolean = false;
+
   constructor(private fb: FormBuilder) {
-    addIcons({
-      'camera-outline': cameraOutline,
-      'document-outline': documentOutline,
-      'save-outline': saveOutline,
-      'print-outline': printOutline
-    });
+    addIcons({ cameraOutline, documentOutline, printOutline, saveOutline });
   }
 
   async ngOnInit() {
@@ -65,6 +128,7 @@ export class InscriptionPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    this.showPrintSection = false;
     await this.initSchedules();
   }
 
@@ -85,7 +149,8 @@ export class InscriptionPage implements OnInit {
         birth_date: ['2023-01-01', [Validators.required, this.validBirthDate]],
         gender: ['M', Validators.required],
         address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
-        schedule: ['Matutina', Validators.required]
+        schedule_id: ['087055be-55f1-4c89-8d29-0f1edfdb3785', Validators.required],
+        ciclo: ['', Validators.required],
       }),
       firstGuardian: this.fb.group({
         full_name: ['JUAN SOTO', [Validators.required, Validators.minLength(3)]],
@@ -115,12 +180,13 @@ export class InscriptionPage implements OnInit {
         relationship: ['Padre', Validators.required]
       }),
       authorizations: this.fb.group({
-        allow_social_media: [true]
+        post_pictures_social_network: [true]
       }),
       signature: this.fb.group({
         signature_text: ['LISSETE MARQUEZ', Validators.required],
         signature_date: [new Date().toISOString().split('T')[0], Validators.required],
-        start_date: ['2025-01-01', Validators.required]
+        start_date: ['2025-01-01', Validators.required],
+        status: ['ACTIVE']
       })
     });
 
@@ -145,6 +211,56 @@ export class InscriptionPage implements OnInit {
       }
       detailsControl?.updateValueAndValidity();
     });
+
+    //debo suscribirme a la fecha de nacimiento para calcular el ciclo
+    this.inscriptionForm.get('childData.birth_date')?.valueChanges.subscribe(value => {
+      const fechaNacimiento = new Date(value);
+      if (isNaN(fechaNacimiento.getTime())) return;
+       this.cicloResult = this.obtenerCicloPorFecha(fechaNacimiento);
+       this.cicloResult.fecha = this.calculateAge(value); 
+       this.inscriptionForm.get('childData.ciclo')?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
+      console.log('Ciclo y curso calculado:', this.cicloResult);
+    });
+  }
+
+
+
+  calculateAge(birthDate: string): string {
+    const today = new Date();
+    const birth = new Date(birthDate);
+
+    let years = today.getFullYear() - birth.getFullYear();
+    let months = today.getMonth() - birth.getMonth();
+    let days = today.getDate() - birth.getDate();
+
+    if (days < 0) {
+      months--;
+      // Get days in previous month
+      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    // Calculate weeks and remaining days
+    let weeks = Math.floor(days / 7);
+    let remainingDays = days % 7;
+
+    const parts: string[] = [];
+    if (years > 0) parts.push(`${years} año${years > 1 ? 's' : ''}`);
+    if (months > 0) parts.push(`${months} mes${months > 1 ? 'es' : ''}`);
+    if (weeks > 0) parts.push(`${weeks} semana${weeks > 1 ? 's' : ''}`);
+    if (remainingDays > 0) parts.push(`${remainingDays} día${remainingDays > 1 ? 's' : ''}`);
+
+    // If all are zero (newborn), show "0 días"
+    if (parts.length === 0) {
+      parts.push('0 días');
+    }
+
+    return parts.join(', ');
   }
 
   validBirthDate(control: AbstractControl): ValidationErrors | null {
@@ -265,36 +381,51 @@ export class InscriptionPage implements OnInit {
 
       console.log('=== DATOS DE INSCRIPCIÓN ===');
 
+      await this.alertService.openModalAlert('Guardando formulario...');
+
       try {
         const supabase = this.supabaseService.getSupabase();
         const dataToSupabase = { ...formData };
         // Remove file previews before sending to Supabase
         delete dataToSupabase.documents;
         dataToSupabase.childData.avatar_url = 'no_haya_url';
+
+        if(this.cicloResult?.ciclo == '' && this.cicloResult?.ciclo?.toLowerCase().includes('fuera de rango')){ 
+          await this.alertService.dismiss();
+          await this.alertService.openFestivaAlert('warning', 'Ciclo inválido', 'La edad del niño no corresponde a ningún ciclo disponible. Por favor verifica la fecha de nacimiento.');
+          return;
+        }
+
         console.log('Data to send to Supabase Function:', dataToSupabase);
         const response = await supabase.functions.invoke('save-inscription', {
           body: { ...dataToSupabase },
 
         });
 
+        console.log('Response from Supabase Function:', response);
+
         if (response.error) {
-          console.error('Error checking email:', response.error);
-          return false;
+          await this.alertService.dismiss();
+          await this.alertService.openFestivaAlert('danger', 'Error', 'No se pudo guardar el formulario. Inténtalo de nuevo más tarde.');
+          return;
         }
 
-        return response.data?.exists || false;
+        await this.uploadAllDocuments(response.data.child?.id, response.data.child?.full_name.replace(/\s+/g, '_'));
+        await this.alertService.openFestivaAlert('success', 'Datos guardados', 'El formulario de inscripción ha sido guardado exitosamente.');
+        this.showPrintSection = true;
+
       } catch (error) {
         console.error('Error calling edge function:', error);
-        return false;
+        await this.alertService.openFestivaAlert('danger', 'Error', 'No se pudo guardar el formulario. Inténtalo de nuevo más tarde.');
+        return;
       }
 
+      await this.alertService.dismiss();
 
-
-      alert('Formulario guardado exitosamente. Revisa la consola para ver los datos.');
     } else {
       console.log('Formulario inválido');
       this.markFormGroupTouched(this.inscriptionForm);
-      alert('Por favor, completa todos los campos requeridos correctamente.');
+      await this.alertService.openFestivaAlert('warning', 'Formulario inválido', 'Por favor, completa todos los campos requeridos correctamente.');
     }
   }
 
@@ -309,8 +440,16 @@ export class InscriptionPage implements OnInit {
     });
   }
 
-  onPrint() {
-    window.print();
+  async onPrint() {
+
+    if (this.inscriptionForm.valid) {
+      this.printSection.inscriptionData = this.inscriptionForm.value;
+      this.printSection.onPrint();
+    }
+    else {
+      await this.alertService.openFestivaAlert('warning', 'Formulario inválido', 'Por favor, completa todos los campos requeridos correctamente antes de imprimir.');
+    }
+
   }
 
   getErrorMessage(formGroupName: string, controlName: string): string {
@@ -342,5 +481,93 @@ export class InscriptionPage implements OnInit {
     const control = this.inscriptionForm.get(`${formGroupName}.${controlName}`);
     return !!(control?.invalid && control?.touched);
   }
+
+  obtenerCicloPorFecha(fechaNacimiento: Date): CicloResult {
+    const hoy = new Date();
+
+    let años = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    let meses = hoy.getMonth() - fechaNacimiento.getMonth();
+
+    if (meses < 0) {
+      años--;
+      meses += 12;
+    }
+
+    const edadEnMeses = años * 12 + meses;
+
+    let ciclo = '';
+    let curso = '';
+
+    // Primer Ciclo
+    if (edadEnMeses >= 2 && edadEnMeses <= 5) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo I - Lactantes';
+    } else if (edadEnMeses >= 6 && edadEnMeses <= 11) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo I';
+    } else if (edadEnMeses >= 12 && edadEnMeses <= 23) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo II';
+    } else if (edadEnMeses >= 24 && edadEnMeses <= 35) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo III';
+    }
+
+    // Segundo Ciclo
+    else if (edadEnMeses >= 36 && edadEnMeses <= 47) {
+      ciclo = 'Segundo Ciclo';
+      curso = 'Prekinder';
+    } else if (edadEnMeses >= 48 && edadEnMeses <= 59) {
+      ciclo = 'Segundo Ciclo';
+      curso = 'Kinder';
+    } else if (edadEnMeses >= 60 && edadEnMeses <= 71) {
+      ciclo = 'Segundo Ciclo';
+      curso = 'Preprimario';
+    } else {
+      ciclo = 'Fuera de rango';
+      curso = 'No aplica';
+    }
+
+    return {
+      ciclo,
+      curso,
+      fecha: fechaNacimiento.toISOString().split('T')[0]
+    };
+  }
+
+  async uploadAllDocuments(
+  inscriptionId: string,
+  childName: string
+): Promise<Record<string, string>> {
+
+  const uploadedPaths: Record<string, string> = {};
+
+  for (const [key, doc] of Object.entries(this.documents)) {
+    if (!doc.file) continue;
+    await this.alertService.dismiss();
+    this.alertService.openFestivaAlert('loading', `Subiendo ${doc.label}...`, 'Por favor espera mientras se sube el documento.');
+    const isImage = doc.file.type.startsWith('image/');
+
+    const result = isImage
+      ? await this.supabaseStorage.uploadImage(doc.file, {
+          bucket: 'babyhouse',
+          folder: `inscriptions/${inscriptionId}/${doc.folderName}`,
+          userId: childName,
+          toWebp: key === 'photo',
+          maxSizeMB: 0.8
+        })
+      : await this.supabaseStorage.uploadDocument(doc.file, {
+          bucket: 'babyhouse',
+          folder: `inscriptions/${inscriptionId}/${doc.folderName}`,
+          userId: childName
+        });
+
+    uploadedPaths[key] = result.path;
+  }
+    await this.alertService.dismiss();
+  console.log('Uploaded document paths:', uploadedPaths);
+  return uploadedPaths;
+}
+
 
 }

@@ -28,7 +28,9 @@ export class SupabaseStorageService {
   private client: SupabaseClient;
 
   constructor() {
-    this.client = createClient(environment.supabaseUrl, environment.supabaseKey);
+    const supabaseUrl = 'https://cchztsiivmddznqtevrw.supabase.co';
+    const supabaseKey = 'sb_publishable_LcCBe5kNxddZYO3JVseRHw_TYeCJ7BU';
+    this.client = createClient(supabaseUrl, supabaseKey);
   }
 
   getSupabase() {
@@ -57,6 +59,9 @@ export class SupabaseStorageService {
   }
 
   async uploadImage(file: File, opts?: UploadOptions): Promise<UploadResult> {
+
+    console
+.log('Uploading image with options:', opts);
     const bucket = opts?.bucket ?? 'festiva';
     const folder = opts?.folder ?? 'users';
     const userId = opts?.userId ?? 'anonymous';
@@ -103,4 +108,51 @@ export class SupabaseStorageService {
     const file = new File([blob], `from-base64.${mime.split('/')[1] || 'jpg'}`, { type: mime });
     return this.uploadImage(file, opts);
   }
+
+  async uploadDocument(
+    file: File,
+    opts?: UploadOptions
+  ): Promise<UploadResult> {
+
+    const bucket = opts?.bucket ?? 'babyhouse';
+    const folder = opts?.folder ?? 'documents';
+    const userId = opts?.userId ?? 'anonymous';
+    const upsert = opts?.upsert ?? true;
+
+    const ext = file.name.split('.').pop();
+    const name = opts?.filename ?? `${Date.now()}-${this.uid()}.${ext}`;
+    const path = `${folder}/${name}`;
+
+    const { error } = await this.client.storage
+      .from(bucket)
+      .upload(path, file, {
+        contentType: file.type,
+        upsert
+      });
+
+    if (error) throw error;
+
+    return {
+      path,
+      url: '', // ❌ NO pública
+      mime: file.type,
+      size: file.size
+    };
+  }
+
+  async getSignedUrl(
+    path: string,
+    bucket = 'babyhouse',
+    expiresIn = 60 * 5 // 5 minutos
+  ): Promise<string> {
+
+    const { data, error } = await this.client.storage
+      .from(bucket)
+      .createSignedUrl(path, expiresIn);
+
+    if (error) throw error;
+    return data.signedUrl;
+  }
+
+
 }

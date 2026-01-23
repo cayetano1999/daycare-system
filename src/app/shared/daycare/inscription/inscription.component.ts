@@ -118,7 +118,7 @@ export class InscriptionComponent implements OnInit {
         relationship: ['Padre', Validators.required]
       }),
       authorizations: this.fb.group({
-        allow_social_media: [true]
+        post_pictures_social_network: [true]
       }),
       signature: this.fb.group({
         signature_text: ['LISSETE MARQUEZ', Validators.required],
