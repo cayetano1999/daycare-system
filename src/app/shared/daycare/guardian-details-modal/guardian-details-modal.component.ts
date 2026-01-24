@@ -2,19 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
-import { addIcons } from 'ionicons';
-import {
-  closeOutline,
-  personOutline,
-  cardOutline,
-  callOutline,
-  briefcaseOutline,
-  peopleOutline,
-  calendarOutline,
-  schoolOutline,
-  maleOutline,
-  femaleOutline
-} from 'ionicons/icons';
+
 import { ModalController } from '@ionic/angular/standalone';
 
 interface Guardian {
@@ -58,18 +46,7 @@ export class GuardianDetailsModalComponent implements OnInit {
   loading: boolean = false;
 
   constructor() {
-    addIcons({
-      closeOutline,
-      personOutline,
-      cardOutline,
-      callOutline,
-      briefcaseOutline,
-      peopleOutline,
-      calendarOutline,
-      schoolOutline,
-      maleOutline,
-      femaleOutline
-    });
+  
   }
 
   ngOnInit() {

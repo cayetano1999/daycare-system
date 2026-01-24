@@ -7,31 +7,7 @@ import { Location } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
-import { addIcons } from 'ionicons';
-import {
-  arrowBackOutline,
-  searchOutline,
-  documentTextOutline,
-  documentText,
-  card,
-  medical,
-  fitness,
-  image,
-  shieldCheckmark,
-  people,
-  eyeOutline,
-  downloadOutline,
-  closeCircle,
-  close,
-  alertCircleOutline,
-  checkmarkCircle,
-  informationCircle,
-  statsChart,
-  personOutline,
-  schoolOutline,
-  chevronForward,
-  school,
-} from 'ionicons/icons';
+
 import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { PipesModule } from "../../../shared/pipes/pipes.module";
@@ -99,30 +75,7 @@ export class DocumentsPage implements OnInit, OnDestroy {
   }
 
   constructor() {
-    addIcons({
-      arrowBackOutline,
-      searchOutline,
-      documentTextOutline,
-      documentText,
-      card,
-      medical,
-      fitness,
-      image,
-      shieldCheckmark,
-      people,
-      eyeOutline,
-      downloadOutline,
-      closeCircle,
-      close,
-      alertCircleOutline,
-      checkmarkCircle,
-      informationCircle,
-      statsChart,
-      personOutline,
-      schoolOutline,
-      chevronForward,
-      school,
-    });
+
   }
 
   async ngOnInit() {

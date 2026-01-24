@@ -5,24 +5,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
-import { addIcons } from 'ionicons';
-import {
-  searchOutline,
-  personOutline,
-  callOutline,
-  briefcaseOutline,
-  cardOutline,
-  eyeOutline,
-  createOutline,
-  trashOutline,
-  peopleOutline,
-  filterOutline,
-  closeCircle,
-  checkmarkCircle,
-  alertCircleOutline,
-  chevronDown,
-  chevronUp
-} from 'ionicons/icons';
+
 import { GuardianDetailsModalComponent } from 'src/app/shared/daycare/guardian-details-modal/guardian-details-modal.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { ActionSheetController } from '@ionic/angular/standalone';

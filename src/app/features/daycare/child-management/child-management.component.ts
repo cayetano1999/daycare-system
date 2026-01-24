@@ -1,327 +1,466 @@
-import { Component, inject } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
-import { IonContent } from "@ionic/angular/standalone";
-import { ChildDetailModalComponent } from 'src/app/shared/daycare/child-detail-modal/child-detail-modal.component';
-import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Subject, takeUntil } from 'rxjs';
+import { ActionSheetController, IonContent, IonIcon } from "@ionic/angular/standalone";
+import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { CICLOS_CURSOS_DROPDOWN } from '../inscription/inscription.page';
+import { calculateAgeToString, obtenerCicloPorFecha } from 'src/app/core/constants/constants';
+import { Router } from '@angular/router';
+import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { InscriptionDetailModalComponent } from 'src/app/shared/daycare/inscription-detail-modal/inscription-detail-modal.component';
+import { ModalController } from '@ionic/angular';
 
 interface Child {
   id: string;
-  photo: string;
-  fullName: string;
-  birthDate: string;
+  full_name: string;
+  avatar_url: string;
+  birth_date: Date | any;
   gender: string;
   address: string;
-  schedule: string;
-  firstGuardian: {
-    fullName: string;
-    identificationType: string;
-    identificationNumber: string;
-    phoneNumber: string;
-    workplace: string;
-  };
-  secondGuardian?: {
-    fullName: string;
-    identificationType: string;
-    identificationNumber: string;
-    phoneNumber: string;
-    workplace: string;
-  };
-  medicalInfo: {
-    hasMedicalCondition: boolean;
-    medicalConditionDetails?: string;
-    takesMedication: boolean;
-    medicationDetails?: string;
-    allergies: string;
-    preferredMedicalCenter: string;
-  };
-  authorizedPerson: {
-    fullName: string;
-    phoneNumber: string;
-    relationship: string;
-  };
-  authorizations: {
-    allowSocialMedia: boolean;
-  };
+  schedule_id: string;
+  ciclo: string;
+  created_at: string;
+  schedule?: Schedule;
+  cicloToValidate?: string;
+  isValidCiclo?: boolean;
+  registration?: any;
 }
+
+interface Schedule {
+  id: string;
+  description: string;
+  status: string;
+}
+
+interface Filters {
+  nombre: string;
+  fechaNacimiento: string;
+  genero: string;
+  schedule_id: string;
+  ciclo: string;
+}
+
 
 @Component({
   selector: 'app-child-management',
+  standalone: true,
+  imports: [IonIcon, IonContent, CommonModule, FormsModule],
   templateUrl: './child-management.component.html',
   styleUrls: ['./child-management.component.scss'],
-  standalone: true,
-  imports: [...StandAloneModules, IonicModule],
   providers: [ModalController]
 })
-export class ChildManagementComponent {
+export class ChildManagementComponent implements OnInit, OnDestroy {
+  private supabase: SupabaseClient;
+  private destroy$ = new Subject<void>();
 
+  supabaseService = inject(SupabaseService);
+  actionSheetCtrl = inject(ActionSheetController);
+  router = inject(Router);
+  alertCtrl = inject(AlertControllerService);
   modalCtrl = inject(ModalController);
 
-  searchType: string = 'name';
-  searchValue: string = '';
-  selectedChild: Child | null = null;
-  isModalOpen: boolean = false;
+  children: Child[] = [];
+  filteredChildren: Child[] = [];
+  loading = true;
 
-  searchTypes = [
-    { value: 'name', label: 'Nombre' },
-    { value: 'gender', label: 'Género' },
-    { value: 'schedule', label: 'Tanda' },
-    { value: 'address', label: 'Dirección' }
-  ];
+  filters: Filters = {
+    nombre: '',
+    fechaNacimiento: '',
+    genero: '',
+    schedule_id: '',
+    ciclo: ''
+  };
 
-  mockChildren: Child[] = [
-    {
-      id: '1',
-      photo: 'https://images.pexels.com/photos/1257110/pexels-photo-1257110.jpeg?auto=compress&cs=tinysrgb&w=200',
-      fullName: 'Adhara Genesis Randy',
-      birthDate: '2023-11-08',
-      gender: 'Femenino',
-      address: 'Calle Principal #123, Santo Domingo',
-      schedule: 'Matutina',
-      firstGuardian: {
-        fullName: 'Carlos González',
-        identificationType: 'Cédula',
-        identificationNumber: '001-0234567-8',
-        phoneNumber: '809-555-1234',
-        workplace: 'Empresa ABC'
-      },
-      medicalInfo: {
-        hasMedicalCondition: false,
-        takesMedication: false,
-        allergies: 'Ninguna',
-        preferredMedicalCenter: 'Hospital General'
-      },
-      authorizedPerson: {
-        fullName: 'Ana Pérez',
-        phoneNumber: '809-555-5678',
-        relationship: 'Tía'
-      },
-      authorizations: {
-        allowSocialMedia: true
-      }
-    },
-    {
-      id: '2',
-      photo: 'https://images.pexels.com/photos/1620653/pexels-photo-1620653.jpeg?auto=compress&cs=tinysrgb&w=200',
-      fullName: 'Juan Carlos Rodríguez López',
-      birthDate: '2019-03-20',
-      gender: 'Masculino',
-      address: 'Av. Winston Churchill #456, Santiago',
-      schedule: 'Vespertina',
-      firstGuardian: {
-        fullName: 'María López',
-        identificationType: 'Cédula',
-        identificationNumber: '001-0345678-9',
-        phoneNumber: '829-555-2345',
-        workplace: 'Clínica XYZ'
-      },
-      medicalInfo: {
-        hasMedicalCondition: true,
-        medicalConditionDetails: 'Asma leve',
-        takesMedication: true,
-        medicationDetails: 'Inhalador según necesidad',
-        allergies: 'Polen',
-        preferredMedicalCenter: 'Clínica Pediatra'
-      },
-      authorizedPerson: {
-        fullName: 'Pedro Rodríguez',
-        phoneNumber: '829-555-6789',
-        relationship: 'Abuelo'
-      },
-      authorizations: {
-        allowSocialMedia: false
-      }
-    },
-    {
-      id: '3',
-      photo: 'https://images.pexels.com/photos/1642228/pexels-photo-1642228.jpeg?auto=compress&cs=tinysrgb&w=200',
-      fullName: 'Sofía Martínez Díaz',
-      birthDate: '2017-11-08',
-      gender: 'Femenino',
-      address: 'Calle El Sol #789, La Vega',
-      schedule: 'Matutina',
-      firstGuardian: {
-        fullName: 'Laura Díaz',
-        identificationType: 'Cédula',
-        identificationNumber: '001-0456789-0',
-        phoneNumber: '849-555-3456',
-        workplace: 'Banco Nacional'
-      },
-      medicalInfo: {
-        hasMedicalCondition: false,
-        takesMedication: false,
-        allergies: 'Mariscos',
-        preferredMedicalCenter: 'Hospital Infantil'
-      },
-      authorizedPerson: {
-        fullName: 'Carmen Martínez',
-        phoneNumber: '849-555-7890',
-        relationship: 'Abuela'
-      },
-      authorizations: {
-        allowSocialMedia: true
-      }
-    },
-    {
-      id: '4',
-      photo: 'https://images.pexels.com/photos/1912868/pexels-photo-1912868.jpeg?auto=compress&cs=tinysrgb&w=200',
-      fullName: 'Miguel Ángel Sánchez Torres',
-      birthDate: '2018-09-12',
-      gender: 'Masculino',
-      address: 'Av. 27 de Febrero #234, Santo Domingo',
-      schedule: 'Vespertina',
-      firstGuardian: {
-        fullName: 'Roberto Sánchez',
-        identificationType: 'Cédula',
-        identificationNumber: '001-0567890-1',
-        phoneNumber: '809-555-4567',
-        workplace: 'Supermercado Nacional'
-      },
-      medicalInfo: {
-        hasMedicalCondition: false,
-        takesMedication: false,
-        allergies: 'Ninguna',
-        preferredMedicalCenter: 'Centro Médico Dominicano'
-      },
-      authorizedPerson: {
-        fullName: 'Isabel Torres',
-        phoneNumber: '809-555-8901',
-        relationship: 'Madre'
-      },
-      authorizations: {
-        allowSocialMedia: true
-      }
-    },
-    {
-      id: '5',
-      photo: 'https://images.pexels.com/photos/1648358/pexels-photo-1648358.jpeg?auto=compress&cs=tinysrgb&w=200',
-      fullName: 'Isabella Fernández García',
-      birthDate: '2019-07-25',
-      gender: 'Femenino',
-      address: 'Calle Las Flores #567, San Pedro de Macorís',
-      schedule: 'Matutina',
-      firstGuardian: {
-        fullName: 'José Fernández',
-        identificationType: 'Cédula',
-        identificationNumber: '001-0678901-2',
-        phoneNumber: '829-555-5678',
-        workplace: 'Ministerio de Salud'
-      },
-      medicalInfo: {
-        hasMedicalCondition: false,
-        takesMedication: false,
-        allergies: 'Frutos secos',
-        preferredMedicalCenter: 'Hospital Regional'
-      },
-      authorizedPerson: {
-        fullName: 'María García',
-        phoneNumber: '829-555-9012',
-        relationship: 'Madre'
-      },
-      authorizations: {
-        allowSocialMedia: false
-      }
+  schedules: Schedule[] = [];
+  ciclos: string[] = CICLOS_CURSOS_DROPDOWN.map(c => c.value);
+
+  constructor() {
+    this.supabase = this.supabaseService.getSupabase();
+  }
+
+  ngOnInit(): void {
+    this.loadSchedules();
+    this.loadChildren();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  async loadSchedules(): Promise<void> {
+    try {
+      const { data, error } = await this.supabase
+        .from('schedules')
+        .select('*')
+        .eq('status', 'ACTIVA');
+
+      if (error) throw error;
+      console.log('Schedules loaded:', data);
+      this.schedules = data || [];
+    } catch (error) {
+      console.error('Error loading schedules:', error);
     }
-  ];
+  }
 
-  get filteredChildren(): Child[] {
-    if (!this.searchValue) {
-      return this.mockChildren;
-    }
+  async loadChildren(): Promise<void> {
+    this.loading = true;
+    debugger;
+    try {
+      const { data, error } = await this.supabase
+        .from('children_with_active_registration')
+        .select('*')
+        .order('full_name', { ascending: true });
 
-    const value = this.searchValue.toLowerCase();
-    return this.mockChildren.filter(child => {
-      switch (this.searchType) {
-        case 'name':
-          return child.fullName.toLowerCase().includes(value);
-        case 'gender':
-          return child.gender.toLowerCase().includes(value);
-        case 'schedule':
-          return child.schedule.toLowerCase().includes(value);
-        case 'address':
-          return child.address.toLowerCase().includes(value);
-        default:
-          return true;
+      if (error) throw error;
+
+      let newData = [];
+      //  hacer un map de data para validar si el ciclo del nino es igual al que debe de tener segun su fecha de nacimiento
+      console.log('Children loaded:', data);
+      if (data) {
+        newData = data.map(child => {
+          const realCiclo = this.validateRealCicle(child.birth_date);
+          child.registration = {
+            created_at: child.registration_created_at,
+            id: child.registration_id,
+           status: child.registration_status
+          };
+          child.schedule = {
+            id: child.schedule_id,
+            description: child.schedule_description,
+            status: child.schedule_status
+          }
+          return {
+            ...child,
+            cicloToValidate: realCiclo,
+            isValidCiclo: child.ciclo === realCiclo ? true : false,
+          };
+        });
       }
+
+      this.children = newData || [];
+      this.applyFilters();
+    } catch (error) {
+      console.error('Error loading children:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  applyFilters(): void {
+    this.filteredChildren = this.children.filter(child => {
+      const matchNombre = !this.filters.nombre ||
+        child.full_name.toLowerCase().includes(this.filters.nombre.toLowerCase());
+
+      const matchFecha = !this.filters.fechaNacimiento ||
+        new Date(child.birth_date).toISOString().split('T')[0] === this.filters.fechaNacimiento;
+
+      const matchGenero = !this.filters.genero ||
+        child.gender === this.filters.genero;
+
+      const matchSchedule = !this.filters.schedule_id ||
+        child.schedule_id === this.filters.schedule_id;
+
+      const matchCiclo = !this.filters.ciclo ||
+        child.ciclo === this.filters.ciclo;
+
+      return matchNombre && matchFecha && matchGenero && matchSchedule && matchCiclo;
     });
+  }
+
+  clearFilters(): void {
+    this.filters = {
+      nombre: '',
+      fechaNacimiento: '',
+      genero: '',
+      schedule_id: '',
+      ciclo: ''
+    };
+    this.applyFilters();
   }
 
   calculateAge(birthDate: string): string {
-    const today = new Date();
-    const birth = new Date(birthDate);
-
-    let years = today.getFullYear() - birth.getFullYear();
-    let months = today.getMonth() - birth.getMonth();
-    let days = today.getDate() - birth.getDate();
-
-    if (days < 0) {
-      months--;
-      // Get days in previous month
-      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-      days += prevMonth.getDate();
-    }
-
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-
-    // Calculate weeks and remaining days
-    let weeks = Math.floor(days / 7);
-    let remainingDays = days % 7;
-
-    const parts: string[] = [];
-    if (years > 0) parts.push(`${years} año${years > 1 ? 's' : ''}`);
-    if (months > 0) parts.push(`${months} mes${months > 1 ? 'es' : ''}`);
-    if (weeks > 0) parts.push(`${weeks} semana${weeks > 1 ? 's' : ''}`);
-    if (remainingDays > 0) parts.push(`${remainingDays} día${remainingDays > 1 ? 's' : ''}`);
-
-    // If all are zero (newborn), show "0 días"
-    if (parts.length === 0) {
-      parts.push('0 días');
-    }
-
-    return parts.join(', ');
+    return calculateAgeToString(birthDate);
   }
 
-  getScheduleCount(schedule: string): number {
-    return this.mockChildren.filter(child => child.schedule === schedule).length;
+  getScheduleName(scheduleId: string): string {
+    const schedule = this.schedules.find(s => s.id === scheduleId);
+    return schedule?.description || 'Sin asignar';
   }
 
-  async openDetailModal(child: Child): Promise<void> {
-    this.selectedChild = child;
-    this.isModalOpen = true;
-    console.log('Abrir modal para niño:', child);
+  get totalChildren(): number {
+    return this.filteredChildren.length;
+  }
 
-    const modal = await this.modalCtrl.create({
-      component: ChildDetailModalComponent,
-      componentProps: {
-        child: child,
-        isOpen: true
-      },
-      cssClass: 'full-modal'
+  get childrenBySchedule(): { schedule: string; count: number }[] {
+    const grouped = this.filteredChildren.reduce((acc, child) => {
+      const scheduleName = this.getScheduleName(child.schedule_id);
+      acc[scheduleName] = (acc[scheduleName] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(grouped).map(([schedule, count]) => ({ schedule, count }));
+  }
+
+  validateRealCicle(birthDate: string): string {
+    const result = obtenerCicloPorFecha(new Date(birthDate));
+    return result.ciclo + ' - ' + result.curso;
+  }
+
+  exportToCSV(): void {
+    const headers = ['Nombre', 'Fecha Nacimiento', 'Edad', 'Género', 'Horario', 'Ciclo', 'Comentario'];
+    const rows = this.filteredChildren.map(child => [
+      child.full_name.replace(/,/g, '-'),
+      new Date(child.birth_date).toLocaleDateString('es-ES').replace(/,/g, '-'),
+      this.calculateAge(child.birth_date.toString()).replace(/,/g, '-'),
+      (child.gender === 'M' ? 'Masculino' : 'Femenino').replace(/,/g, '-'),
+      this.getScheduleName(child.schedule_id).replace(/,/g, '-'),
+      (child.ciclo || '').replace(/,/g, '-'),
+      (child.isValidCiclo ? 'Válido' : `El ciclo actual no es válido. le corresponde el ciclo: (${child?.cicloToValidate})`).replace(/,/g, '-')
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `listado_ninos_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  async viewDetails(child: Child) {
+    console.log('Ver detalles:', child);
+    // Implementar navegación o modal
+
+
+    //obtener el ultimo item de registrations
+    if (!child?.registration) {
+      this.alertCtrl.openFestivaAlert('warning', 'Sin Inscripción', 'El niño no tiene una inscripción asociada.');
+      return;
+    }
+
+    try {
+      // Cargar detalles completos
+      this.alertCtrl.openFestivaAlert('loading', 'Cargando detalles de la inscripción...', 'por favor, espere');
+      const fullDetails = await this.getRegistrationById(child.registration);
+      if (fullDetails) {
+        const modal = await this.modalCtrl.create({
+          component: InscriptionDetailModalComponent,
+          componentProps: {
+            registration: fullDetails
+          },
+          cssClass: 'details-modal full-modal'
+        });
+        await modal.present();
+        await this.alertCtrl.dismiss();
+      }
+    } catch (error) {
+      console.error('Error loading registration details:', error);
+      alert('Error al cargar los detalles de la inscripción');
+    }
+  }
+
+  private async getRegistrationById(registrationPrm: any) {
+    try {
+      const { data, error } = await this.supabase
+        .from('registration')
+        .select(`
+          *,
+          child:children(id, full_name, birth_date, gender, ciclo, avatar_url, address, schedule_id),
+          profile:user_profiles(id, full_name)
+        `)
+        .eq('id', registrationPrm.id)
+        .maybeSingle();
+
+      console.log('Error fetching registration:', error);
+      if (error) throw error;
+      if (!data) return null;
+
+      const registration = data as any;
+      console.log('Base registration data:', registration);
+
+      // Cargar relaciones adicionales
+      const [legalParentsResult, authorizedResult, medicalResult, termsResult] = await Promise.all([
+        this.getLegalParentsByChild(registration.children_id),
+        this.getAuthorizedPersonsByChild(registration.children_id),
+        this.getMedicalInfoByRegistration(registration.children_id),
+        this.getTermsByRegistration(registration.id)
+      ]);
+
+      return {
+        ...registration,
+        legal_parents: legalParentsResult,
+        authorized_persons: authorizedResult,
+        medical_info: medicalResult,
+        terms: termsResult
+      };
+    } catch (error) {
+      console.error('Error fetching registration details:', error);
+      return null;
+    }
+  }
+
+  private async getLegalParentsByChild(childId: string) {
+    const { data, error } = await this.supabase
+      .from('children_legal_parents')
+      .select(`
+        id,
+        relationship,
+        is_primary,
+        legal_parent:legal_parents(id, full_name, phone_number)
+      `)
+      .eq('children_id', childId);
+
+    if (error) {
+      console.error('Error fetching legal parents:', error);
+      return [];
+    }
+
+    return data.map((item: any) => ({
+      id: item.legal_parent.id,
+      full_name: item.legal_parent.full_name,
+      phone_number: item.legal_parent.phone_number,
+      relationship: item.relationship,
+      is_primary: item.is_primary
+    }));
+  }
+
+  private async getAuthorizedPersonsByChild(childId: string) {
+    const { data, error } = await this.supabase
+      .from('authorized_pickup')
+      .select('*')
+      .eq('children_id', childId);
+
+    if (error) {
+      console.error('Error fetching authorized persons:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
+
+  private async getMedicalInfoByRegistration(registrationId: string) {
+    const { data, error } = await this.supabase
+      .from('medical_info')
+      .select('*')
+      .eq('child_id', registrationId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching medical info:', error);
+      return null;
+    }
+
+    return data;
+  }
+
+  private async getTermsByRegistration(registrationId: string) {
+    const { data, error } = await this.supabase
+      .from('terms_condition')
+      .select('*')
+      .eq('registration_id', registrationId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching terms:', error);
+      return null;
+    }
+
+    return data;
+  }
+
+  editChild(child: Child): void {
+    console.log('Editar:', child);
+    // Implementar navegación o modal
+  }
+
+  async deleteChild(child: Child): Promise<void> {
+    if (!confirm(`¿Está seguro de eliminar a ${child?.full_name}?`)) {
+      return;
+    }
+
+    try {
+      const { error } = await this.supabase
+        .from('children')
+        .delete()
+        .eq('id', child.id);
+
+      if (error) throw error;
+
+      this.children = this.children.filter(c => c.id !== child.id);
+      this.applyFilters();
+    } catch (error) {
+      console.error('Error deleting child:', error);
+    }
+  }
+
+  async openActions(ev: Event, children: Child) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: `Acciones - ${children.full_name}`,
+      cssClass: 'custom-action-sheet',
+      buttons: [
+        {
+          text: 'Ver Detalles',
+          icon: 'eye',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            this.viewDetails(children);
+
+          }
+        },
+        {
+          text: 'Ver Documentos',
+          icon: 'document-text',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            // this.onViewDocuments(registration);
+          }
+        },
+        {
+          text: 'Editar Inscripción',
+          icon: 'create',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            // this.onEditRegistration(registration);
+          }
+        },
+        {
+          text: 'Eliminar Inscripción',
+          role: 'destructive',
+          icon: 'trash',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            // this.onDelete(registration);
+          }
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            // Acción de cancelar
+          }
+        }
+      ]
     });
 
-    await modal.present();
+    if(children.registration?.status !== 'ACTIVE'){
+      //remove the edit option
+      this.alertCtrl.openFestivaAlert('warning', 'Acción no permitida', 'No se puede editar un niño/a con una inscripción inactiva.');
+      return;
+    }
 
-    const { data } = await modal.onDidDismiss();
-    console.log('Modal cerrado con datos:', data);
-
-  }
-
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.selectedChild = null;
-  }
-
-  onEditChild(child: Child): void {
-    console.log('Editar niño:', child);
-  }
-
-  onDeleteChild(child: Child): void {
-    console.log('Eliminar niño:', child);
-  }
-
-  onExport(): void {
-    console.log('Exportar listado de niños');
+    await actionSheet.present();
   }
 }

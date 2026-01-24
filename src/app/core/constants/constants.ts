@@ -1,3 +1,4 @@
+import { CicloResult } from "src/app/features/daycare/inscription/inscription.page"
 import { remoteConfig } from "src/environments/environment.remoteconfig"
 
 export const COLORS = {
@@ -141,6 +142,59 @@ export function calculateAgeToString(birthDate: string): string {
     }
 
     return parts.join(', ');
+  }
+
+  export function   obtenerCicloPorFecha(fechaNacimiento: Date): CicloResult {
+    const hoy = new Date();
+
+    let años = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    let meses = hoy.getMonth() - fechaNacimiento.getMonth();
+
+    if (meses < 0) {
+      años--;
+      meses += 12;
+    }
+
+    const edadEnMeses = años * 12 + meses;
+
+    let ciclo = '';
+    let curso = '';
+
+    // Primer Ciclo
+    if (edadEnMeses >= 2 && edadEnMeses <= 5) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo I - Lactantes';
+    } else if (edadEnMeses >= 6 && edadEnMeses <= 11) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo I';
+    } else if (edadEnMeses >= 12 && edadEnMeses <= 23) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo II';
+    } else if (edadEnMeses >= 24 && edadEnMeses <= 35) {
+      ciclo = 'Primer Ciclo';
+      curso = 'Párvulo III';
+    }
+
+    // Segundo Ciclo
+    else if (edadEnMeses >= 36 && edadEnMeses <= 47) {
+      ciclo = 'Segundo Ciclo';
+      curso = 'Prekinder';
+    } else if (edadEnMeses >= 48 && edadEnMeses <= 59) {
+      ciclo = 'Segundo Ciclo';
+      curso = 'Kinder';
+    } else if (edadEnMeses >= 60 && edadEnMeses <= 71) {
+      ciclo = 'Segundo Ciclo';
+      curso = 'Preprimario';
+    } else {
+      ciclo = 'Fuera de rango';
+      curso = 'No aplica';
+    }
+
+    return {
+      ciclo,
+      curso,
+      fecha: fechaNacimiento.toISOString().split('T')[0]
+    };
   }
 
 

@@ -23,11 +23,13 @@ import { PipesModule } from './app/shared/pipes/pipes.module';
 import { LOCALE_ID } from '@angular/core';
 import { environment } from './environments/environment';
 import { routes } from './app/app.routes';
+import { registerIonIcons } from './app/icons/ionicicons.registry';
 
 if (environment.production) {
   enableProdMode();
 }
 
+registerIonIcons(); // 👈 AQUÍ, UNA VEZ
 // Inicialización del Locale
 registerLocaleData(es.default);
 

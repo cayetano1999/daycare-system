@@ -1,12 +1,9 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { addIcons } from 'ionicons';
-import { cameraOutline, documentOutline, saveOutline, printOutline } from 'ionicons/icons';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { InscriptionDetailPrintComponent } from 'src/app/shared/daycare/inscription-detail-print/inscription-detail-print.component';
-import { InscriptionComponent } from 'src/app/shared/daycare/inscription/inscription.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 export const CICLOS_CURSOS_DROPDOWN = [
   {
@@ -60,7 +57,7 @@ export const CICLOS_CURSOS_DROPDOWN = [
   }
 ];
 
-interface CicloResult {
+export interface CicloResult {
   ciclo: string;
   curso: string;
   fecha: string;
@@ -119,7 +116,6 @@ export class InscriptionPage implements OnInit {
   showPrintSection: boolean = false;
 
   constructor(private fb: FormBuilder) {
-    addIcons({ cameraOutline, documentOutline, printOutline, saveOutline });
   }
 
   async ngOnInit() {

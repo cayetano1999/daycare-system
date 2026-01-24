@@ -203,7 +203,7 @@ export class InscriptionListComponent   {
     try {
       // Cargar detalles completos
       this.alertController.openFestivaAlert('loading', 'Cargando detalles de la inscripción...', 'por favor, espere');
-      const fullDetails = await this.getRegistrationById(registration.id);
+      const fullDetails = await this.getRegistrationById(registration);
       if (fullDetails) {
         const modal = await this.modalController.create({
           component: InscriptionDetailModalComponent,
@@ -270,6 +270,13 @@ export class InscriptionListComponent   {
       ]
     });
 
+    if(registration?.status !== 'ACTIVE'){
+      //remove the edit option
+      actionSheet.buttons = actionSheet.buttons?.filter(
+        button => button['text' as keyof typeof button] !== 'Editar Inscripción' && button['text' as keyof typeof button] !== 'Eliminar Inscripción'
+      );
+    }
+
     await actionSheet.present();
   }
 
@@ -305,7 +312,7 @@ export class InscriptionListComponent   {
     return name ? name.charAt(0).toUpperCase() : '?';
   }
 
-  private async getRegistrationById(id: string): Promise<RegistrationWithDetails | null> {
+  private async getRegistrationById(registrationPrm: any): Promise<RegistrationWithDetails | null> {
     try {
       const { data, error } = await this.supabase
         .from('registration')
@@ -314,7 +321,7 @@ export class InscriptionListComponent   {
           child:children(id, full_name, birth_date, gender, ciclo, avatar_url, address, schedule_id),
           profile:user_profiles(id, full_name)
         `)
-        .eq('id', id)
+        .eq('id', registrationPrm.id)
         .maybeSingle();
 
       console.log('Error fetching registration:', error);
@@ -328,8 +335,8 @@ export class InscriptionListComponent   {
       const [legalParentsResult, authorizedResult, medicalResult, termsResult] = await Promise.all([
         this.getLegalParentsByChild(registration.children_id),
         this.getAuthorizedPersonsByChild(registration.children_id),
-        this.getMedicalInfoByRegistration(id),
-        this.getTermsByRegistration(id)
+        this.getMedicalInfoByRegistration(registration.children_id),
+        this.getTermsByRegistration(registration.id)
       ]);
 
       return {
@@ -388,7 +395,7 @@ export class InscriptionListComponent   {
     const { data, error } = await this.supabase
       .from('medical_info')
       .select('*')
-      .eq('registration_id', registrationId)
+      .eq('child_id', registrationId)
       .maybeSingle();
 
     if (error) {

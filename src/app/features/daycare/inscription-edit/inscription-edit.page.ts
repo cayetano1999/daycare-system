@@ -1,14 +1,6 @@
 import { Component, inject, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { addIcons } from 'ionicons';
-import {
-  cameraOutline,
-  documentOutline,
-  saveOutline,
-  printOutline,
-  arrowBackOutline,
-  closeOutline
-} from 'ionicons/icons';
+
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
@@ -119,14 +111,7 @@ export class InscriptionEditPage implements OnInit {
   termsConditionId: string = '';
 
   constructor(private fb: FormBuilder) {
-    addIcons({
-      cameraOutline,
-      documentOutline,
-      printOutline,
-      saveOutline,
-      arrowBackOutline,
-      closeOutline
-    });
+  
   }
 
   async ngOnInit() {

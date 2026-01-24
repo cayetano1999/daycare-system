@@ -6,17 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
-import { addIcons } from 'ionicons';
-import {
-  arrowBackOutline,
-  saveOutline,
-  personOutline,
-  cardOutline,
-  callOutline,
-  briefcaseOutline,
-  checkmarkCircle,
-  closeCircle
-} from 'ionicons/icons';
+
 
 interface GuardianForm {
   full_name: string;
@@ -57,16 +47,7 @@ export class GuardianEditPage implements OnInit {
   errors: { [key: string]: string } = {};
 
   constructor() {
-    addIcons({
-      arrowBackOutline,
-      saveOutline,
-      personOutline,
-      cardOutline,
-      callOutline,
-      briefcaseOutline,
-      checkmarkCircle,
-      closeCircle
-    });
+ 
   }
 
   async ngOnInit() {

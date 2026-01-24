@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import {
   IonCol } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { cameraOutline, documentOutline, saveOutline, printOutline } from 'ionicons/icons';
 import { IonicModule } from '@ionic/angular';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 
@@ -57,12 +55,7 @@ export class InscriptionComponent implements OnInit {
   ];
 
   constructor(private fb: FormBuilder) {
-    addIcons({
-      'camera-outline': cameraOutline,
-      'document-outline': documentOutline,
-      'save-outline': saveOutline,
-      'print-outline': printOutline
-    });
+ 
   }
 
   async ngOnInit() {

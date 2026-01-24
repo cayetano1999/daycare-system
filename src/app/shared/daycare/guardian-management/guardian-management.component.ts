@@ -2,28 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
-  IonCard,
-  IonCardContent,
-  IonButton,
-  IonIcon,
-  IonSearchbar,
-  IonBadge,
-  IonSpinner,
   ModalController,
   AlertController
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import {
-  searchOutline,
-  addOutline,
-  ellipsisVerticalOutline,
-  eyeOutline,
-  createOutline,
-  trashOutline,
-  peopleOutline
-} from 'ionicons/icons';
-import { createClient } from '@supabase/supabase-js';
+
 import { GuardianDetailModalComponent } from '../guardian-detail-modal/guardian-detail-modal.component';
 import { IonicModule } from '@ionic/angular';
 
@@ -185,15 +167,7 @@ export class GuardianManagementComponent implements OnInit {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController
   ) {
-    // addIcons({
-    //   'search-outline': searchOutline,
-    //   'add-outline': addOutline,
-    //   'ellipsis-vertical-outline': ellipsisVerticalOutline,
-    //   'eye-outline': eyeOutline,
-    //   'create-outline': createOutline,
-    //   'trash-outline': trashOutline,
-    //   'people-outline': peopleOutline
-    // });
+  
   }
 
   ngOnInit() {
