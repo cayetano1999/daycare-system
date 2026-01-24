@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar style="--background:#000">
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
@@ -9,16 +9,25 @@
       Editar Tutor
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content class="page-bg">
+
+   <app-custom-header
+    [title]="'Editar Tutor'"
+    [subtitle]="'Actualiza la información del tutor legal'"
+    [showRightBtn]="true"
+    [textRightBtn]="'Cancelar'"
+    [iconRightBtn]="'close-circle'"
+    (rightBtnClick)="goBack()"
+  ></app-custom-header>
   <div class="container">
 
     <!-- Page header -->
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h1>Editar Tutor</h1>
       <p>Actualiza la información del tutor legal</p>
-    </div>
+    </div> -->
 
     <!-- Loading -->
     <div *ngIf="loading" class="loading">

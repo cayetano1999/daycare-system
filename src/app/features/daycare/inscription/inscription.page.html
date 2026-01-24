@@ -1,18 +1,28 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar class="ion-no-border" style="--background: #000;">
     <ion-title class="ion-text-center" style="color: #fff;">Dashboard</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content class="">
   @if(!showPrintSection){
+
+      <app-custom-header
+    [title]="'Formulario de Inscripción'"
+    [subtitle]="'Complete todos los campos requeridos para registrar al niño/a'"
+    [showRightBtn]="true"
+    [textRightBtn]="'Cancelar'"
+    [iconRightBtn]="'close-circle'"
+    (rightBtnClick)="onCancel()"
+  ></app-custom-header>
+
   <div class="bg-gradient-to-br from-slate-50 to-slate-100">
     <div class="p-6 max-w-7xl mx-auto">
       <!-- Header -->
-      <div class="mb-8 no-print">
+      <!-- <div class="mb-8 no-print">
         <h1 class="text-4xl font-bold text-slate-800 mb-2">Formulario de Inscripción</h1>
         <p class="text-slate-600">Complete todos los campos requeridos para registrar al niño/a</p>
-      </div>
+      </div> -->
 
       <form [formGroup]="inscriptionForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-12 gap-6">

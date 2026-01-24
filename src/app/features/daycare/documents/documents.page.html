@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar class="ion-no-border" style="--background: #000;">
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
@@ -7,15 +7,25 @@
     </ion-buttons>
     <ion-title class="ion-text-center" style="color: #fff;">Documentos</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content class="bg-gradient-to-br from-slate-50 to-slate-100">
+
+   <app-custom-header
+    [title]="'Gestión de Documentos'"
+    [subtitle]="'Visualiza y descarga los documentos de inscripción'"
+    [showRightBtn]="true"
+    [textRightBtn]="'Cancelar'"
+    [iconRightBtn]="'close-circle'"
+    (rightBtnClick)="goBack()"
+  ></app-custom-header>
+  
   <div class="p-6 max-w-full mx-auto">
     <!-- Header -->
-    <div class="mb-6">
+    <!-- <div class="mb-6">
       <h1 class="text-4xl font-bold text-slate-800 mb-2">Gestión de Documentos</h1>
       <p class="text-slate-600">Visualiza y descarga los documentos de inscripción</p>
-    </div>
+    </div> -->
 
     <!-- Main Layout Grid -->
     <ion-grid class="ion-no-padding">

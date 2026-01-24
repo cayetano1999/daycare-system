@@ -1,28 +1,22 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar style="--background:#0f172a">
     <ion-title class="ion-text-center text-white">Tutores</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content class="page-bg">
+
+  <app-custom-header [title]="'Gestión de Padres/Tutores'" [subtitle]="'Administra los tutores y sus hijos registrados'"
+    [showRightBtn]="false"></app-custom-header>
   <div class="page-container">
 
-    <!-- Header -->
-    <div class="page-header">
-      <h1>Gestión de Tutores</h1>
-      <p>Administra los tutores y sus hijos registrados</p>
-    </div>
+   
 
     <!-- Filters -->
     <div class="filters-bar">
       <div class="filter search">
         <ion-icon name="search-outline"></ion-icon>
-        <input
-          type="text"
-          placeholder="Buscar tutor..."
-          [(ngModel)]="searchTerm"
-          (input)="filterGuardians()"
-        />
+        <input type="text" placeholder="Buscar tutor..." [(ngModel)]="searchTerm" (input)="filterGuardians()" />
       </div>
 
       <div class="filter">
@@ -79,7 +73,7 @@
               <ion-button fill="clear" size="small" (click)="openActions(guardian)">
                 <ion-icon name="ellipsis-vertical"></ion-icon>
               </ion-button>
-             
+
             </td>
           </tr>
 

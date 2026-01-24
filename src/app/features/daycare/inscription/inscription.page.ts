@@ -1,8 +1,10 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
+import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
 import { InscriptionDetailPrintComponent } from 'src/app/shared/daycare/inscription-detail-print/inscription-detail-print.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 export const CICLOS_CURSOS_DROPDOWN = [
@@ -68,7 +70,7 @@ export interface CicloResult {
   templateUrl: './inscription.page.html',
   styleUrls: ['./inscription.page.scss'],
   standalone: true,
-  imports: [InscriptionDetailPrintComponent, ...StandAloneModules],
+  imports: [InscriptionDetailPrintComponent, CustomHeaderComponent, ...StandAloneModules],
 })
 export class InscriptionPage implements OnInit {
 
@@ -76,6 +78,7 @@ export class InscriptionPage implements OnInit {
   supabaseService = inject(SupabaseService);
   alertService = inject(AlertControllerService);
   supabaseStorage = inject(SupabaseStorageService);
+  router = inject(Router);
 
   //Childs
   @ViewChild('printSection') printSection!: InscriptionDetailPrintComponent;
@@ -128,6 +131,9 @@ export class InscriptionPage implements OnInit {
     await this.initSchedules();
   }
 
+  onCancel() {
+    this.router.navigate(['/daycare/inscription']);
+  }
 
   async initSchedules() {
     const result = await this.supabaseService.getSupabase().from('schedules').select('*');

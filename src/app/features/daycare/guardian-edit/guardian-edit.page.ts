@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
 
 
 interface GuardianForm {
@@ -21,7 +22,7 @@ interface GuardianForm {
   templateUrl: './guardian-edit.page.html',
   styleUrls: ['./guardian-edit.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, CustomHeaderComponent]
 })
 export class GuardianEditPage implements OnInit {
   supabaseService = inject(SupabaseService);

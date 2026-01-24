@@ -6,6 +6,7 @@ import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
 
 export const CICLOS_CURSOS_DROPDOWN = [
   {
@@ -70,7 +71,7 @@ interface CicloResult {
   templateUrl: './inscription-edit.page.html',
   styleUrls: ['./inscription-edit.page.scss'],
   standalone: true,
-  imports: [...StandAloneModules],
+  imports: [...StandAloneModules, CustomHeaderComponent],
 })
 export class InscriptionEditPage implements OnInit {
   supabaseService = inject(SupabaseService);
@@ -131,6 +132,10 @@ export class InscriptionEditPage implements OnInit {
         this.goBack();
       }
     });
+  }
+
+  onCancel() {
+    this.router.navigate(['/daycare/inscription']);
   }
 
   async ionViewWillEnter() {

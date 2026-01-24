@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular/standalone';
 import { InscriptionDetailModalComponent } from 'src/app/shared/daycare/inscription-detail-modal/inscription-detail-modal.component';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
 
 interface RegistrationWithDetails {
   id: string;
@@ -37,7 +38,7 @@ interface RegistrationWithDetails {
   templateUrl: './inscription-list.component.html',
   styleUrls: ['./inscription-list.component.scss'],
   standalone: true,
-  imports: [...StandAloneModules],
+  imports: [...StandAloneModules, CustomHeaderComponent],
   providers: [ModalController]
 
 })
@@ -192,7 +193,7 @@ export class InscriptionListComponent   {
     this.openMenuId = null;
   }
 
-  redirectToNewInscription() {
+  redirectToNewInscription(event: any) {
     this.openMenuId = null;
     this.router.navigate(['/daycare/inscription-new']);
   }

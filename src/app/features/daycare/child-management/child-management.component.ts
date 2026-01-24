@@ -424,7 +424,7 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
           icon: 'document-text',
           cssClass: 'option-sheet-button',
           handler: () => {
-            // this.onViewDocuments(registration);
+            this.router.navigate(['/daycare/documents', children.registration?.id ]);
           }
         },
         {
@@ -433,10 +433,11 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
           cssClass: 'option-sheet-button',
           handler: () => {
             // this.onEditRegistration(registration);
+            this.router.navigate(['/daycare/inscription', children.registration?.id ]);
           }
         },
         {
-          text: 'Eliminar Inscripción',
+          text: 'Eliminar Niño/a',
           role: 'destructive',
           icon: 'trash',
           cssClass: 'option-sheet-button',

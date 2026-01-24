@@ -12,6 +12,7 @@ import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.s
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { PipesModule } from "../../../shared/pipes/pipes.module";
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
+import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
 
 interface Child {
   id: string;
@@ -38,7 +39,7 @@ interface Documents {
   templateUrl: './documents.page.html',
   styleUrls: ['./documents.page.scss'],
   standalone: true,
-  imports: [...StandAloneModules],
+  imports: [...StandAloneModules, CustomHeaderComponent],
   providers: [SafeHtmlPipe]
 })
 export class DocumentsPage implements OnInit, OnDestroy {

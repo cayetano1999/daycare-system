@@ -9,6 +9,7 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { GuardianDetailsModalComponent } from 'src/app/shared/daycare/guardian-details-modal/guardian-details-modal.component';
 import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { ActionSheetController } from '@ionic/angular/standalone';
+import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
 
 interface Guardian {
   id: string;
@@ -26,7 +27,7 @@ interface Guardian {
   templateUrl: './guardians.page.html',
   styleUrls: ['./guardians.page.scss'],
   standalone: true,
-  imports: [...StandAloneModules, GuardianDetailsModalComponent],
+  imports: [...StandAloneModules, CustomHeaderComponent],
   providers: [ModalController]
 })
 export class GuardiansPage implements OnDestroy {
