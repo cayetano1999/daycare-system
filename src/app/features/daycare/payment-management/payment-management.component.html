@@ -266,23 +266,23 @@
           </div>
 
           <!-- DETALLE -->
-          <ion-accordion-group value="details">
-            <ion-accordion  value="details">
-              <ion-item slot="header">
+          <!-- <ion-accordion-group value="details">
+            <ion-accordion  value="details"> -->
+              <!-- <ion-item slot="header">
                 <ion-label>Ver cuotas</ion-label>
-              </ion-item>
+              </ion-item> -->
 
               <div slot="content" class="installments">
                 <div *ngFor="let inst of child.installments" class="installment-row">
-                  <span>{{ inst.payment_date }}</span>
+                  <span>{{ inst.description }}</span>
                   <span>RD$ {{ inst.amount }}</span>
                   <ion-badge [color]="getStatusColor(inst.status)">
                     {{ getStatusLabel(inst.status) }}
                   </ion-badge>
                 </div>
               </div>
-            </ion-accordion>
-          </ion-accordion-group>
+            <!-- </ion-accordion>
+          </ion-accordion-group> -->
 
         </ion-card-content>
       </ion-card>

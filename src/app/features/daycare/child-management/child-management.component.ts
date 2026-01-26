@@ -29,7 +29,7 @@ interface Child {
   registration?: any;
 }
 
-interface Schedule {
+export interface Schedule {
   id: string;
   description: string;
   status: string;

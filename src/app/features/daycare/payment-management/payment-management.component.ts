@@ -16,6 +16,7 @@ interface Payment {
   payment_date: string;
   status: 'PENDING' | 'COMPLETED' | 'OVERDUE';
   notes?: string;
+  description?: string;
 }
 
 interface ChildPaymentGroup {
@@ -138,6 +139,7 @@ export class PaymentManagementComponent implements OnInit {
       .select(`
       id,
       amount_total,
+      description,
       status,
       created_at,
       child:children (
@@ -168,7 +170,8 @@ export class PaymentManagementComponent implements OnInit {
       child_name: item.child?.full_name ?? 'N/A',
       amount: item.amount_total,
       payment_date: item.created_at.split('T')[0],
-      status: item.status as 'PENDING' | 'COMPLETED' | 'OVERDUE'
+      status: item.status as 'PENDING' | 'COMPLETED' | 'OVERDUE',
+      description: item?.description
     }));
   }
 
@@ -178,6 +181,9 @@ export class PaymentManagementComponent implements OnInit {
     // this.payments = this.mockPayments;
     await this.loadPayments();
     this.applyFilters();
+    console.log('Payments loaded:', this.payments);
+    console.log('Filtered Payments:', this.filteredPayments);
+    console.log('Grouped Children:', this.groupedChildren);
   }
 
   groupPaymentsByChild(payments: Payment[]): ChildPaymentGroup[] {
@@ -231,7 +237,7 @@ export class PaymentManagementComponent implements OnInit {
       const { data, error } = await this.supabaseService.getSupabase().functions.invoke('generate-monthly-installments', {
         body: {
           period_year: 2026,
-          period_month: 3,
+          period_month: 5,
         }
       });
       if (error) {
@@ -300,9 +306,10 @@ export class PaymentManagementComponent implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.payment) {
-      this.payments.unshift(data.payment);
-      this.applyFilters();
+      // this.payments.unshift(data.payment);
+      // this.applyFilters();
     }
+    await this.ionViewWillEnter();
   }
 
   getStatusColor(status: string): string {
@@ -313,6 +320,8 @@ export class PaymentManagementComponent implements OnInit {
         return 'warning';
       case 'OVERDUE':
         return 'danger';
+        case 'PARCIAL':
+        return 'tertiary';
       default:
         return 'medium';
     }
@@ -326,6 +335,8 @@ export class PaymentManagementComponent implements OnInit {
         return 'Pendiente';
       case 'OVERDUE':
         return 'Vencido';
+        case 'PARCIAL':
+        return 'Parcial';
       default:
         return status;
     }

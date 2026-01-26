@@ -239,6 +239,7 @@ export class AlertControllerService {
     }
 
     public async openFestivaAlert(type: 'success' | 'warning' | 'question' | 'danger' | 'loading' = 'success', title: string, message: string, showCancel: boolean = false, cancelText?: string, confirmText?: string) {
+        this.dismiss();
 
         const modal = await this.modalCtrl.create({
             component: CustomDialogComponent,
@@ -255,7 +256,6 @@ export class AlertControllerService {
         });
         await modal.present();
         const result = await modal.onDidDismiss();
-        this.dismiss();
         return result.data;
 
     }
