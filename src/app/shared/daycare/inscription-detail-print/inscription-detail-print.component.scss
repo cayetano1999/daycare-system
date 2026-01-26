@@ -188,38 +188,46 @@
 }
 
 // Print-specific styles
-@media print {
-  .info-grid .info-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* 3 columnas fijas */
-    gap: 16px;
-  }
+// @media print {
+//   .info-grid .info-row {
+//     display: grid;
+//     grid-template-columns: 1fr 1fr 1fr; /* 3 columnas fijas */
+//     gap: 16px;
+//   }
 
-  .info-item.full-width {
-    grid-column: 1 / -1;
-  }
+//   .info-item.full-width {
+//     grid-column: 1 / -1;
+//   }
 
-    .document-header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
+//     .document-header {
+//     text-align: center;
+//     margin-bottom: 24px;
+//   }
 
-  .document-title h2 {
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
-  }
+//   .document-title h2 {
+//     margin-left: auto;
+//     margin-right: auto;
+//     width: fit-content;
+//   }
 
-  .print-content {
-    border: none !important;
-    padding: 0 !important;
-  }
-}
+//   .print-content {
+//     width: 210mm;
+//   min-height: 297mm;
+//   padding: 20mm;
+//   background: white;
+//   color: #000;
+//   }
+// }
 
 // Screen-only styles
 @media screen {
     .print-content {
         // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        width: 210mm;
+  min-height: 297mm;
+  padding: 20mm;
+  background: white;
+  color: #000;
     }
 }
 
@@ -258,6 +266,29 @@
     break-inside: avoid;
 }
 
+/* Ocultar botones al imprimir */
+.no-print {
+  display: none !important;
+}
+
+/* Ajustes generales para impresión */
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .print-container {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Asegurar ancho tipo A4 */
 .print-content {
-    max-width: 100% !important;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 20mm;
+  background: white;
+  color: #000;
 }

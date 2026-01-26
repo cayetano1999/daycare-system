@@ -1,11 +1,13 @@
 <div class="print-container" id="form-print">
   <!-- Print Button (hidden when printing) -->
+  @if(!printing){
   <div class="print-actions no-print">
     <ion-button (click)="onPrint()" color="dark">
       <ion-icon slot="start" name="print-outline"></ion-icon>
       Imprimir Formulario
     </ion-button>
   </div>
+  }
 
   <!-- Print Content -->
   <div class="print-content" *ngIf="inscriptionData">
@@ -15,11 +17,11 @@
 
       <ion-row>
         <ion-col size="12" style="display: flex; justify-content: center; align-items: center;">
-           <img style="width: 20%;" src="assets/img/baby-house.jpeg" alt="">
+          <img style="width: 20%;" src="assets/img/baby-house.jpeg" alt="">
         </ion-col>
       </ion-row>
       <div class="institution-info">
-       
+
         <h1 class="institution-name">Baby House</h1>
         <p class="institution-subtitle">Centro de Cuidado Infantil</p>
       </div>
@@ -56,6 +58,12 @@
             <span class="label">Género:</span>
             <span class="value">{{ getGenderText(inscriptionData.childData.gender) }}</span>
           </div>
+
+          <div class="info-item">
+            <span class="label">Cuotas mensuales:</span>
+            <span class="value">{{ inscriptionData.childData.monthly_quotes }}</span>
+          </div>
+
         </div>
 
         <div class="info-row">
@@ -66,13 +74,6 @@
           <div class="info-item">
             <span class="label">Fecha de Inicio:</span>
             <span class="value">{{ formatDate(inscriptionData.signature.start_date) }}</span>
-          </div>
-        </div>
-
-        <div class="info-row">
-          <div class="info-item full-width">
-            <span class="label">Dirección:</span>
-            <span class="value">{{ inscriptionData.childData.address }}</span>
           </div>
         </div>
       </div>
@@ -118,7 +119,7 @@
 
     <!-- Second Guardian Section (if exists) -->
     <div class="section" *ngIf="inscriptionData.secondGuardian?.full_name">
-      <h3 class="section-title">3. Segundo Tutor Legal</h3>
+      <h3 class="section-title py-5">3. Segundo Tutor Legal</h3>
 
       <div class="info-grid">
         <div class="info-row">
@@ -170,14 +171,16 @@
           </div>
         </div>
 
-        <div class="info-row" *ngIf="inscriptionData.medicalInfo.has_medical_condition && inscriptionData.medicalInfo.medical_condition_details">
+        <div class="info-row"
+          *ngIf="inscriptionData.medicalInfo.has_medical_condition && inscriptionData.medicalInfo.medical_condition_details">
           <div class="info-item full-width">
             <span class="label">Detalles de la Condición Médica:</span>
             <span class="value">{{ inscriptionData.medicalInfo.medical_condition_details }}</span>
           </div>
         </div>
 
-        <div class="info-row" *ngIf="inscriptionData.medicalInfo.takes_medication && inscriptionData.medicalInfo.medication_details">
+        <div class="info-row"
+          *ngIf="inscriptionData.medicalInfo.takes_medication && inscriptionData.medicalInfo.medication_details">
           <div class="info-item full-width">
             <span class="label">Medicamentos que Toma:</span>
             <span class="value">{{ inscriptionData.medicalInfo.medication_details }}</span>
@@ -204,7 +207,8 @@
 
     <!-- Authorized Person Section -->
     <div class="section">
-      <h3 class="section-title">{{ inscriptionData.secondGuardian?.full_name ? '5' : '4' }}. Persona Autorizada para Recoger al Niño/a</h3>
+      <h3 class="section-title">{{ inscriptionData.secondGuardian?.full_name ? '5' : '4' }}. Persona Autorizada para
+        Recoger al Niño/a</h3>
 
       <div class="info-grid">
         <div class="info-row">

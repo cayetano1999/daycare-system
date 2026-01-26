@@ -126,7 +126,7 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
           child.registration = {
             created_at: child.registration_created_at,
             id: child.registration_id,
-           status: child.registration_status
+            status: child.registration_status
           };
           child.schedule = {
             id: child.schedule_id,
@@ -425,7 +425,7 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
           icon: 'document-text',
           cssClass: 'option-sheet-button',
           handler: () => {
-            this.router.navigate(['/daycare/documents', children.registration?.id ]);
+            this.router.navigate(['/daycare/documents', children.registration?.id]);
           }
         },
         {
@@ -434,7 +434,15 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
           cssClass: 'option-sheet-button',
           handler: () => {
             // this.onEditRegistration(registration);
-            this.router.navigate(['/daycare/inscription', children.registration?.id ]);
+            this.router.navigate(['/daycare/inscription', children.registration?.id]);
+          }
+        },
+        {
+          text: 'Generar Cuota',
+          icon: 'cash',
+          cssClass: 'option-sheet-button',
+          handler: () => {
+            this.onGenerateFee(children);
           }
         },
         {
@@ -457,12 +465,37 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
       ]
     });
 
-    if(children.registration?.status !== 'ACTIVE'){
+    if (children.registration?.status !== 'ACTIVE') {
       //remove the edit option
       this.alertCtrl.openFestivaAlert('warning', 'Acción no permitida', 'No se puede editar un niño/a con una inscripción inactiva.');
       return;
     }
 
     await actionSheet.present();
+  }
+
+  async onGenerateFee(value: any) {
+
+    this.alertCtrl.openFestivaAlert('loading', 'Generando cuota mensual...', 'por favor, espere');
+    console.log('Generating fee for registration:', value);
+    const {data, error} = await this.supabaseService.getSupabase().functions.invoke('generate-monthly-quote-unique', {
+      body: {
+        child_id: value.id,
+        registration_id: value.registration?.id,
+        period_year: 2026,
+        period_month: 1,
+      }
+    });
+
+    if(error) {
+      console.error('Error generating fee:', error);
+      this.alertCtrl.openFestivaAlert('danger', 'Error', 'Ocurrió un error al generar la cuota mensual.');
+      return;
+    }
+
+    await  this.alertCtrl.confirmation(()=> {
+      this.alertCtrl.dismiss();
+      this.router.navigate(['/daycare/payment-management']);
+    }, "La cuota ha sido generada, desea ver el listado de pagos?", 'Cuota Generada', 'Si', ()=> {}, 'No');
   }
 }

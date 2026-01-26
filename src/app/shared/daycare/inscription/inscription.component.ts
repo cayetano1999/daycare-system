@@ -81,7 +81,8 @@ export class InscriptionComponent implements OnInit {
         birth_date: ['2023-01-01', [Validators.required, this.validBirthDate]],
         gender: ['M', Validators.required],
         address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
-        schedule: ['Matutina', Validators.required]
+        schedule: ['Matutina', Validators.required],
+        
       }),
       firstGuardian: this.fb.group({
         full_name: ['JUAN SOTO', [Validators.required, Validators.minLength(3)]],

@@ -153,6 +153,7 @@ export class InscriptionPage implements OnInit {
         address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
         schedule_id: ['087055be-55f1-4c89-8d29-0f1edfdb3785', Validators.required],
         ciclo: ['', Validators.required],
+        monthly_quotes: [0, [Validators.required, Validators.min(0)]]
       }),
       firstGuardian: this.fb.group({
         full_name: ['JUAN SOTO', [Validators.required, Validators.minLength(3)]],

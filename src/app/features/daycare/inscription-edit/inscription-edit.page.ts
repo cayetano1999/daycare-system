@@ -159,6 +159,7 @@ export class InscriptionEditPage implements OnInit {
         address: ['', [Validators.required, Validators.minLength(10)]],
         schedule_id: ['', Validators.required],
         ciclo: ['', Validators.required],
+        monthly_quotes: [0, [Validators.required, Validators.min(0)]]
       }),
       firstGuardian: this.fb.group({
         full_name: ['', [Validators.required, Validators.minLength(3)]],
