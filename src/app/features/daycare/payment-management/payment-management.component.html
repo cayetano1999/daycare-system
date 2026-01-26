@@ -1,37 +1,19 @@
-<ion-header>
-  <ion-toolbar class="ion-no-border" style="--background: #000;">
-    <ion-title class="ion-text-center" style="color: #fff;">Dashboard</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="payment-management">
+
+  <app-custom-header [title]="'Gestión de Pagos'" [subtitle]="'Administración y seguimiento de pagos'"
+    [showRightBtn]="true" [textRightBtn]="'Registrar Pago'" [iconRightBtn]="'add-circle'"
+    (rightBtnClick)="openPaymentModal()"></app-custom-header>
+
   <div class="container">
     <!-- Header -->
     <div class="header">
       <div class="header-content">
-        <div class="header-info">
-          <div class="icon-container">
-            <ion-icon name="card" class="header-icon"></ion-icon>
-          </div>
-          <div class="header-text">
-            <h1 class="title">Gestión de Pagos</h1>
-            <p class="subtitle">Administración y seguimiento de pagos</p>
-          </div>
-        </div>
         <div class="header-actions">
-          <ion-button
-            color="success"
-            class="add-button"
-            (click)="openPaymentModal()"
-          >
-            <ion-icon slot="start" name="add-circle"></ion-icon>
-            Agregar Pago
+          <ion-button color="dark" class="add-button" (click)="insertMonthlyQuotes()">
+            <ion-icon slot="start" name="sync-circle"></ion-icon>
+            Generar cuotas
           </ion-button>
-          <ion-button
-            color="primary"
-            class="export-button"
-            (click)="onExport()"
-          >
+          <ion-button color="dark" class="export-button" (click)="onExport()">
             <ion-icon slot="start" name="download"></ion-icon>
             Exportar
           </ion-button>
@@ -46,12 +28,7 @@
           <ion-icon name="funnel"></ion-icon>
           Filtros de Búsqueda
         </h3>
-        <ion-button
-          fill="clear"
-          size="small"
-          color="medium"
-          (click)="clearFilters()"
-        >
+        <ion-button fill="clear" size="small" color="medium" (click)="clearFilters()">
           <ion-icon slot="start" name="close-circle"></ion-icon>
           Limpiar
         </ion-button>
@@ -70,51 +47,31 @@
 
         <div class="filter-group">
           <label class="filter-label">Valor:</label>
-          <input
-            type="text"
-            [(ngModel)]="searchValue"
-            (ngModelChange)="applyFilters()"
-            class="filter-input"
+          <input type="text" [(ngModel)]="searchValue" (ngModelChange)="applyFilters()" class="filter-input"
             placeholder="Ingrese el valor a buscar...">
         </div>
 
         <!-- Date Range -->
         <div class="filter-group">
           <label class="filter-label">Fecha Desde:</label>
-          <input
-            type="date"
-            [(ngModel)]="startDate"
-            (ngModelChange)="applyFilters()"
-            class="filter-input">
+          <input type="date" [(ngModel)]="startDate" (ngModelChange)="applyFilters()" class="filter-input">
         </div>
 
         <div class="filter-group">
           <label class="filter-label">Fecha Hasta:</label>
-          <input
-            type="date"
-            [(ngModel)]="endDate"
-            (ngModelChange)="applyFilters()"
-            class="filter-input">
+          <input type="date" [(ngModel)]="endDate" (ngModelChange)="applyFilters()" class="filter-input">
         </div>
 
         <!-- Amount Range -->
         <div class="filter-group">
           <label class="filter-label">Monto Mínimo:</label>
-          <input
-            type="number"
-            [(ngModel)]="minAmount"
-            (ngModelChange)="applyFilters()"
-            class="filter-input"
+          <input type="number" [(ngModel)]="minAmount" (ngModelChange)="applyFilters()" class="filter-input"
             placeholder="0.00">
         </div>
 
         <div class="filter-group">
           <label class="filter-label">Monto Máximo:</label>
-          <input
-            type="number"
-            [(ngModel)]="maxAmount"
-            (ngModelChange)="applyFilters()"
-            class="filter-input"
+          <input type="number" [(ngModel)]="maxAmount" (ngModelChange)="applyFilters()" class="filter-input"
             placeholder="0.00">
         </div>
       </div>
@@ -122,29 +79,26 @@
 
     <!-- Stats Cards -->
     <div class="stats-grid">
-      <ion-card class="stat-card">
+      <!-- <ion-card class="stat-card">
         <ion-card-content>
           <div class="stat-content">
             <div class="stat-info">
               <p class="stat-label">Total de Pagos</p>
-              <p class="stat-value">{{ payments.length }}</p>
+              <p class="stat-value">{{ filteredPayments.length }}</p>
             </div>
             <div class="stat-icon-container blue">
               <ion-icon name="receipt" class="stat-icon"></ion-icon>
             </div>
           </div>
         </ion-card-content>
-      </ion-card>
+      </ion-card> -->
 
       <ion-card class="stat-card">
         <ion-card-content>
           <div class="stat-content">
             <div class="stat-info">
               <p class="stat-label">Monto Total Filtrado</p>
-              <p class="stat-value">RD$ {{ getTotalAmount().toFixed(2) }}</p>
-            </div>
-            <div class="stat-icon-container green">
-              <ion-icon name="cash" class="stat-icon"></ion-icon>
+              <p class="stat-value">RD$ {{ getTotalAmount() | currency:'DOP':'symbol':'1.2-2'}}</p>
             </div>
           </div>
         </ion-card-content>
@@ -154,12 +108,10 @@
         <ion-card-content>
           <div class="stat-content">
             <div class="stat-info">
-              <p class="stat-label">Completados</p>
-              <p class="stat-value">{{ getStatusCount('completed') }}</p>
+              <p class="stat-label">Completados <ion-badge color="success" mode="ios">{{ getStatusCount('COMPLETED') }} </ion-badge></p>
+              <p class="stat-value">{{ (totalAmountsByStatus['COMPLETED'] || 0) | currency:'DOP':'symbol':'1.2-2' }}</p>
             </div>
-            <div class="stat-icon-container success">
-              <ion-icon name="checkmark-circle" class="stat-icon"></ion-icon>
-            </div>
+            
           </div>
         </ion-card-content>
       </ion-card>
@@ -168,12 +120,10 @@
         <ion-card-content>
           <div class="stat-content">
             <div class="stat-info">
-              <p class="stat-label">Pendientes</p>
-              <p class="stat-value">{{ getStatusCount('pending') }}</p>
+              <p class="stat-label">Pendientes <ion-badge color="warning" mode="ios">{{ getStatusCount('PENDING') }} </ion-badge></p>
+              <p class="stat-value"> {{ (totalAmountsByStatus['PENDING'] || 0) | currency:'DOP':'symbol':'1.2-2' }}</p>
             </div>
-            <div class="stat-icon-container warning">
-              <ion-icon name="time" class="stat-icon"></ion-icon>
-            </div>
+            
           </div>
         </ion-card-content>
       </ion-card>
@@ -182,12 +132,12 @@
         <ion-card-content>
           <div class="stat-content">
             <div class="stat-info">
-              <p class="stat-label">Vencidos</p>
-              <p class="stat-value">{{ getStatusCount('overdue') }}</p>
+              <p class="stat-label">Vencidos <ion-badge color="danger" mode="ios">{{ getStatusCount('OVERDUE') }} </ion-badge></p>
+              <p class="stat-value">{{ totalAmountsByStatus['OVERDUE'] || 0 | currency:'DOP':'symbol':'1.2-2'}}</p>
             </div>
-            <div class="stat-icon-container danger">
+            <!-- <div class="stat-icon-container danger">
               <ion-icon name="alert-circle" class="stat-icon"></ion-icon>
-            </div>
+            </div> -->
           </div>
         </ion-card-content>
       </ion-card>
@@ -208,7 +158,7 @@
     </div>
 
     <!-- Table -->
-    <ion-card class="table-card">
+    <!-- <ion-card class="table-card">
       <div class="table-container">
         <table class="data-table">
           <thead>
@@ -271,14 +221,72 @@
           </tbody>
         </table>
 
-        <!-- Empty State -->
+        
         <div *ngIf="filteredPayments.length === 0" class="empty-state">
           <ion-icon name="receipt" class="empty-icon"></ion-icon>
           <p class="empty-title">No se encontraron pagos</p>
           <p class="empty-subtitle">Intenta con otros criterios de búsqueda</p>
         </div>
       </div>
-    </ion-card>
+    </ion-card> -->
+
+
+    <div class="children-cards">
+      <ion-card *ngFor="let child of groupedChildren" class="child-card">
+        <ion-card-content>
+
+          <!-- HEADER -->
+          <div class="child-header">
+            <h3>{{ child.child_name }}</h3>
+
+            <br>
+
+            <ion-badge *ngIf="child.has_overdue" color="danger">
+              Vencido
+            </ion-badge>
+
+            <ion-badge *ngIf="!child.has_overdue && child.has_pending" color="warning">
+              Pendiente
+            </ion-badge>
+
+            <ion-badge *ngIf="!child.has_pending && !child.has_overdue" color="success">
+              Al día
+            </ion-badge>
+          </div>
+
+          <!-- RESUMEN -->
+          <div class="child-summary">
+            <p><strong>Total:</strong> RD$ {{ child.total_amount }}</p>
+            <p *ngIf="child.pending_amount > 0">
+              <strong>Pendiente:</strong> RD$ {{ child.pending_amount }}
+            </p>
+            <p *ngIf="child.overdue_amount > 0">
+              <strong>Vencido:</strong> RD$ {{ child.overdue_amount }}
+            </p>
+          </div>
+
+          <!-- DETALLE -->
+          <ion-accordion-group value="details">
+            <ion-accordion  value="details">
+              <ion-item slot="header">
+                <ion-label>Ver cuotas</ion-label>
+              </ion-item>
+
+              <div slot="content" class="installments">
+                <div *ngFor="let inst of child.installments" class="installment-row">
+                  <span>{{ inst.payment_date }}</span>
+                  <span>RD$ {{ inst.amount }}</span>
+                  <ion-badge [color]="getStatusColor(inst.status)">
+                    {{ getStatusLabel(inst.status) }}
+                  </ion-badge>
+                </div>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+
+        </ion-card-content>
+      </ion-card>
+    </div>
 
     <!-- Results Summary -->
     <div class="results-summary">

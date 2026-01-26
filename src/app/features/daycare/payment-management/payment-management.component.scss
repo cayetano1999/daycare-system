@@ -59,7 +59,7 @@
         .add-button,
         .export-button {
           --border-radius: 1rem;
-          --box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+          // --box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
           font-weight: 600;
           text-transform: none;
           height: 3rem;
@@ -397,4 +397,64 @@ ion-popover {
 
 input, select {
     background: white;
+}
+
+.children-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.child-card {
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.child-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.child-summary {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 12px;
+
+  p {
+    margin: 2px 0;
+  }
+}
+
+.installments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.installment-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.installment-row:last-child {
+  border-bottom: none;
+}
+
+ion-badge {
+  font-size: 12px;
+  padding: 4px 8px;
 }

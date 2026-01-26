@@ -24,7 +24,8 @@ import { LOCALE_ID } from '@angular/core';
 import { environment } from './environments/environment';
 import { routes } from './app/app.routes';
 import { registerIonIcons } from './app/icons/ionicicons.registry';
-
+import localeEsDo from '@angular/common/locales/es-DO';
+registerLocaleData(localeEsDo);
 if (environment.production) {
   enableProdMode();
 }
@@ -52,7 +53,7 @@ bootstrapApplication(AppComponent, {
     FirebaseRemoteConfigService,
     FirebaseAppService,
     provideHttpClient(withInterceptorsFromDi()), // HttpClient con interceptores
-    { provide: LOCALE_ID, useValue: 'es' },
+    { provide: LOCALE_ID, useValue: 'es-DO' },
     provideAnimationsAsync(),
     providePrimeNG({
       theme: { preset: Aura }
@@ -68,5 +69,5 @@ bootstrapApplication(AppComponent, {
     }),
   ]
 })
-  .then(() => {})
+  .then(() => { })
   .catch(err => console.error(err));

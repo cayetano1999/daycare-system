@@ -255,6 +255,7 @@ export class AlertControllerService {
         });
         await modal.present();
         const result = await modal.onDidDismiss();
+        this.dismiss();
         return result.data;
 
     }

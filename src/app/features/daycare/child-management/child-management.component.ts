@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { InscriptionDetailModalComponent } from 'src/app/shared/daycare/inscription-detail-modal/inscription-detail-modal.component';
 import { ModalController } from '@ionic/angular';
+import * as XLSX from 'xlsx';
 
 interface Child {
   id: string;
