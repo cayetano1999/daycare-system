@@ -424,6 +424,12 @@ export class InscriptionEditPage implements OnInit {
       const supabase = this.supabaseService.getSupabase();
       const formData = this.inscriptionForm.value;
       formData.childData.avatar_url = this.avatarPreview || formData.childData.avatar_url;
+      debugger;
+      //ELIMINAR EL OBJETO DE SECONDgUARDIAN SI NO TIENE NOMBRE
+        if (!formData?.secondGuardian?.full_name) {
+          delete formData?.secondGuardian;
+          this.secondGuardianId = '';
+        }
 
       await supabase
         .from('children')

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { StandAloneModules } from '../../stand-alone-module';
@@ -49,9 +49,13 @@ interface RegistrationWithDetails {
   } | null;
   terms?: {
     id: string;
-    post_pictures_social_media: boolean;
+    post_pictures_social_network: boolean;
     accepted_at: string;
   } | null;
+
+  authorizations: {
+    post_pictures_social_network: boolean;
+  };
 }
 
 @Component({
@@ -61,10 +65,16 @@ interface RegistrationWithDetails {
   standalone: true,
   imports: [...StandAloneModules]
 })
-export class InscriptionDetailModalComponent {
+export class InscriptionDetailModalComponent implements OnInit {
   @Input() registration!: RegistrationWithDetails;
 
-  constructor(private modalController: ModalController) {}
+  constructor(private modalController: ModalController) {
+    console.log(this.registration);
+  }
+
+  ngOnInit(): void {
+    console.log(this.registration);
+  }
 
   dismiss() {
     this.modalController.dismiss();

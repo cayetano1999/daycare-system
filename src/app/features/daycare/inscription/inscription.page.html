@@ -59,7 +59,7 @@
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre Completo *</label>
                       <input type="text" formControlName="full_name"
-                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-uppercase"
                         [class.border-red-500]="isFieldInvalid('childData', 'full_name')"
                         placeholder="Ingrese el nombre completo">
                       <p *ngIf="isFieldInvalid('childData', 'full_name')" class="text-red-500 text-sm mt-1">

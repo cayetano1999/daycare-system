@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { StandAloneModules } from '../../stand-alone-module';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
@@ -59,13 +59,18 @@ interface InscriptionData {
   standalone: true,
   imports: [...StandAloneModules]
 })
-export class InscriptionDetailPrintComponent {
+export class InscriptionDetailPrintComponent implements OnInit {
   @Input() inscriptionData!: InscriptionData;
   @Input() scheduleDescription: string = '';
 
   printing: boolean = false;
 
   constructor() {}
+
+
+  ngOnInit(): void {
+    console.log('Detalle',this.inscriptionData);
+  }
 
 async onPrint() {
   this.printing = true;

@@ -147,48 +147,48 @@ export class InscriptionPage implements OnInit {
     this.inscriptionForm = this.fb.group({
       childData: this.fb.group({
         avatar_url: ['not_provided'],
-        full_name: ['JOSUE ALEXANDER CAYETANO', [Validators.required, Validators.minLength(3)]],
-        birth_date: ['2023-01-01', [Validators.required, this.validBirthDate]],
-        gender: ['M', Validators.required],
+        full_name: ['', [Validators.required, Validators.minLength(3)]],
+        birth_date: [null, [Validators.required, this.validBirthDate]],
+        gender: ['', Validators.required],
         address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
-        schedule_id: ['087055be-55f1-4c89-8d29-0f1edfdb3785', Validators.required],
+        schedule_id: ['', Validators.required],
         ciclo: ['', Validators.required],
         monthly_quotes: [0, [Validators.required, Validators.min(0)]]
       }),
       firstGuardian: this.fb.group({
-        full_name: ['JUAN SOTO', [Validators.required, Validators.minLength(3)]],
+        full_name: ['', [Validators.required, Validators.minLength(3)]],
         identification_type: ['Cédula', Validators.required],
-        identification_number: ['40209341789', [Validators.required, this.validateIdentification.bind(this)]],
-        phone_number: ['8093716874', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['INAPA 2', Validators.required]
+        identification_number: ['', [Validators.required, this.validateIdentification.bind(this)]],
+        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['', Validators.required]
       }),
       secondGuardian: this.fb.group({
-        full_name: ['MARTA CANDELA'],
+        full_name: [''],
         identification_type: ['Cédula'],
-        identification_number: ['02300893167', [this.validateIdentification.bind(this)]],
-        phone_number: ['8093716874', [Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['INAPA']
+        identification_number: ['', [this.validateIdentification.bind(this)]],
+        phone_number: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['']
       }),
       medicalInfo: this.fb.group({
-        has_medical_condition: [true],
-        medical_condition_details: ['muchas'],
-        takes_medication: [true],
-        medication_details: ['no hay'],
-        allergies: ['a la pobreza'],
-        preferred_medical_center: ['MUSA', Validators.required]
+        has_medical_condition: [false],
+        medical_condition_details: [''],
+        takes_medication: [false],
+        medication_details: [''],
+        allergies: [''],
+        preferred_medical_center: ['', Validators.required]
       }),
       authorizedPerson: this.fb.group({
-        full_name: ['Los Proto Proto', [Validators.required, Validators.minLength(3)]],
-        phone_number: ['8093716874', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        relationship: ['Padre', Validators.required]
+        full_name: ['', [Validators.required, Validators.minLength(3)]],
+        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        relationship: ['', Validators.required]
       }),
       authorizations: this.fb.group({
         post_pictures_social_network: [true]
       }),
       signature: this.fb.group({
-        signature_text: ['LISSETE MARQUEZ', Validators.required],
+        signature_text: ['', Validators.required],
         signature_date: [new Date().toISOString().split('T')[0], Validators.required],
-        start_date: ['2025-01-01', Validators.required],
+        start_date: ['', Validators.required],
         status: ['ACTIVE']
       })
     });
@@ -401,6 +401,11 @@ export class InscriptionPage implements OnInit {
         // Remove file previews before sending to Supabase
         delete dataToSupabase.documents;
         dataToSupabase.childData.avatar_url = this.avatarPreview || 'not_provided';
+
+        //ELIMINAR EL OBJETO DE SECONDgUARDIAN SI NO TIENE NOMBRE
+        if (!dataToSupabase.secondGuardian.full_name) {
+          delete dataToSupabase.secondGuardian;
+        }
 
         if(this.cicloResult?.ciclo == '' && this.cicloResult?.ciclo?.toLowerCase().includes('fuera de rango')){ 
           await this.alertService.dismiss();

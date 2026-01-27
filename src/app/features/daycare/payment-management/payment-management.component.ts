@@ -237,7 +237,7 @@ export class PaymentManagementComponent implements OnInit {
       const { data, error } = await this.supabaseService.getSupabase().functions.invoke('generate-monthly-installments', {
         body: {
           period_year: 2026,
-          period_month: 5,
+          period_month: 7,
         }
       });
       if (error) {
