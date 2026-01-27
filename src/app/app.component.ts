@@ -68,12 +68,12 @@ export class AppComponent implements OnInit {
             icon: 'card-outline',
             url: 'daycare/payment-management'
         },
-        {
-            title: 'Personas Autorizadas',
-            menu: true,
-            icon: 'person-add-outline',
-            url: 'daycare/authorized-person-management'
-        },
+        // {
+        //     title: 'Personas Autorizadas',
+        //     menu: true,
+        //     icon: 'person-add-outline',
+        //     url: 'daycare/authorized-person-management'
+        // },
         {
             title: 'Configuración',
             menu: true,

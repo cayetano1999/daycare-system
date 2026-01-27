@@ -72,7 +72,7 @@
           Cuotas Pendientes / Vencidas
         </h2>
 
-        <ion-card *ngIf="installments.length; else noInstallments">
+        <ion-card *ngIf="installments.length; else noInstallments" style="box-shadow: none;">
           <ion-card-content>
 
             <div class="installment-row" *ngFor="let inst of installments">

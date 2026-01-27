@@ -83,9 +83,9 @@ export class PaymentModalComponent implements OnInit {
 
   paymentMethods = [
     { value: 'EFECTIVO', label: 'Efectivo' },
-    { value: 'TARJETA', label: 'Tarjeta' },
+    // { value: 'TARJETA', label: 'Tarjeta' },
     { value: 'TRANSFERENCIA', label: 'Transferencia' },
-    { value: 'CHEQUE', label: 'Cheque' }
+    // { value: 'CHEQUE', label: 'Cheque' }
   ];
 
   paymentStatuses = [
