@@ -74,13 +74,13 @@ export class AppComponent implements OnInit {
             url: 'daycare/payment-management',
             description: 'Administra los pagos y facturación.'
         },
-        {
-            title: 'Personas Autorizadas',
-            menu: true,
-            icon: 'person-add-outline',
-            url: 'daycare/authorized-person-management',
-            description: 'Administra las personas autorizadas para recoger a los niños.'
-        },
+        // {
+        //     title: 'Personas Autorizadas',
+        //     menu: true,
+        //     icon: 'person-add-outline',
+        //     url: 'daycare/authorized-person-management',
+        //     description: 'Administra las personas autorizadas para recoger a los niños.'
+        // },
 
 
 
@@ -106,7 +106,7 @@ export class AppComponent implements OnInit {
                     await this.supabase.getSupabase().auth.signOut();
                     await this.storageHelper.clear();
                     this.availableMenu = false;
-                    this.router.navigate([RoutesApp.PRE_HOME]);
+                    this.router.navigate([RoutesApp.PRE_HOME], { replaceUrl: true });
                 }
             }
         }
@@ -140,8 +140,11 @@ export class AppComponent implements OnInit {
             this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
             console.log('Usuario cargado en AppComponent:', this.user);
 
-
         });
+    }
+
+    redirect(url?: string){
+        this.router.navigate([url || '/dashboard'], { replaceUrl: true } );
     }
 
     async setStatusBar() {
@@ -273,7 +276,7 @@ export class AppComponent implements OnInit {
     }
 
     handleItemSelected(item: any): void {
-        this.router.navigate([item.url]);
+        this.router.navigate([item.url], { replaceUrl: true });
     }
 
     validateUrlWeb() {

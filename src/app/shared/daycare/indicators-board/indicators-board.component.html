@@ -17,7 +17,7 @@
               </div>
               <div class="text-right">
                 <div class="text-5xl font-bold text-blue-600 mb-1">
-                  48
+                  {{data?.stats?.children}}
                 </div>
               </div>
             </div>
@@ -37,7 +37,7 @@
               </div>
               <div class="text-right">
                 <div class="text-5xl font-bold text-emerald-600 mb-1">
-                  72
+                  {{data?.stats?.parents}}
                 </div>
               </div>
             </div>
@@ -57,7 +57,7 @@
               </div>
               <div class="text-right">
                 <div class="text-5xl font-bold text-amber-600 mb-1">
-                  35
+                  {{data?.stats?.registrations}}
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <ion-card class="text-center m-0 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer" >
-        <ion-card-content class="p-0 text-center">
+        <ion-card-content class="p-0 text-center" (click)="redirect('daycare/payment-management')">
           <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-8 rounded-2xl">
             <div class="flex flex-col items-center justify-center text-center">
               <div class=" backdrop-blur-md p-6 rounded-2xl mb-4 shadow-xl flex items-center justify-center w-24 h-24">
@@ -91,7 +91,7 @@
       </ion-card>
 
       <ion-card class="text-center m-0 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer" >
-        <ion-card-content class="p-0">
+        <ion-card-content class="p-0" (click)="redirect('daycare/child-management')">
           <div class="bg-gradient-to-br from-blue-500 to-cyan-600 p-8 rounded-2xl">
             <div class="flex flex-col items-center justify-center text-center">
               <div class=" backdrop-blur-md p-6 rounded-2xl mb-4 shadow-xl flex items-center justify-center w-24 h-24">
@@ -106,7 +106,7 @@
       </ion-card>
 
       <ion-card class="text-center m-0 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer" >
-        <ion-card-content class="p-0">
+        <ion-card-content class="p-0" (click)="redirect('daycare/parents-management')">
           <div class="bg-gradient-to-br from-purple-500 to-pink-600 p-8 rounded-2xl">
             <div class="flex flex-col items-center justify-center text-center">
               <div class=" backdrop-blur-md p-6 rounded-2xl mb-4 shadow-xl flex items-center justify-center w-24 h-24">
@@ -127,33 +127,24 @@
       <ion-card class="m-0 shadow-md">
         <ion-card-content>
           <div class="space-y-4">
+            @for( activity of data?.recent_activity; track activity) {
             <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
               <div class="bg-blue-100 p-3 rounded-full flex items-center justify-center flex-shrink-0">
-                <ion-icon name="person-add-outline" class="text-2xl text-blue-600"></ion-icon>
+                <ion-icon [name]="getIconForActivity(activity)" class="text-2xl text-blue-600"></ion-icon>
               </div>
               <div class="flex-1">
-                <p class="font-semibold text-slate-800">Nuevo niño registrado</p>
-                <p class="text-sm text-slate-500">María González - Hace 2 horas</p>
+                <p class="font-semibold text-slate-800">{{activity?.title}}</p>
+                <p class="text-sm text-slate-500">{{activity?.subtitle}}</p>
               </div>
             </div>
-            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-              <div class="bg-emerald-100 p-3 rounded-full flex items-center justify-center flex-shrink-0">
-                <ion-icon name="cash-outline" class="text-2xl text-emerald-600"></ion-icon>
-              </div>
-              <div class="flex-1">
-                <p class="font-semibold text-slate-800">Pago recibido</p>
-                <p class="text-sm text-slate-500">Mensualidad - Hace 3 horas</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-              <div class="bg-amber-100 p-3 rounded-full flex items-center justify-center flex-shrink-0">
-                <ion-icon name="clipboard-outline" class="text-2xl text-amber-600"></ion-icon>
-              </div>
-              <div class="flex-1">
-                <p class="font-semibold text-slate-800">Nueva inscripción</p>
-                <p class="text-sm text-slate-500">Carlos Rodríguez - Hace 5 horas</p>
-              </div>
-            </div>
+
+
+
+          }
+
+          @if(!data?.recent_activity || data?.recent_activity.length === 0) {
+            <p class="text-slate-500">No hay actividad reciente.</p>    
+          }
           </div>
         </ion-card-content>
       </ion-card>

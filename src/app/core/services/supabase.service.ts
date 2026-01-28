@@ -85,7 +85,7 @@ export class SupabaseService {
       .from(table)
       .select(columns.join(','))
       .eq(field, value)
-      .maybeSingle();
+      .single();
   }
 
   getRecords<T>(table: string, columns: string[], field: string, value: string, orderProperty: string) {

@@ -290,22 +290,18 @@ export class InscriptionListComponent   {
   async onDelete(registration: RegistrationWithDetails) {
     this.openMenuId = null;
 
-    const confirmed = window.confirm(`¿Está seguro de eliminar la inscripción de ${registration.child?.full_name}?`);
-    if (!confirmed) return;
+    const confirmed = await this.alertController.openFestivaAlert('question', 'Confirmar eliminación', '¿Estás seguro de que deseas eliminar esta inscripción? Esta acción no se puede deshacer.', true, 'Cancelar', 'Eliminar');
+    if (confirmed?.action !== 'confirm') return;
 
     try {
-      const { error } = await this.supabase
-        .from('registration')
-        .delete()
-        .eq('id', registration.id);
-
+      const { error } = await this.supabase.rpc('delete_child_full_registration', { p_registration_id: registration.id, p_child_id: registration?.child?.id });
       if (error) throw error;
-
+      await this.alertController.openFestivaAlert('success', 'Inscripción eliminada', 'La inscripción ha sido eliminada correctamente.');
       this.deleteRegistration.emit(registration);
       await this.loadRegistrations();
     } catch (error) {
       console.error('Error deleting registration:', error);
-      alert('Error al eliminar la inscripción');
+      await this.alertController.openFestivaAlert('danger', 'Error', 'Error al eliminar la inscripción');
     }
   }
 

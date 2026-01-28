@@ -5,7 +5,7 @@
       <ion-content class="menu-content">
         <!-- Header con gradiente -->
         <div class="menu-header">
-          <div class="logo-container">
+          <div class="logo-container" (click)="redirect()">
             <img [src]="user?.company?.avatar_url || profile?.company?.avatar_url || '../assets/img/baby-house.jpeg'" alt="Company Logo" class="logo">
           </div>
           <h1 class="brand-name">{{user?.company?.full_name || profile?.company?.full_name || 'Company'}}</h1>

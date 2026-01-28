@@ -7,7 +7,9 @@
 <ion-content class="bg-gradient-to-br from-slate-50 to-slate-100">
   <ion-row>
     <ion-col size="12">
-      <app-indicators-board></app-indicators-board>
+      @if(dataForDashboard) {
+      <app-indicators-board [data]="dataForDashboard"></app-indicators-board>
+      }
     </ion-col>
   </ion-row>
 </ion-content>

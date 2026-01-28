@@ -89,7 +89,7 @@ export class InscriptionPage implements OnInit {
   //Childs
   @ViewChild('printSection') printSection!: InscriptionDetailPrintComponent;
 
-  inscriptionForm!: FormGroup;
+  inscriptionForm!: FormGroup ;
   avatarPreview: string = '';
   cicloResult: CicloResult = { ciclo: '', curso: '', fecha: '' };
   documents = {
@@ -125,16 +125,20 @@ export class InscriptionPage implements OnInit {
   showPrintSection: boolean = false;
   printing!: boolean;
   clickedPrintButton!: boolean;
+  firstGuardianExists!: boolean;
+  firstGuardianExistsData!: any;
+  secondGuardianExists!: boolean;
+  secondGuardianExistsData!: any;
 
   constructor(private fb: FormBuilder) {
   }
 
   async ngOnInit() {
-    this.initForm();
-
   }
 
   async ionViewWillEnter() {
+    this.initForm();
+
     this.showPrintSection = false;
     this.userData = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
     await this.initSchedules();
@@ -156,27 +160,27 @@ export class InscriptionPage implements OnInit {
     this.inscriptionForm = this.fb.group({
       childData: this.fb.group({
         avatar_url: ['not_provided'],
-        full_name: ['JOSUE CAYETANO', [Validators.required, Validators.minLength(3)]],
-        birth_date: ['01/01/2025', [Validators.required, this.validBirthDate]],
-        gender: ['M', Validators.required],
+        full_name: ['', [Validators.required, Validators.minLength(3)]],
+        birth_date: ['', [Validators.required, this.validBirthDate]],
+        gender: ['', Validators.required],
         address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
-        schedule_id: ['ddd', Validators.required],
-        ciclo: ['dd', Validators.required],
-        monthly_quotes: [5000, [Validators.required, Validators.min(0)]]
+        schedule_id: ['', Validators.required],
+        ciclo: ['', Validators.required],
+        monthly_quotes: [0, [Validators.required, Validators.min(1)]]
       }),
       firstGuardian: this.fb.group({
-        full_name: ['Lissette Alexandra', [Validators.required, Validators.minLength(3)]],
+        full_name: ['', [Validators.required, Validators.minLength(3)]],
         identification_type: ['Cédula', Validators.required],
-        identification_number: ['40209341789', [Validators.required, this.validateIdentification.bind(this)]],
-        phone_number: ['8093716874', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['INAPA', Validators.required]
+        identification_number: ['', [Validators.required, this.validateIdentification.bind(this)]],
+        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['', Validators.required]
       }),
       secondGuardian: this.fb.group({
-        full_name: ['Maria Cayetano', [Validators.minLength(3)]],
+        full_name: ['', [Validators.minLength(3)]],
         identification_type: ['Cédula'],
-        identification_number: ['40209341789', [this.validateIdentification.bind(this)]],
-        phone_number: ['8098999333', [Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['CAEI']
+        identification_number: ['', [this.validateIdentification.bind(this)]],
+        phone_number: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['']
       }),
       medicalInfo: this.fb.group({
         has_medical_condition: [false],
@@ -184,18 +188,18 @@ export class InscriptionPage implements OnInit {
         takes_medication: [false],
         medication_details: [''],
         allergies: [''],
-        preferred_medical_center: ['Hospital General', Validators.required]
+        preferred_medical_center: ['', Validators.required]
       }),
       authorizedPerson: this.fb.group({
-        full_name: ['LEONEL FERNANDEZ', [Validators.required, Validators.minLength(3)]],
-        phone_number: ['8091234567', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        relationship: ['Tío', Validators.required]
+        full_name: ['', [Validators.required, Validators.minLength(3)]],
+        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        relationship: ['', Validators.required]
       }),
       authorizations: this.fb.group({
         post_pictures_social_network: [true]
       }),
       signature: this.fb.group({
-        signature_text: ['LEONEL FERNANDEZ', Validators.required],
+        signature_text: ['', Validators.required],
         signature_date: [new Date().toISOString().split('T')[0], Validators.required],
         start_date: [new Date().toISOString().split('T')[0], Validators.required],
         status: ['ACTIVE']
@@ -228,19 +232,25 @@ export class InscriptionPage implements OnInit {
     this.inscriptionForm.get('childData.birth_date')?.valueChanges.subscribe(value => {
       const fechaNacimiento = new Date(value);
       if (isNaN(fechaNacimiento.getTime())) return;
-       this.cicloResult = this.obtenerCicloPorFecha(fechaNacimiento);
-       this.cicloResult.fecha = this.calculateAge(value); 
-       this.inscriptionForm.get('childData.ciclo')?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
+      this.cicloResult = this.obtenerCicloPorFecha(fechaNacimiento);
+      this.cicloResult.fecha = this.calculateAge(value);
+      this.inscriptionForm.get('childData.ciclo')?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
       console.log('Ciclo y curso calculado:', this.cicloResult);
     });
 
     //insribirme al genero para cambiar la imagen del avatar
-    this.inscriptionForm.get('childData.gender')?.valueChanges.subscribe(value => { 
+    this.inscriptionForm.get('childData.gender')?.valueChanges.subscribe(value => {
       this.avatarPreview = value === 'M'
         ? 'assets/img/masculino.png'
         : value === 'F'
-        ? 'assets/img/femenino.png'
-        : this.avatarPreview;
+          ? 'assets/img/femenino.png'
+          : this.avatarPreview;
+    });
+
+
+    //suscribirme al nombre del primer tutor para la firma
+    this.inscriptionForm.get('firstGuardian.full_name')?.valueChanges.subscribe(value => {
+      this.inscriptionForm.get('signature.signature_text')?.setValue(value);
     });
   }
 
@@ -406,7 +416,7 @@ export class InscriptionPage implements OnInit {
 
       try {
         const supabase = this.supabaseService.getSupabase();
-        const dataToSupabase = { ...formData };
+        let dataToSupabase = { ...formData };
         // Remove file previews before sending to Supabase
         delete dataToSupabase.documents;
         dataToSupabase.childData.avatar_url = this.avatarPreview || 'not_provided';
@@ -416,7 +426,21 @@ export class InscriptionPage implements OnInit {
           delete dataToSupabase.secondGuardian;
         }
 
-        if(this.cicloResult?.ciclo == '' && this.cicloResult?.ciclo?.toLowerCase().includes('fuera de rango')){ 
+
+        if (this.firstGuardianExists || this.secondGuardianExists) {
+          dataToSupabase.legalParentsPayload = [];
+          if (this.firstGuardianExists) {
+            this.firstGuardianExistsData['is_primary'] = true;
+            dataToSupabase.legalParentsPayload.push({ parent: { ...this.firstGuardianExistsData } });
+            delete dataToSupabase.firstGuardian;
+          }
+          if (this.secondGuardianExists) {
+            dataToSupabase.legalParentsPayload.push({ parent: { ...this.secondGuardianExistsData } });
+            delete dataToSupabase.secondGuardian;
+          }
+        }
+
+        if (this.cicloResult?.ciclo == '' && this.cicloResult?.ciclo?.toLowerCase().includes('fuera de rango')) {
           await this.alertService.dismiss();
           await this.alertService.openFestivaAlert('warning', 'Ciclo inválido', 'La edad del niño no corresponde a ningún ciclo disponible. Por favor verifica la fecha de nacimiento.');
           return;
@@ -439,10 +463,13 @@ export class InscriptionPage implements OnInit {
         await this.uploadAllDocuments(response.data?.registration_id, response.data.child?.id, response.data.child?.full_name.replace(/\s+/g, '_'));
         await this.alertService.openFestivaAlert('success', 'Datos guardados', 'El formulario de inscripción ha sido guardado exitosamente.');
 
-        if(!this.clickedPrintButton){
+        if (!this.clickedPrintButton) {
           this.printing = true;
-          this.showPrintSection = true;
-          await this.onPrintFull();
+          this.alertService.openFestivaAlert('loading', 'Preparando formulario para impresión...', 'por favor espera');
+          setTimeout(async () => {
+            await this.onPrintFull();
+            this.alertService.dismiss();
+          }, 1000);
 
         }
 
@@ -470,6 +497,67 @@ export class InscriptionPage implements OnInit {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  async findParentByIdentification(event: any) {
+    this.alertService.openFestivaAlert('loading', 'Buscando tutor...', 'por favor espera');
+    const identificationNumber = event.target.value;
+    // Aquí puedes implementar la lógica para buscar al padre por su número de identificación
+    console.log('Buscar padre con ID:', identificationNumber);
+
+    //remover los espacios y guiones
+    const cleanedId = identificationNumber.replace(/[-\s]/g, '');
+    const { data, error } = await this.supabaseService.getSupabase().from('legal_parents').select("*").eq('identification_number', cleanedId).single();
+    console.log('Parent search result:', { data, error });
+    this.alertService.dismiss();
+
+    this.firstGuardianExists = data ? true : false;
+
+    if (data) {
+      this.firstGuardianExists = true;
+      this.firstGuardianExistsData = data;
+      ['full_name', 'phone_number', 'workplace'].forEach(field => {
+        this.inscriptionForm.get(`firstGuardian.${field}`)?.setValue(data[field]);
+        this.inscriptionForm.get(`firstGuardian.${field}`)?.disable();
+      });
+    } else {
+      ['full_name', 'phone_number', 'workplace'].forEach(field => {
+        this.inscriptionForm.get(`firstGuardian.${field}`)?.enable();
+        this.inscriptionForm.get(`firstGuardian.${field}`)?.setValue('');
+      });
+    }
+
+  }
+
+  async findSecondGuardianByIdentification(event: any) {
+    this.alertService.openFestivaAlert('loading', 'Buscando tutor...', 'por favor espera');
+    const identificationNumber = event.target.value;
+    // Aquí puedes implementar la lógica para buscar al padre por su número de identificación
+    console.log('Buscar padre con ID:', identificationNumber);
+
+    //remover los espacios y guiones
+    const cleanedId = identificationNumber.replace(/[-\s]/g, '');
+    const { data, error } = await this.supabaseService.getSupabase().from('legal_parents').select("*").eq('identification_number', cleanedId).single();
+    console.log('Parent search result:', { data, error });
+
+    this.secondGuardianExists = data ? true : false;
+
+    this.alertService.dismiss();
+
+    if (data) {
+      this.secondGuardianExists = true;
+      this.secondGuardianExistsData = data;
+      ['full_name', 'phone_number', 'workplace'].forEach(field => {
+        this.inscriptionForm.get(`secondGuardian.${field}`)?.setValue(data[field]);
+        this.inscriptionForm.get(`secondGuardian.${field}`)?.disable();
+      });
+    } else {
+      ['full_name', 'phone_number', 'workplace'].forEach(field => {
+        this.inscriptionForm.get(`secondGuardian.${field}`)?.enable();
+        this.inscriptionForm.get(`secondGuardian.${field}`)?.setValue('');
+      });
+    }
+
   }
 
   async onPrint() {
@@ -500,54 +588,54 @@ export class InscriptionPage implements OnInit {
 
 
 
-async onPrintFull() {
-  const element = document.getElementById('fullform');
+  async onPrintFull() {
+    const element = document.getElementById('fullform');
 
-  if (!element) {
-    console.error('Elemento para imprimir no encontrado');
-    return;
-  }
+    if (!element) {
+      console.error('Elemento para imprimir no encontrado');
+      return;
+    }
 
-  // Asegurar que el elemento sea visible y tenga fondo blanco
-  const originalStyle = element.style.cssText;
-  element.style.background = '#ffffff';
+    // Asegurar que el elemento sea visible y tenga fondo blanco
+    const originalStyle = element.style.cssText;
+    element.style.background = '#ffffff';
 
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: '#ffffff',
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight
-  });
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight
+    });
 
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
 
-  const imgWidth = 210; // Ancho A4 en mm
-  const pageHeight = 297; // Alto A4 en mm
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
-  let heightLeft = imgHeight;
-  let position = 0;
+    const imgWidth = 210; // Ancho A4 en mm
+    const pageHeight = 297; // Alto A4 en mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  // Añadir la primera página
-  pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight;
+    let heightLeft = imgHeight;
+    let position = 0;
 
-  // Manejo de páginas adicionales
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight; // Ajuste de posición negativa
-    pdf.addPage();
+    // Añadir la primera página
     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
+
+    // Manejo de páginas adicionales
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight; // Ajuste de posición negativa
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // Restaurar estilo original
+    element.style.cssText = originalStyle;
+
+    const fileName = this.inscriptionForm.get('childData.full_name')?.value || 'Inscripcion';
+    pdf.save(`Formulario_Inscripcion_${fileName}_${new Date().toISOString().split('T')[0]}.pdf`);
   }
-
-  // Restaurar estilo original
-  element.style.cssText = originalStyle;
-
-  const fileName = this.inscriptionForm.get('childData.full_name')?.value || 'Inscripcion';
-  pdf.save(`Formulario_Inscripcion_${fileName}_${new Date().toISOString().split('T')[0]}.pdf`);
-}
 
   getErrorMessage(formGroupName: string, controlName: string): string {
     const control = this.inscriptionForm.get(`${formGroupName}.${controlName}`);
@@ -633,54 +721,54 @@ async onPrintFull() {
   }
 
   async uploadAllDocuments(
-  registrationId: string,
-  childId: string,
-  childName: string
-): Promise<Record<string, string>> {
+    registrationId: string,
+    childId: string,
+    childName: string
+  ): Promise<Record<string, string>> {
 
-  const uploadedPaths: Record<string, string> = {};
+    const uploadedPaths: Record<string, string> = {};
 
-  for (const [key, doc] of Object.entries(this.documents)) {
-    if (!doc.file) continue;
-    await this.alertService.dismiss();
-    this.alertService.openFestivaAlert('loading', `Subiendo ${doc.label}...`, 'Por favor espera mientras se sube el documento.');
-    const isImage = doc.file.type.startsWith('image/');
+    for (const [key, doc] of Object.entries(this.documents)) {
+      if (!doc.file) continue;
+      await this.alertService.dismiss();
+      this.alertService.openFestivaAlert('loading', `Subiendo ${doc.label}...`, 'Por favor espera mientras se sube el documento.');
+      const isImage = doc.file.type.startsWith('image/');
 
-    const result = isImage
-      ? await this.supabaseStorage.uploadImage(doc.file, {
+      const result = isImage
+        ? await this.supabaseStorage.uploadImage(doc.file, {
           bucket: 'babyhouse',
           folder: `inscriptions/${childId}/${doc.folderName}`,
           userId: childName,
           toWebp: key === 'photo',
           maxSizeMB: 0.8
         })
-      : await this.supabaseStorage.uploadDocument(doc.file, {
+        : await this.supabaseStorage.uploadDocument(doc.file, {
           bucket: 'babyhouse',
           folder: `inscriptions/${childId}/${doc.folderName}`,
           userId: childName
         });
 
-    uploadedPaths[key] = result.path;
-  }
+      uploadedPaths[key] = result.path;
+    }
     await this.alertService.dismiss();
-  console.log('Uploaded document paths:', uploadedPaths);
+    console.log('Uploaded document paths:', uploadedPaths);
 
-  const resultAddDocuments = await this.supabaseService.createRecord('documents', {
-    registration_id: registrationId,
-    birth_certificate: uploadedPaths['birthCertificate'] || null,
-    legal_parents_identification: uploadedPaths['idCopies'] || null,
-    medical_certificate: uploadedPaths['medicalCertificate'] || null,
-    vaccination_card: uploadedPaths['vaccineCard'] || null,
-    picture_2x2: uploadedPaths['photo'] || null,
-    health_insurance: uploadedPaths['medicalInsurance'] || null,
-    pickuper_identification: uploadedPaths['authorizedPersonId'] || null
-  });
-  console.log('Result adding document records to Supabase:', resultAddDocuments);
-  return uploadedPaths;
+    const resultAddDocuments = await this.supabaseService.createRecord('documents', {
+      registration_id: registrationId,
+      birth_certificate: uploadedPaths['birthCertificate'] || null,
+      legal_parents_identification: uploadedPaths['idCopies'] || null,
+      medical_certificate: uploadedPaths['medicalCertificate'] || null,
+      vaccination_card: uploadedPaths['vaccineCard'] || null,
+      picture_2x2: uploadedPaths['photo'] || null,
+      health_insurance: uploadedPaths['medicalInsurance'] || null,
+      pickuper_identification: uploadedPaths['authorizedPersonId'] || null
+    });
+    console.log('Result adding document records to Supabase:', resultAddDocuments);
+    return uploadedPaths;
 
 
 
-}
+  }
 
 
 }

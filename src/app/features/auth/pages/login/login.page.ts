@@ -97,6 +97,7 @@ export class LoginPage implements OnInit {
           this.supabaseService.getSupabase().auth.setSession(data.session);
           await this.storageHelper.setStorageKey(StorageKeys.SESSION_DATA, data.session);
           console.log('Sesión almacenada en el almacenamiento local.', data.session);
+          await this.storageHelper.setStorageKey(StorageKeys.ONBOARDING_COMPLETED, true);
           const profile = await this.supabaseService.profile();
           console.log('Perfil obtenido después del login:', profile);
           if (profile) {
