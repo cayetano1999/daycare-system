@@ -7,6 +7,7 @@ import { StandAloneModules } from 'src/app/shared/stand-alone-module';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { CustomHeaderComponent } from 'src/app/shared/daycare/custom-header/custom-header.component';
+import { onPrintFull } from 'src/app/core/constants/constants';
 
 export const CICLOS_CURSOS_DROPDOWN = [
   {
@@ -740,5 +741,14 @@ export class InscriptionEditPage implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  onPrint(){
+    const element = document.getElementById('inscription-edit-page');
+    if (!element) {
+      console.error('Elemento para imprimir no encontrado');
+      return;
+    }
+    onPrintFull(element, 'Edicion_Inscripcion');
   }
 }

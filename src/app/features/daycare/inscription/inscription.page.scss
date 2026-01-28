@@ -252,3 +252,58 @@ textarea {
   border-radius: 0.5rem;
   margin-bottom: 1rem;
 }
+
+
+
+
+.institution-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.institution-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0 0;
+}
+
+.document-title {
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #111827;
+  }
+
+  .document-date {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0.75rem 0 0 0;
+  }
+}
+
+.print-card-header {
+  background: #fff!important;
+  border: 1px solid #bebebe!important;
+  border-top-left-radius: 20px!important;
+  border-top-right-radius: 20px!important;
+
+  ion-card-title {
+    font-size: 1.2rem!important;
+    font-weight: 700!important;
+    color: #111827!important;
+    margin: 0!important;
+    letter-spacing: -0.5px!important;
+  }
+  ion-card-subtitle {
+    font-size: 0.9rem!important;
+    color: #6b7280!important;
+    margin: 0.25rem 0 0 0!important;
+  }
+
+}

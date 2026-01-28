@@ -7,17 +7,12 @@
 <ion-content class="">
   @if(!showPrintSection){
 
-      <app-custom-header
-    [title]="'Formulario de Inscripción'"
-    [subtitle]="'Complete todos los campos requeridos para registrar al niño/a'"
-    [showRightBtn]="true"
-    [textRightBtn]="'Cancelar'"
-    [iconRightBtn]="'close-circle'"
-    (rightBtnClick)="onCancel()"
-  ></app-custom-header>
+  <app-custom-header [title]="'Formulario de Inscripción'"
+    [subtitle]="'Complete todos los campos requeridos para registrar al niño/a'" [showRightBtn]="true"
+    [textRightBtn]="'Cancelar'" [iconRightBtn]="'close-circle'" (rightBtnClick)="onCancel()"></app-custom-header>
 
   <div class="bg-gradient-to-br from-slate-50 to-slate-100">
-    <div class="p-6 max-w-7xl mx-auto">
+    <div class="p-6 max-w-7xl mx-auto" id="fullform">
       <!-- Header -->
       <!-- <div class="mb-8 no-print">
         <h1 class="text-4xl font-bold text-slate-800 mb-2">Formulario de Inscripción</h1>
@@ -25,12 +20,42 @@
       </div> -->
 
       <form [formGroup]="inscriptionForm" (ngSubmit)="onSubmit()">
+        @if(userData?.company && printing){
+
+        
+
+        <ion-row>
+          <ion-col size="12" style="display: flex; justify-content: center; align-items: center;">
+            <img style="width: 20%;" [src]="userData?.company?.avatar_url" alt="">
+          </ion-col>
+          <ion-col size="12" class="justify-center">
+            <h1 class="institution-name">{{ userData?.company?.full_name }}</h1>
+          </ion-col>
+
+          <ion-col size="12" class="justify-center">
+            <p class="institution-subtitle">Centro de Cuidado Infantil</p>
+          </ion-col>
+
+          <ion-col size="12" class="justify-center">
+            <h2><strong>Formulario de Inscripción</strong></h2>
+          </ion-col>
+
+          <ion-col size="12" class="justify-center  mb-4">
+            <p class="document-date">Fecha de Inscripción: {{ inscriptionForm.get('signature.signature_date')?.value
+              }}</p>
+          </ion-col>
+        </ion-row>
+
+
+        }
         <div class="grid grid-cols-12 gap-6">
+
+
 
           <!-- Card 1: Datos del Niño -->
           <div class="col-span-12">
             <ion-card class="shadow-lg">
-              <ion-card-header class="bg-slate-900">
+              <ion-card-header class="bg-slate-900 " [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Datos del Niño/a</ion-card-title>
                 <ion-card-subtitle class="text-blue-50">Información personal del menor</ion-card-subtitle>
               </ion-card-header>
@@ -58,6 +83,7 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre Completo *</label>
+                      @if(!printing){
                       <input type="text" formControlName="full_name"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-uppercase"
                         [class.border-red-500]="isFieldInvalid('childData', 'full_name')"
@@ -65,20 +91,30 @@
                       <p *ngIf="isFieldInvalid('childData', 'full_name')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('childData', 'full_name') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{ inscriptionForm.get('childData.full_name')?.value }}</p>
+                      }
                     </div>
 
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Fecha de Nacimiento *</label>
+                      @if(!printing){
                       <input type="date" formControlName="birth_date"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('childData', 'birth_date')">
                       <p *ngIf="isFieldInvalid('childData', 'birth_date')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('childData', 'birth_date') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{ inscriptionForm.get('childData.birth_date')?.value }}</p>
+                      }
                     </div>
 
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Género *</label>
+                      @if(!printing){
                       <select formControlName="gender"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('childData', 'gender')">
@@ -89,10 +125,15 @@
                       <p *ngIf="isFieldInvalid('childData', 'gender')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('childData', 'gender') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{ inscriptionForm.get('childData.gender')?.value }}</p>
+                      }
                     </div>
 
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Tanda *</label>
+                      @if(!printing){
                       <select formControlName="schedule_id"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('childData', 'schedule_id')">
@@ -103,10 +144,16 @@
                       <p *ngIf="isFieldInvalid('childData', 'schedule_id')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('childData', 'schedule_id') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{ getScheduleDescription(inscriptionForm.get('childData.schedule_id')?.value) }}
+                      </p>
+                      }
                     </div>
 
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Ciclo *</label>
+                      @if(!printing){
                       <select formControlName="ciclo"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('childData', 'ciclo')">
@@ -118,10 +165,15 @@
                       <p *ngIf="isFieldInvalid('childData', 'ciclo')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('childData', 'ciclo') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{ inscriptionForm.get('childData.ciclo')?.value }}</p>
+                      }
                     </div>
 
-                     <div>
+                    <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Cuota Mensual *</label>
+                      @if(!printing){
                       <input type="number" formControlName="monthly_quotes"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('childData', 'monthly_quotes')"
@@ -129,9 +181,14 @@
                       <p *ngIf="isFieldInvalid('childData', 'monthly_quotes')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('childData', 'monthly_quotes') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{ inscriptionForm.get('childData.monthly_quotes')?.value }}
+                      </p>
+                      }
                     </div>
 
-                    
+
 
                     <div class="md:col-span-2">
                       <!-- <label class="block text-sm font-semibold text-slate-700 mb-2">Dirección *</label>
@@ -145,7 +202,7 @@
                       {{ getErrorMessage('childData', 'address') }}
                     </p> -->
 
-                    @if(cicloResult.ciclo.length) {
+                      @if(cicloResult.ciclo.length) {
                       <div class="alert alert-warning" role="alert">
                         <strong>Ciclo Asignado</strong>
                         <p>
@@ -153,7 +210,7 @@
                             cicloResult.ciclo }} - {{ cicloResult.curso }} (Edad: {{ cicloResult.fecha }}</strong> ).
                         </p>
                       </div>
-                    }
+                      }
                     </div>
 
                     <!-- <ion-row>
@@ -175,8 +232,8 @@
 
           <!-- Card 2: Primer Tutor Legal -->
           <div class="col-span-12 md:col-span-6">
-            <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-slate-900">
+            <ion-card class="shadow-lg h-full" >
+              <ion-card-header class="bg-slate-900" [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Primer Tutor Legal</ion-card-title>
                 <ion-card-subtitle class="text-emerald-50">Datos del padre, madre o tutor principal</ion-card-subtitle>
               </ion-card-header>
@@ -184,6 +241,7 @@
                 <div formGroupName="firstGuardian" class="space-y-4">
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre Completo *</label>
+                    @if(!printing){
                     <input type="text" formControlName="full_name"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('firstGuardian', 'full_name')"
@@ -191,18 +249,30 @@
                     <p *ngIf="isFieldInvalid('firstGuardian', 'full_name')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('firstGuardian', 'full_name') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('firstGuardian.full_name')?.value }}
+                    </p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Tipo de Identificación *</label>
+                    @if(!printing){
                     <select formControlName="identification_type"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all">
                       <option *ngFor="let type of identificationTypes" [value]="type">{{ type }}</option>
                     </select>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{
+                      inscriptionForm.get('firstGuardian.identification_type')?.value }}</p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Número de Identificación *</label>
+                    @if(!printing){
                     <input type="text" formControlName="identification_number"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('firstGuardian', 'identification_number')"
@@ -211,20 +281,32 @@
                       class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('firstGuardian', 'identification_number') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{
+                      inscriptionForm.get('firstGuardian.identification_number')?.value }}</p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Teléfono *</label>
+                    @if(!printing){
                     <input type="tel" formControlName="phone_number"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('firstGuardian', 'phone_number')" placeholder="8091234567">
                     <p *ngIf="isFieldInvalid('firstGuardian', 'phone_number')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('firstGuardian', 'phone_number') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('firstGuardian.phone_number')?.value }}
+                    </p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Lugar de Trabajo *</label>
+                    @if(!printing){
                     <input type="text" formControlName="workplace"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('firstGuardian', 'workplace')"
@@ -232,6 +314,11 @@
                     <p *ngIf="isFieldInvalid('firstGuardian', 'workplace')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('firstGuardian', 'workplace') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('firstGuardian.workplace')?.value }}
+                    </p>
+                    }
                   </div>
                 </div>
               </ion-card-content>
@@ -241,7 +328,7 @@
           <!-- Card 3: Segundo Tutor Legal -->
           <div class="col-span-12 md:col-span-6">
             <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-slate-900">
+              <ion-card-header class="bg-slate-900" [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Segundo Tutor Legal</ion-card-title>
                 <ion-card-subtitle class="text-amber-50">Datos del segundo padre, madre o tutor
                   (opcional)</ion-card-subtitle>
@@ -250,21 +337,36 @@
                 <div formGroupName="secondGuardian" class="space-y-4">
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre Completo</label>
+                    @if(!printing){
                     <input type="text" formControlName="full_name"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       placeholder="Ingrese el nombre completo">
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('secondGuardian.full_name')?.value }}
+                    </p>
+                    }
+
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Tipo de Identificación</label>
+                    @if(!printing){
                     <select formControlName="identification_type"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all">
                       <option *ngFor="let type of identificationTypes" [value]="type">{{ type }}</option>
                     </select>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{
+                      inscriptionForm.get('secondGuardian.identification_type')?.value }}</p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Número de Identificación</label>
+
+                    @if(!printing){
                     <input type="text" formControlName="identification_number"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('secondGuardian', 'identification_number')"
@@ -273,10 +375,16 @@
                       class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('secondGuardian', 'identification_number') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{
+                      inscriptionForm.get('secondGuardian.identification_number')?.value }}</p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
+                    @if(!printing){
                     <input type="tel" formControlName="phone_number"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('secondGuardian', 'phone_number')"
@@ -284,13 +392,24 @@
                     <p *ngIf="isFieldInvalid('secondGuardian', 'phone_number')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('secondGuardian', 'phone_number') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('secondGuardian.phone_number')?.value
+                      }}</p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Lugar de Trabajo</label>
+                    @if(!printing){
                     <input type="text" formControlName="workplace"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       placeholder="Empresa o lugar de trabajo">
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('secondGuardian.workplace')?.value }}
+                    </p>
+                    }
                   </div>
                 </div>
               </ion-card-content>
@@ -300,7 +419,7 @@
           <!-- Card 4: Información Médica -->
           <div class="col-span-12">
             <ion-card class="shadow-lg">
-              <ion-card-header class="bg-slate-900">
+              <ion-card-header class="bg-slate-900" [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Información Médica</ion-card-title>
                 <ion-card-subtitle class="text-red-50">Datos médicos importantes del niño/a</ion-card-subtitle>
               </ion-card-header>
@@ -309,13 +428,24 @@
                   <!-- Medical Condition -->
                   <div class="bg-slate-50 p-4 rounded-lg">
                     <label class="flex items-center gap-3 cursor-pointer mb-3">
+                      @if(!printing){
                       <input type="checkbox" formControlName="has_medical_condition"
                         class="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500">
                       <span class="text-sm font-semibold text-slate-700">¿El niño/a tiene alguna condición
                         médica?</span>
+                      }
+                      @if(printing){
+                      <input type="checkbox" [checked]="inscriptionForm.get('medicalInfo.has_medical_condition')?.value"
+                        class="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500" disabled>
+                      <span class="text-sm font-semibold text-slate-700">¿El niño/a tiene alguna condición
+                        médica?</span>
+                      }
+
                     </label>
                     <div *ngIf="inscriptionForm.get('medicalInfo.has_medical_condition')?.value" class="mt-3">
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Especifique la condición *</label>
+
+                      @if(!printing){
                       <textarea formControlName="medical_condition_details" rows="3"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all resize-none"
                         [class.border-red-500]="isFieldInvalid('medicalInfo', 'medical_condition_details')"
@@ -324,6 +454,11 @@
                         class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('medicalInfo', 'medical_condition_details') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{
+                        inscriptionForm.get('medicalInfo.medical_condition_details')?.value }}</p>
+                      }
                     </div>
                   </div>
 
@@ -336,6 +471,7 @@
                     </label>
                     <div *ngIf="inscriptionForm.get('medicalInfo.takes_medication')?.value" class="mt-3">
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Indique cuáles *</label>
+                      @if(!printing){
                       <textarea formControlName="medication_details" rows="3"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all resize-none"
                         [class.border-red-500]="isFieldInvalid('medicalInfo', 'medication_details')"
@@ -343,21 +479,32 @@
                       <p *ngIf="isFieldInvalid('medicalInfo', 'medication_details')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('medicalInfo', 'medication_details') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{
+                        inscriptionForm.get('medicalInfo.medication_details')?.value }}</p>
+                      }
                     </div>
                   </div>
 
                   <!-- Allergies -->
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Alergias Conocidas</label>
+                    @if(!printing){
                     <textarea formControlName="allergies" rows="3"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all resize-none"
                       placeholder="Indique si tiene alergias a medicamentos, alimentos, etc."></textarea>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('medicalInfo.allergies')?.value }}</p>
+                    }
                   </div>
 
                   <!-- Preferred Medical Center -->
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Centro Médico Preferido en Caso de
                       Emergencia *</label>
+                    @if(!printing){
                     <input type="text" formControlName="preferred_medical_center"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('medicalInfo', 'preferred_medical_center')"
@@ -366,6 +513,11 @@
                       class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('medicalInfo', 'preferred_medical_center') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{
+                      inscriptionForm.get('medicalInfo.preferred_medical_center')?.value }}</p>
+                    }
                   </div>
                 </div>
               </ion-card-content>
@@ -375,7 +527,7 @@
           <!-- Card 5: Persona Autorizada -->
           <div class="col-span-12 md:col-span-6">
             <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-slate-900">
+              <ion-card-header class="bg-slate-900" [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Persona Autorizada</ion-card-title>
                 <ion-card-subtitle class="text-indigo-50">Persona autorizada a recoger al niño/a</ion-card-subtitle>
               </ion-card-header>
@@ -383,6 +535,7 @@
                 <div formGroupName="authorizedPerson" class="space-y-4">
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Nombre Completo *</label>
+                    @if(!printing){
                     <input type="text" formControlName="full_name"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('authorizedPerson', 'full_name')"
@@ -390,10 +543,16 @@
                     <p *ngIf="isFieldInvalid('authorizedPerson', 'full_name')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('authorizedPerson', 'full_name') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('authorizedPerson.full_name')?.value }}
+                    </p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Teléfono *</label>
+                    @if(!printing){
                     <input type="tel" formControlName="phone_number"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('authorizedPerson', 'phone_number')"
@@ -401,10 +560,16 @@
                     <p *ngIf="isFieldInvalid('authorizedPerson', 'phone_number')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('authorizedPerson', 'phone_number') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('authorizedPerson.phone_number')?.value
+                      }}</p>
+                    }
                   </div>
 
                   <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Relación con el Niño/a *</label>
+                    @if(!printing){
                     <select formControlName="relationship"
                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                       [class.border-red-500]="isFieldInvalid('authorizedPerson', 'relationship')">
@@ -414,6 +579,11 @@
                     <p *ngIf="isFieldInvalid('authorizedPerson', 'relationship')" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('authorizedPerson', 'relationship') }}
                     </p>
+                    }
+                    @if(printing){
+                    <p class="text-slate-700 font-medium">{{ inscriptionForm.get('authorizedPerson.relationship')?.value
+                      }}</p>
+                    }
                   </div>
                 </div>
               </ion-card-content>
@@ -423,11 +593,12 @@
           <!-- Card 6: Autorizaciones -->
           <div class="col-span-12 md:col-span-6">
             <ion-card class="shadow-lg h-full">
-              <ion-card-header class="bg-slate-900">
+              <ion-card-header class="bg-slate-900" [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Autorizaciones</ion-card-title>
                 <ion-card-subtitle class="text-teal-50">Permisos y consentimientos</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content>
+                @if(!printing){
                 <div formGroupName="authorizations" class="space-y-4">
                   <div class="bg-slate-50 p-6 rounded-lg">
                     <p class="text-sm font-semibold text-slate-700 mb-4">
@@ -447,10 +618,26 @@
                     </div>
                   </div>
                 </div>
+                }
+                @if(printing){
+                <div formGroupName="authorizations" class="space-y-4">
+                  <div class="bg-slate-50 p-6 rounded-lg">
+                    <p class="text-sm font-semibold text-slate-700 mb-4">
+                      ¿Autoriza usted que se pueda publicar fotos y videos de su hijo/a en nuestras redes sociales?
+                    </p>
+                    <p class="text-slate-700 font-medium">
+                      {{
+                      inscriptionForm.get('authorizations.post_pictures_social_network')?.value ? 'Sí' : 'No'
+                      }}
+                    </p>
+                  </div>
+                </div>
+                }
               </ion-card-content>
             </ion-card>
           </div>
 
+          @if(!printing){
           <!-- Card 7: Carga de Documentos -->
           <div class="col-span-12">
             <ion-card class="shadow-lg">
@@ -630,11 +817,12 @@
               </ion-card-content>
             </ion-card>
           </div>
+          }
 
           <!-- Card 8: Autorización y Firma -->
           <div class="col-span-12">
             <ion-card class="shadow-lg">
-              <ion-card-header class="bg-slate-900">
+              <ion-card-header class="bg-slate-900" [ngClass]="printing ? 'print-card-header' : ''">
                 <ion-card-title class="text-white text-2xl font-bold">Autorización y Firma</ion-card-title>
                 <ion-card-subtitle class="text-slate-200">Declaración y consentimiento final</ion-card-subtitle>
               </ion-card-header>
@@ -651,6 +839,7 @@
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Firma del Padre/Madre/Tutor
                         *</label>
+                      @if(!printing){
                       <input type="text" formControlName="signature_text"
                         class="w-full px-4 py-3 border-b-2 border-slate-300 focus:border-slate-600 transition-colors font-signature text-2xl"
                         [class.border-red-500]="isFieldInvalid('signature', 'signature_text')"
@@ -658,26 +847,43 @@
                       <p *ngIf="isFieldInvalid('signature', 'signature_text')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('signature', 'signature_text') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-signature text-2xl">{{
+                        inscriptionForm.get('signature.signature_text')?.value }}</p>
+                      }
                     </div>
 
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Fecha Inscripción *</label>
+                      @if(!printing){
                       <input type="date" formControlName="signature_date"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('signature', 'signature_date')">
                       <p *ngIf="isFieldInvalid('signature', 'signature_date')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('signature', 'signature_date') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{
+                        inscriptionForm.get('signature.signature_date')?.value }}</p>
+                      }
                     </div>
 
                     <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-2">Fecha Inicio *</label>
+                      @if(!printing){
                       <input type="date" formControlName="start_date"
                         class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                         [class.border-red-500]="isFieldInvalid('signature', 'start_date')">
                       <p *ngIf="isFieldInvalid('signature', 'start_date')" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('signature', 'start_date') }}
                       </p>
+                      }
+                      @if(printing){
+                      <p class="text-slate-700 font-medium">{{
+                        inscriptionForm.get('signature.start_date')?.value }}</p>
+                      }
                     </div>
 
                   </div>
@@ -686,6 +892,7 @@
             </ion-card>
           </div>
 
+          @if(!printing){
           <!-- Action Buttons -->
           <div class="col-span-12 flex gap-4 justify-end no-print">
             <ion-button type="button" (click)="onPrint()" class="px-8" color="medium">
@@ -697,6 +904,7 @@
               Guardar Datos
             </ion-button>
           </div>
+        }
         </div>
       </form>
     </div>

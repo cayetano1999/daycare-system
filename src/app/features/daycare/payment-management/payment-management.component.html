@@ -9,11 +9,11 @@
     <div class="header">
       <div class="header-content">
         <div class="header-actions">
-          <ion-button color="dark" class="add-button" (click)="insertMonthlyQuotes()">
+          <ion-button  color="dark" class="add-button" (click)="insertMonthlyQuotes()">
             <ion-icon slot="start" name="sync-circle"></ion-icon>
             Generar cuotas
           </ion-button>
-          <ion-button color="dark" class="export-button" (click)="onExport()">
+          <ion-button [disabled]="!filteredPayments.length"  color="dark" class="export-button" (click)="onExport()">
             <ion-icon slot="start" name="download"></ion-icon>
             Exportar
           </ion-button>

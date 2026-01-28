@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { StandAloneModules } from '../../stand-alone-module';
-import { calculateAgeToString } from 'src/app/core/constants/constants';
+import { calculateAgeToString, onPrintFull } from 'src/app/core/constants/constants';
 
 interface RegistrationWithDetails {
   id: string;
@@ -116,5 +116,14 @@ export class InscriptionDetailModalComponent implements OnInit {
       default:
         return status;
     }
+  }
+
+  async print() {
+    const element = document.getElementById('inscription-detail');
+    if (!element) {
+      console.error('Elemento para imprimir no encontrado');
+      return;
+    }
+    await onPrintFull(element, 'Detalle_Inscripcion');
   }
 }

@@ -236,8 +236,8 @@ export class PaymentManagementComponent implements OnInit {
       this.alertService.openFestivaAlert('loading', 'Generando Cuotas', 'Por favor, espera mientras se generan las cuotas mensuales...');
       const { data, error } = await this.supabaseService.getSupabase().functions.invoke('generate-monthly-installments', {
         body: {
-          period_year: 2026,
-          period_month: 7,
+          period_year:  new Date().getFullYear(),
+          period_month: new Date().getMonth() + 1,
         }
       });
       if (error) {

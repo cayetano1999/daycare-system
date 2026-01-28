@@ -374,3 +374,9 @@ ion-searchbar::part(icon) {
 ion-content {
   --background: #F9FAFB;
 }
+
+.justify-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

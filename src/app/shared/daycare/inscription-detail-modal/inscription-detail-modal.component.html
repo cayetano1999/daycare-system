@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content class="modal-content">
-  <div class="details-container">
+  <div class="details-container" id="inscription-detail">
 
     <!-- Información del Niño -->
     <div class="section">
@@ -189,6 +189,11 @@
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="end">
+
+      <ion-button color="dark" (click)="print()">
+        <ion-icon slot="start" name="print-outline"></ion-icon> Imprimir
+      </ion-button>
+
       <ion-button color="primary" (click)="dismiss()">
         Cerrar
       </ion-button>

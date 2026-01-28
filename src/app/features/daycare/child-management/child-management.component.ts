@@ -478,24 +478,24 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
 
     this.alertCtrl.openFestivaAlert('loading', 'Generando cuota mensual...', 'por favor, espere');
     console.log('Generating fee for registration:', value);
-    const {data, error} = await this.supabaseService.getSupabase().functions.invoke('generate-monthly-quote-unique', {
+    const { data, error } = await this.supabaseService.getSupabase().functions.invoke('generate-monthly-quote-unique', {
       body: {
         child_id: value.id,
         registration_id: value.registration?.id,
-        period_year: 2026,
-        period_month: 1,
+        period_year: new Date().getFullYear(),
+        period_month: new Date().getMonth() + 1,
       }
     });
 
-    if(error) {
+    if (error) {
       console.error('Error generating fee:', error);
       this.alertCtrl.openFestivaAlert('danger', 'Error', 'Ocurrió un error al generar la cuota mensual.');
       return;
     }
 
-    await  this.alertCtrl.confirmation(()=> {
+    await this.alertCtrl.confirmation(() => {
       this.alertCtrl.dismiss();
       this.router.navigate(['/daycare/payment-management']);
-    }, "La cuota ha sido generada, desea ver el listado de pagos?", 'Cuota Generada', 'Si', ()=> {}, 'No');
+    }, "La cuota ha sido generada, desea ver el listado de pagos?", 'Cuota Generada', 'Si', () => { }, 'No');
   }
 }

@@ -1,16 +1,8 @@
-<div class="print-container" id="form-print">
-  <!-- Print Button (hidden when printing) -->
-  @if(!printing){
-  <div class="print-actions no-print">
-    <ion-button (click)="onPrint()" color="dark">
-      <ion-icon slot="start" name="print-outline"></ion-icon>
-      Imprimir Formulario
-    </ion-button>
-  </div>
-  }
+<div class="print-container">
+
 
   <!-- Print Content -->
-  <div class="print-content" *ngIf="inscriptionData">
+  <div class="print-content">
 
     <!-- Header -->
     <div class="document-header">

@@ -1,6 +1,10 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseStorageService } from 'src/app/core/services/supabase-storage.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
@@ -79,6 +83,8 @@ export class InscriptionPage implements OnInit {
   alertService = inject(AlertControllerService);
   supabaseStorage = inject(SupabaseStorageService);
   router = inject(Router);
+  storageHelper = inject(StorageHelper);
+  userData!: any;
 
   //Childs
   @ViewChild('printSection') printSection!: InscriptionDetailPrintComponent;
@@ -117,6 +123,8 @@ export class InscriptionPage implements OnInit {
   ];
 
   showPrintSection: boolean = false;
+  printing!: boolean;
+  clickedPrintButton!: boolean;
 
   constructor(private fb: FormBuilder) {
   }
@@ -128,6 +136,7 @@ export class InscriptionPage implements OnInit {
 
   async ionViewWillEnter() {
     this.showPrintSection = false;
+    this.userData = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
     await this.initSchedules();
   }
 
@@ -147,27 +156,27 @@ export class InscriptionPage implements OnInit {
     this.inscriptionForm = this.fb.group({
       childData: this.fb.group({
         avatar_url: ['not_provided'],
-        full_name: ['', [Validators.required, Validators.minLength(3)]],
-        birth_date: [null, [Validators.required, this.validBirthDate]],
-        gender: ['', Validators.required],
+        full_name: ['JOSUE CAYETANO', [Validators.required, Validators.minLength(3)]],
+        birth_date: ['01/01/2025', [Validators.required, this.validBirthDate]],
+        gender: ['M', Validators.required],
         address: ['NOT PROVIDED FOR THE TUTORS', [Validators.required, Validators.minLength(10)]],
-        schedule_id: ['', Validators.required],
-        ciclo: ['', Validators.required],
-        monthly_quotes: [0, [Validators.required, Validators.min(0)]]
+        schedule_id: ['ddd', Validators.required],
+        ciclo: ['dd', Validators.required],
+        monthly_quotes: [5000, [Validators.required, Validators.min(0)]]
       }),
       firstGuardian: this.fb.group({
-        full_name: ['', [Validators.required, Validators.minLength(3)]],
+        full_name: ['Lissette Alexandra', [Validators.required, Validators.minLength(3)]],
         identification_type: ['Cédula', Validators.required],
-        identification_number: ['', [Validators.required, this.validateIdentification.bind(this)]],
-        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['', Validators.required]
+        identification_number: ['40209341789', [Validators.required, this.validateIdentification.bind(this)]],
+        phone_number: ['8093716874', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['INAPA', Validators.required]
       }),
       secondGuardian: this.fb.group({
-        full_name: [''],
+        full_name: ['Maria Cayetano', [Validators.minLength(3)]],
         identification_type: ['Cédula'],
-        identification_number: ['', [this.validateIdentification.bind(this)]],
-        phone_number: ['', [Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['']
+        identification_number: ['40209341789', [this.validateIdentification.bind(this)]],
+        phone_number: ['8098999333', [Validators.pattern(/^[0-9]{10}$/)]],
+        workplace: ['CAEI']
       }),
       medicalInfo: this.fb.group({
         has_medical_condition: [false],
@@ -175,20 +184,20 @@ export class InscriptionPage implements OnInit {
         takes_medication: [false],
         medication_details: [''],
         allergies: [''],
-        preferred_medical_center: ['', Validators.required]
+        preferred_medical_center: ['Hospital General', Validators.required]
       }),
       authorizedPerson: this.fb.group({
-        full_name: ['', [Validators.required, Validators.minLength(3)]],
-        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        relationship: ['', Validators.required]
+        full_name: ['LEONEL FERNANDEZ', [Validators.required, Validators.minLength(3)]],
+        phone_number: ['8091234567', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        relationship: ['Tío', Validators.required]
       }),
       authorizations: this.fb.group({
         post_pictures_social_network: [true]
       }),
       signature: this.fb.group({
-        signature_text: ['', Validators.required],
+        signature_text: ['LEONEL FERNANDEZ', Validators.required],
         signature_date: [new Date().toISOString().split('T')[0], Validators.required],
-        start_date: ['', Validators.required],
+        start_date: [new Date().toISOString().split('T')[0], Validators.required],
         status: ['ACTIVE']
       })
     });
@@ -429,7 +438,13 @@ export class InscriptionPage implements OnInit {
 
         await this.uploadAllDocuments(response.data?.registration_id, response.data.child?.id, response.data.child?.full_name.replace(/\s+/g, '_'));
         await this.alertService.openFestivaAlert('success', 'Datos guardados', 'El formulario de inscripción ha sido guardado exitosamente.');
-        this.showPrintSection = true;
+
+        if(!this.clickedPrintButton){
+          this.printing = true;
+          this.showPrintSection = true;
+          await this.onPrintFull();
+
+        }
 
       } catch (error) {
         console.error('Error calling edge function:', error);
@@ -460,14 +475,80 @@ export class InscriptionPage implements OnInit {
   async onPrint() {
 
     if (this.inscriptionForm.valid) {
+      this.clickedPrintButton = true;
+      this.alertService.openFestivaAlert('loading', 'Preparando formulario para impresión...', 'por favor espera');
       this.printSection.inscriptionData = this.inscriptionForm.value;
-      this.printSection.onPrint();
+      // this.printSection.onPrint();
+      this.printing = true;
+
+      setTimeout(async () => {
+        await this.onPrintFull();
+        this.printing = false;
+        this.alertService.dismiss();
+      }, 1000);
     }
     else {
       await this.alertService.openFestivaAlert('warning', 'Formulario inválido', 'Por favor, completa todos los campos requeridos correctamente antes de imprimir.');
     }
 
   }
+
+  getScheduleDescription(scheduleId: string): string {
+    const schedule = this.scheduleOptions.find(s => s.id === scheduleId);
+    return schedule ? schedule.description : 'Horario no disponible';
+  }
+
+
+
+async onPrintFull() {
+  const element = document.getElementById('fullform');
+
+  if (!element) {
+    console.error('Elemento para imprimir no encontrado');
+    return;
+  }
+
+  // Forzar fondo blanco
+  element.style.background = '#ffffff';
+
+  const canvas = await html2canvas(element, {
+    scale: 2, // Alta resolución
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    scrollY: -window.scrollY
+  });
+
+  const imgData = canvas.toDataURL('image/png');
+
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  // Primera página
+  pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  heightLeft -= pageHeight;
+
+  // Páginas adicionales si el contenido es largo
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+  }
+
+  pdf.save(`Formulario_Inscripcion_${this.inscriptionForm.get('childData.full_name')?.value}_${new Date().toISOString().split('T')[0]}.pdf`);
+}
 
   getErrorMessage(formGroupName: string, controlName: string): string {
     const control = this.inscriptionForm.get(`${formGroupName}.${controlName}`);
