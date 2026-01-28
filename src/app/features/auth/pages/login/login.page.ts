@@ -9,6 +9,7 @@ import { StorageHelper } from 'src/app/core/helpers/storage.helper';
 import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 import { RoutesApp } from 'src/app/core/enums/routes.enum';
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
+import { CommunicationService } from 'src/app/core/services/comunication/communication.service';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +32,7 @@ export class LoginPage implements OnInit {
   storageHelper = inject(StorageHelper);
   alertCtrl = inject(AlertControllerService);
   navCtrl = inject(NavController);
+  comunicationService = inject(CommunicationService);
 
   constructor() { }
 
@@ -94,11 +96,14 @@ export class LoginPage implements OnInit {
         if (data?.session) {
           this.supabaseService.getSupabase().auth.setSession(data.session);
           await this.storageHelper.setStorageKey(StorageKeys.SESSION_DATA, data.session);
+          console.log('Sesión almacenada en el almacenamiento local.', data.session);
           const profile = await this.supabaseService.profile();
+          console.log('Perfil obtenido después del login:', profile);
           if (profile) {
             await this.storageHelper.setStorageKey(StorageKeys.USER_DATA, profile.data);
           }
-          this.router.navigate([RoutesApp.ONBOARDING]);
+          this.comunicationService.sendMessage('userLoggedIn');
+          this.router.navigate(['/dashboard']);
         }
       }
     }

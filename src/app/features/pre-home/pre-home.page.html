@@ -8,10 +8,12 @@
     <div class="intro-content" [class.fade-out]="fadeOut">
       <div class="intro-text">
         <h1 class="intro-title">
-          {{ pageData.intro.title }}
+          <!-- {{ pageData.intro.title }} -->
+          Day Care System
         </h1>
         <p class="intro-subtitle">
-          {{ pageData.intro.subtitle }}
+          <!-- {{ pageData.intro.subtitle }} -->
+          Bienvenido al sistema de gestión de guarderías diseñado para facilitar la administración de guarderías.
         </p>
         <l-mirage size="80" speed="2.5" color="white"></l-mirage>
       </div>
@@ -27,15 +29,18 @@
     <div class="content-wrapper">
       <div class="header-section">
         <h1 class="main-title">
-          {{ pageData.main_content.title }}
+          <!-- {{ pageData.main_content.title }} -->
+          Day Care System
         </h1>
         <p class="main-description">
-          {{ pageData.main_content.description }}
+          <!-- {{ pageData.main_content.description }} -->
+          Bienvenido al sistema de gestión de guarderías diseñado para facilitar la administración y mejorar la
+          experiencia tanto de los padres como del personal.
         </p>
       </div>
 
       <div class="buttons-section">
-        @if(availableAuths.google) {
+        <!-- @if(availableAuths.google) {
         <button class="google-button" (click)="loginWithGoogle()">
           <svg class="button-icon" viewBox="0 0 24 24">
             <path fill="currentColor"
@@ -49,9 +54,9 @@
           </svg>
           <span>{{ pageData.main_content.buttons.google }}</span>
         </button>
-      }
+        } -->
 
-        @if(availableAuths.apple) {
+        <!-- @if(availableAuths.apple) {
         <button class="apple-button" (click)="loginWithApple()">
           <svg class="button-icon" viewBox="0 0 24 24" fill="currentColor">
             <path
@@ -59,19 +64,19 @@
           </svg>
           <span>{{ pageData.main_content.buttons.apple }}</span>
         </button>
-      }
+        }
 
-      @if(availableAuths.register) {
+        @if(availableAuths.register) {
         <button class="register-button" (click)="register()">
           {{ pageData.main_content.buttons.register }}
         </button>
-      }
+        } -->
 
-      @if(availableAuths.login) {
-         <button class="register-button" (click)="login()">
+        @if(availableAuths.login) {
+        <button class="register-button" (click)="login()">
           {{ pageData.main_content.buttons.login }}
         </button>
-      }
+        }
 
       </div>
 

@@ -57,7 +57,10 @@ export class SupabaseService {
   profile() {
     return this.supabase
       .from('user_profiles')
-      .select('*')
+      .select(`
+        *,
+        company(*)
+        `)
       .eq('id', this.session?.user.id)
       .single()
   }

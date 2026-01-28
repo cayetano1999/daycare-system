@@ -6,6 +6,8 @@ import { Schedule } from 'src/app/features/daycare/child-management/child-manage
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { StorageHelper } from 'src/app/core/helpers/storage.helper';
+import { StorageKeys } from 'src/app/core/enums/storage.keys.enum';
 
 type PaymentType = 'ABONO' | 'PAGO_TOTAL';
 
@@ -29,6 +31,7 @@ interface ReceiptData {
   items: ReceiptItem[];
   total_paid: number;
   total_pending_after: number;
+  payment_hour?: string;
 }
 interface Child {
   id: string;
@@ -143,6 +146,7 @@ export class PaymentModalComponent implements OnInit {
 
   supabaseService = inject(SupabaseService);
   alertCtrl = inject(AlertControllerService);
+  storageHelper = inject(StorageHelper);
   childrenResults: Child[] = [];
   installments: Installment[] = [];
   selectedInstallments: Map<string, number> = new Map(); // id → monto a pagar
@@ -150,10 +154,10 @@ export class PaymentModalComponent implements OnInit {
 
 
   // Header del recibo
-  daycareName = 'Baby House';
-  daycareAddress = 'Tu dirección aquí, Santo Domingo';
-  daycarePhone = '(829) 000-0000';
-  daycareLogoUrl = 'assets/img/baby-house.png'; // pon tu logo
+  daycareName = '';
+  daycareAddress = '';
+  daycarePhone = '';
+  daycareLogoUrl = ''; // pon tu logo
 
   receiptData: ReceiptData = {
     receipt_no: '',
@@ -165,7 +169,10 @@ export class PaymentModalComponent implements OnInit {
     items: [],
     total_paid: 0,
     total_pending_after: 0,
+    payment_hour: ''
   };
+  daycareIdentification: string = '';
+  footerText: string = '';
 
   constructor(private modalController: ModalController) {
     // const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -173,7 +180,18 @@ export class PaymentModalComponent implements OnInit {
     // this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  ngOnInit() { }
+  async ngOnInit() {
+    const userData = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
+    if (userData?.company) {
+      this.daycareName = userData.company.full_name || this.daycareName;
+      this.daycareLogoUrl = userData.company.avatar_url || this.daycareLogoUrl;
+      this.daycareAddress = userData.company.address || this.daycareAddress;
+      this.daycarePhone = userData.company.phone_number || this.daycarePhone;
+      this.daycareIdentification = userData.company.identification || this.daycareIdentification;
+      this.footerText = userData.company.footer_message || this.footerText;
+    }
+
+   }
 
   async searchChild() {
     if (!this.searchValue) return;
@@ -432,6 +450,7 @@ export class PaymentModalComponent implements OnInit {
       items,
       total_paid: totalPaid,
       total_pending_after: totalPendingAfter,
+      payment_hour: new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })
     };
 
     this.showReceipt = true;

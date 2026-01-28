@@ -1,0 +1,77 @@
+<ion-content>
+
+    <app-custom-header
+    [title]="'Datos de la Empresa'"
+    [subtitle]="'Información oficial de la guardería'"
+    [showRightBtn]="false"
+    [textRightBtn]="'Cancelar'"
+    [iconRightBtn]="'close-circle'"
+  ></app-custom-header>
+  <div class="company-page">
+
+  <!-- Header -->
+
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-preview">
+        <img
+          *ngIf="company.avatar_url; else placeholder"
+          [src]="company.avatar_url"
+          alt="Logo empresa"
+        />
+        <ng-template #placeholder>
+          <div class="logo-placeholder">LOGO</div>
+        </ng-template>
+      </div>
+
+      <label class="upload-btn">
+        Cambiar logo
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+      </label>
+    </div>
+
+    <!-- Form -->
+    <div class="form-grid">
+
+      <div class="form-group full">
+        <label>Nombre de la empresa *</label>
+        <input type="text" [(ngModel)]="company.full_name" />
+      </div>
+
+      <div class="form-group">
+        <label>Teléfono *</label>
+        <input type="text" [(ngModel)]="company.phone_number" />
+      </div>
+
+      <div class="form-group">
+        <label>Identificación (RNC / Cédula)</label>
+        <input type="text" [(ngModel)]="company.identification" />
+      </div>
+
+      <div class="form-group full">
+        <label>Dirección *</label>
+        <input type="text" [(ngModel)]="company.address" />
+      </div>
+
+      <div class="form-group full">
+        <label>Mensaje de pie de página</label>
+        <textarea rows="3" [(ngModel)]="company.footer_message"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-primary" (click)="saveCompany()" [disabled]="loading">
+        {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+</ion-content>

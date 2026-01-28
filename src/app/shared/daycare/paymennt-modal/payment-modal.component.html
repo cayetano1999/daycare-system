@@ -209,6 +209,7 @@
         <div class="r-title">{{ daycareName }}</div>
         <div class="r-sub">{{ daycareAddress }}</div>
         <div class="r-sub">Tel: {{ daycarePhone }}</div>
+        <div class="r-sub">RNC: {{ daycareIdentification }}</div>
       </div>
     </div>
 
@@ -217,7 +218,7 @@
     <!-- Meta -->
     <div class="r-meta">
       <div><strong>Recibo:</strong> {{ receiptData.receipt_no }}</div>
-      <div><strong>Fecha:</strong> {{ receiptData.payment_date }}</div>
+      <div><strong>Fecha:</strong> {{ receiptData.payment_date }} - {{ receiptData.payment_hour }}</div>
       <div><strong>Método:</strong> {{ receiptData.method_label }}</div>
       <div><strong>Niño/a:</strong> {{ receiptData.child_name }}</div>
     </div>
@@ -273,7 +274,7 @@
 
     <div class="r-footer">
       <div class="r-thanks">¡Gracias por su pago!</div>
-      <div class="r-small">Este recibo fue generado automáticamente.</div>
+      <div class="r-small">{{footerText}}</div>
       <div class="r-small">ID: {{ receiptData.transaction_id }}</div>
     </div>
   </div>

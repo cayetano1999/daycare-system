@@ -23,6 +23,7 @@ import { App } from '@capacitor/app';
 import { Profile } from './core/interface/profile.interface';
 import { USER_SINGLE } from './core/constants/constants';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { AlertControllerService } from './core/services/ionic/alert-controller.service';
 
 
 register(); // Register Swiper elements globally
@@ -41,53 +42,81 @@ export class AppComponent implements OnInit {
             title: 'Gestión de Incripciones',
             menu: true,
             icon: 'document-text-outline',
-            url: 'daycare/inscription'
+            url: 'daycare/inscription',
+            description: 'Administra las inscripciones de los niños.'
 
         },
         {
             title: 'Gestión de Padres',
             menu: true,
             icon: 'people-circle',
-            url: 'daycare/parents-management'
+            url: 'daycare/parents-management',
+            description: 'Administra la información de los padres.'
         },
         {
             title: 'Administración de Niños',
             menu: true,
             icon: 'accessibility-outline',
-            url: 'daycare/child-management'
+            url: 'daycare/child-management',
+            description: 'Administra la información de los niños.'
         },
         {
             title: 'Gestión de Tandas',
             menu: true,
             icon: 'time-outline',
-            url: 'daycare/schedule-management'
+            url: 'daycare/schedule-management',
+            description: 'Administra las tandas de cuidado infantil.'
         },
         {
             title: 'Gestión de Pagos',
             menu: true,
             icon: 'card-outline',
-            url: 'daycare/payment-management'
+            url: 'daycare/payment-management',
+            description: 'Administra los pagos y facturación.'
         },
-        // {
-        //     title: 'Personas Autorizadas',
-        //     menu: true,
-        //     icon: 'person-add-outline',
-        //     url: 'daycare/authorized-person-management'
-        // },
         {
-            title: 'Configuración',
+            title: 'Personas Autorizadas',
             menu: true,
-            icon: 'settings-outline',
-            url: 'daycare/register'
-        }
+            icon: 'person-add-outline',
+            url: 'daycare/authorized-person-management',
+            description: 'Administra las personas autorizadas para recoger a los niños.'
+        },
+
 
 
     ]  //remoteConfig.OPTIONS_ITEMS.options as any;
-    public availableMenu = true;
+
+    public menuSettingsOptions = [
+        {
+            title: 'Tu Guardería',
+            menu: true,
+            icon: 'settings-outline',
+            url: 'daycare/company-info',
+            description: 'Configura los detalles de tu guardería.'
+        },
+        {
+            title: 'Cerrar Sesión',
+            menu: true,
+            icon: 'log-out-outline',
+            url: null,
+            description: 'Cerrar sesión de la aplicación.',
+            onClick: async () => {
+                const result = await this.alertCtrl.openFestivaAlert('question', '¿Estás seguro de que deseas cerrar sesión?', '¿Cerrar sesión?', true, 'Cancelar', 'Cerrar Sesión');
+                if (result?.action == 'confirm') {
+                    await this.supabase.getSupabase().auth.signOut();
+                    await this.storageHelper.clear();
+                    this.availableMenu = false;
+                    this.router.navigate([RoutesApp.PRE_HOME]);
+                }
+            }
+        }
+    ]
+    public availableMenu = false;
     public loadingAds = false;
     public navegationHistory: string[] = [];
     public isOnboardingComplete: boolean = false;
     public profile!: Profile;
+    public user!: Profile;
     // Services
     private readonly platform = inject(Platform);
     private readonly communicationService = inject(CommunicationService);
@@ -98,14 +127,21 @@ export class AppComponent implements OnInit {
     private readonly supabase = inject(SupabaseService);
     private readonly storageHelper = inject(StorageHelper);
     private readonly fcm = inject(FirebaseMessagingService);
-    private readonly fingerprint = inject(FingerprintService);
+    private readonly alertCtrl = inject(AlertControllerService);
 
 
     constructor() {
         this.setupRouterEvents();
         this.setupBackButton();
         this.validateUrlWeb();
+        this.communicationService.message$.subscribe(async () => {
+            console.log('Mensaje recibido en AppComponent');
+            this.availableMenu = true;
+            this.user = await this.storageHelper.getStorageKey<Profile>(StorageKeys.USER_DATA) as Profile;
+            console.log('Usuario cargado en AppComponent:', this.user);
 
+
+        });
     }
 
     async setStatusBar() {
@@ -129,6 +165,9 @@ export class AppComponent implements OnInit {
         this.isOnboardingComplete = await this.storageHelper.getStorageKey(StorageKeys.ONBOARDING_COMPLETED);
         this.profile = await this.storageHelper.getStorageKey(StorageKeys.USER_DATA);
 
+        console.log('Perfil cargado en AppComponent:', this.profile);
+        this.availableMenu = this.profile ? true : false;
+
         const isConnected = await Network.getStatus();
         if (!isConnected.connected) {
             this.navCtrl.navigateRoot(RoutesApp.NO_INTERNET);
@@ -139,7 +178,6 @@ export class AppComponent implements OnInit {
         //     await ScreenOrientation.lock({ orientation: 'portrait' });
         // }
 
-        this.communicationService.message$.subscribe(() => this.availableMenu = true);
         this.loadFingerprint();
         await this.fcm.initializeFirebaseMessaging();
 
@@ -244,7 +282,7 @@ export class AppComponent implements OnInit {
         }
     }
 
- 
+
 
     getDescription(title: string): string {
         return 'Gestión y administración';

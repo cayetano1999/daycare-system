@@ -9,4 +9,5 @@ export interface Profile {
   device_id: string | null;
   push_token: string | null;
   device_name: string | null;
+  company: any;
 }

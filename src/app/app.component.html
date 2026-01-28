@@ -1,43 +1,15 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    @if(availableMenu) {
-    <!-- <ion-menu contentId="main-content" type="overlay" >
-      <ion-content>
-        <ion-list id="inbox-list">
-          <img src="../assets/img/logodefault.png" style="width: 50px; margin-left: 13px;" alt="">
-          <ion-list-header class="mb-3">DayCare System</ion-list-header>
-          <hr>
 
-          @for(option of menuOptions; track option) {
-          <ion-menu-toggle auto-hide="false" style="margin-top: -20px;" >
-            @if(option.menu) {
-            <ion-item routerDirection="root" (click)="handleItemSelected(option)" lines="none" detail="false" routerLinkActive="selected">
-               
-              <ion-icon slot="start" [name]="option.icon"></ion-icon>
-              <ion-label><b>{{ option.title }}</b></ion-label>
-            </ion-item>
-          }
-          </ion-menu-toggle>
-        }
-        </ion-list>
-      </ion-content>
-
-      <ion-footer class="ion-no-border mb-5">
-        <ion-toolbar>
-          <ion-title>v{{version}} </ion-title>
-        </ion-toolbar>
-      </ion-footer>
-    </ion-menu> -->
-
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu [disabled]="!availableMenu" contentId="main-content" type="overlay">
       <ion-content class="menu-content">
         <!-- Header con gradiente -->
         <div class="menu-header">
           <div class="logo-container">
-            <img src="../assets/img/baby-house.jpeg" alt="Baby House Logo" class="logo">
+            <img [src]="user?.company?.avatar_url || profile?.company?.avatar_url || '../assets/img/baby-house.jpeg'" alt="Company Logo" class="logo">
           </div>
-          <h1 class="brand-name">Baby House</h1>
-          <p class="brand-subtitle">Sistema de Gestión</p>
+          <h1 class="brand-name">{{user?.company?.full_name || profile?.company?.full_name || 'Company'}}</h1>
+          <p class="brand-subtitle">{{user?.full_name || profile?.full_name || 'N/A'}}</p>
         </div>
 
         <!-- Menu Items -->
@@ -58,6 +30,31 @@
                 </div>
                 <div class="item-text">
                   <ion-label class="item-label">{{ option.title }}</ion-label>
+                  <span class="item-description">{{ option.description }}</span>
+                </div>
+                <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+              </div>
+            </ion-item>
+            }
+          </ion-menu-toggle>
+          }
+
+          <div class="menu-section-title">
+            <ion-icon name="grid-outline"></ion-icon>
+            <span>CONFIGURACIÓN</span>
+          </div>
+
+          @for(option of menuSettingsOptions; track option) {
+          <ion-menu-toggle auto-hide="false">
+            @if(option.menu) {
+            <ion-item routerDirection="root" (click)="option.onClick ? option.onClick() : handleItemSelected(option)" lines="none" detail="false"
+              routerLinkActive="selected" class="menu-item">
+              <div class="item-content">
+                <div class="icon-wrapper" [attr.data-color]="getIconColor(option.icon)">
+                  <ion-icon [name]="option.icon"></ion-icon>
+                </div>
+                <div class="item-text">
+                  <ion-label class="item-label">{{ option.title }}</ion-label>
                   <span class="item-description">{{ getDescription(option.title) }}</span>
                 </div>
                 <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
@@ -68,8 +65,12 @@
           }
         </ion-list>
 
+
+
         <!-- Decorative gradient line -->
         <div class="gradient-divider"></div>
+
+
       </ion-content>
 
       <!-- Footer -->
@@ -90,9 +91,8 @@
       </ion-footer>
     </ion-menu>
 
-    }
+
     <ion-router-outlet id="main-content"></ion-router-outlet>
 
   </ion-split-pane>
 </ion-app>
-<!-- <app-kuido-tab></app-kuido-tab> colocar el mtop:100 fixed para que siempre este ahi. -->
