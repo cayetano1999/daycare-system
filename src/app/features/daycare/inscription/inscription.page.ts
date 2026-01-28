@@ -508,46 +508,45 @@ async onPrintFull() {
     return;
   }
 
-  // Forzar fondo blanco
+  // Asegurar que el elemento sea visible y tenga fondo blanco
+  const originalStyle = element.style.cssText;
   element.style.background = '#ffffff';
 
   const canvas = await html2canvas(element, {
-    scale: 2, // Alta resolución
+    scale: 2,
     useCORS: true,
     backgroundColor: '#ffffff',
-    scrollY: -window.scrollY
+    windowWidth: element.scrollWidth,
+    windowHeight: element.scrollHeight
   });
 
   const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p', 'mm', 'a4');
 
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
-  });
-
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-
-  const imgWidth = pageWidth;
+  const imgWidth = 210; // Ancho A4 en mm
+  const pageHeight = 297; // Alto A4 en mm
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+  
   let heightLeft = imgHeight;
   let position = 0;
 
-  // Primera página
+  // Añadir la primera página
   pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
   heightLeft -= pageHeight;
 
-  // Páginas adicionales si el contenido es largo
+  // Manejo de páginas adicionales
   while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
+    position = heightLeft - imgHeight; // Ajuste de posición negativa
     pdf.addPage();
     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
   }
 
-  pdf.save(`Formulario_Inscripcion_${this.inscriptionForm.get('childData.full_name')?.value}_${new Date().toISOString().split('T')[0]}.pdf`);
+  // Restaurar estilo original
+  element.style.cssText = originalStyle;
+
+  const fileName = this.inscriptionForm.get('childData.full_name')?.value || 'Inscripcion';
+  pdf.save(`Formulario_Inscripcion_${fileName}_${new Date().toISOString().split('T')[0]}.pdf`);
 }
 
   getErrorMessage(formGroupName: string, controlName: string): string {

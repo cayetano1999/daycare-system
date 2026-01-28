@@ -307,3 +307,8 @@ textarea {
   }
 
 }
+
+.card-container-body { /* Cambia por tu clase real */
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
