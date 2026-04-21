@@ -13,7 +13,8 @@
     "lint:fix": "eslint --fix 'src/**/*.{js,ts,tsx}'",
     "android": "ionic build --prod && npx cap sync android && npx cap open android",
     "ios": "ionic build --prod && npx cap sync ios && npx cap open ios",
-    "generate-assets": "npx capacitor-assets generate"
+    "generate-assets": "npx capacitor-assets generate",
+    "firebase:deploy": "firebase deploy --only hosting:daycaresystem"
   },
   "private": true,
   "dependencies": {

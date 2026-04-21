@@ -3,13 +3,13 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyALX1dktKbImJhmUPd-mQzWnR2p5QHELgU",
-    authDomain: "festiva-30592.firebaseapp.com",
-    projectId: "festiva-30592",
-    storageBucket: "festiva-30592.firebasestorage.app",
-    messagingSenderId: "96276999190",
-    appId: "1:96276999190:web:e5a7ea20a6cd02d5931937",
-    measurementId: "G-RZ51N1PV59"
+    apiKey: "AIzaSyBCc5CdERpeZjArfXMNVW0x28uVqmrgEho",
+  authDomain: "daycaresystem-27b1a.firebaseapp.com",
+  projectId: "daycaresystem-27b1a",
+  storageBucket: "daycaresystem-27b1a.firebasestorage.app",
+  messagingSenderId: "180043662238",
+  appId: "1:180043662238:web:091dcd393afe2b455e8c8f",
+  measurementId: "G-5L0FTX6SVQ"
   },
   supabaseUrl: "",
   supabaseKey: "",
