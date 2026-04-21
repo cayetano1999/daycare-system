@@ -290,22 +290,37 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
            });
            
            const pdfWidth = pdf.internal.pageSize.getWidth();
-           // Calculate height proportional to the width
            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+           const pageHeight = pdf.internal.pageSize.getHeight();
+           
+           const footerMargin = 20; // 20mm margin at the bottom
+           const topMargin = 15;    // 15mm top margin for subsequent pages
+           const usableHeightFirstPage = pageHeight - footerMargin;
+           const usableHeightNextPages = pageHeight - footerMargin - topMargin;
            
            let position = 0;
            let heightLeft = pdfHeight;
-           const pageHeight = pdf.internal.pageSize.getHeight();
            
            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-           heightLeft -= pageHeight;
+           // Ocultar la parte inferior para crear el margen del footer
+           pdf.setFillColor(255, 255, 255);
+           pdf.rect(0, usableHeightFirstPage, pdfWidth, footerMargin, 'F');
+           heightLeft -= usableHeightFirstPage;
            
            // Pagination logic for long tables
            while (heightLeft > 0) {
-               position = heightLeft - pdfHeight;
+               // Calculate the position to shift the image up
+               position = topMargin - (pdfHeight - heightLeft);
+               
                pdf.addPage();
                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-               heightLeft -= pageHeight;
+               
+               // Ocultar márgenes superior e inferior
+               pdf.setFillColor(255, 255, 255);
+               pdf.rect(0, 0, pdfWidth, topMargin, 'F'); // Top margin
+               pdf.rect(0, pageHeight - footerMargin, pdfWidth, footerMargin, 'F'); // Footer margin
+               
+               heightLeft -= usableHeightNextPages;
            }
            
            pdf.save(`reporte_ninos_${new Date().toISOString().split('T')[0]}.pdf`);
