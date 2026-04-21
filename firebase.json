@@ -1,7 +1,7 @@
 {
   "hosting": {
-    "site": "festiva",
-    "public": "landing",
+    "site": "daycaresystem",
+    "public": "www/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
