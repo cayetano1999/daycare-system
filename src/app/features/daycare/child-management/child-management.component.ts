@@ -12,6 +12,8 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { InscriptionDetailModalComponent } from 'src/app/shared/daycare/inscription-detail-modal/inscription-detail-modal.component';
 import { ModalController } from '@ionic/angular';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface Child {
   id: string;
@@ -77,6 +79,10 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
   schedules: Schedule[] = [];
   ciclos: string[] = CICLOS_CURSOS_DROPDOWN.map(c => c.value);
 
+  isPrinting = false;
+  currentDate = new Date();
+  currentUser: any = null;
+
   constructor() {
     this.supabase = this.supabaseService.getSupabase();
   }
@@ -84,6 +90,18 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadSchedules();
     this.loadChildren();
+    this.loadUserProfile();
+  }
+
+  async loadUserProfile() {
+    try {
+      const { data } = await this.supabaseService.profile();
+      if (data) {
+        this.currentUser = data;
+      }
+    } catch (error) {
+      console.error('Error loading user profile', error);
+    }
   }
 
   ngOnDestroy(): void {
@@ -237,6 +255,83 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  async exportToPDF() {
+    this.isPrinting = true;
+    this.currentDate = new Date();
+    
+    // Wait for Angular to update the DOM (hide actions, show print header)
+    setTimeout(async () => {
+       const element = document.getElementById('pdf-report-container');
+       if (!element) {
+           this.isPrinting = false;
+           return;
+       }
+       
+       try {
+           this.alertCtrl.openFestivaAlert('loading', 'Generando PDF...', 'Por favor espere');
+           
+           // Allow time for the loading alert to present before blocking the thread
+           await new Promise(resolve => setTimeout(resolve, 300));
+           
+           const canvas = await html2canvas(element, {
+               scale: 2,
+               useCORS: true,
+               backgroundColor: '#ffffff'
+           });
+           
+           const imgData = canvas.toDataURL('image/png');
+           
+           const pdf = new jsPDF({
+               orientation: 'p',
+               unit: 'mm',
+               format: 'a4'
+           });
+           
+           const pdfWidth = pdf.internal.pageSize.getWidth();
+           const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+           const pageHeight = pdf.internal.pageSize.getHeight();
+           
+           const footerMargin = 20; // 20mm margin at the bottom
+           const topMargin = 15;    // 15mm top margin for subsequent pages
+           const usableHeightFirstPage = pageHeight - footerMargin;
+           const usableHeightNextPages = pageHeight - footerMargin - topMargin;
+           
+           let position = 0;
+           let heightLeft = pdfHeight;
+           
+           pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+           // Ocultar la parte inferior para crear el margen del footer
+           pdf.setFillColor(255, 255, 255);
+           pdf.rect(0, usableHeightFirstPage, pdfWidth, footerMargin, 'F');
+           heightLeft -= usableHeightFirstPage;
+           
+           // Pagination logic for long tables
+           while (heightLeft > 0) {
+               // Calculate the position to shift the image up
+               position = topMargin - (pdfHeight - heightLeft);
+               
+               pdf.addPage();
+               pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+               
+               // Ocultar márgenes superior e inferior
+               pdf.setFillColor(255, 255, 255);
+               pdf.rect(0, 0, pdfWidth, topMargin, 'F'); // Top margin
+               pdf.rect(0, pageHeight - footerMargin, pdfWidth, footerMargin, 'F'); // Footer margin
+               
+               heightLeft -= usableHeightNextPages;
+           }
+           
+           pdf.save(`reporte_ninos_${new Date().toISOString().split('T')[0]}.pdf`);
+       } catch (error) {
+           console.error('Error generating PDF:', error);
+           this.alertCtrl.openFestivaAlert('danger', 'Error', 'Ocurrió un error al generar el PDF.');
+       } finally {
+           this.alertCtrl.dismiss();
+           this.isPrinting = false;
+       }
+    }, 150);
   }
 
   async viewDetails(child: Child) {
