@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "festiva", 
+    "site": "festiva",
     "public": "landing",
     "ignore": [
       "firebase.json",
@@ -13,9 +13,5 @@
         "destination": "/index.html"
       }
     ]
-  },
-  "remoteconfig": {},
-  "database": {
-    "rules": "database.rules.json"
   }
 }
