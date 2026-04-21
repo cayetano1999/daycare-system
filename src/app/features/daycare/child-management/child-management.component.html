@@ -237,7 +237,8 @@
                   <!-- Edad -->
                   <td class="px-6 py-4">
                     <span
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      class="inline-flex items-center text-xs font-medium text-gray-800"
+                      [ngClass]="{'px-2.5 py-0.5 rounded-full bg-gray-100': !isPrinting}">
                       {{ calculateAge(child.birth_date) }} años
                     </span>
                   </td>
@@ -245,12 +246,15 @@
                   <!-- Género -->
                   <td class="px-6 py-4">
                     <div class="flex items-center gap-2">
-                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
+                      <span class="inline-flex items-center gap-1.5 text-xs font-medium"
                         [ngClass]="{
-                          'bg-blue-100 text-blue-700': child.gender === 'M',
-                          'bg-pink-100 text-pink-700': child.gender === 'F'
+                          'px-3 py-1 rounded-full': !isPrinting,
+                          'bg-blue-100 text-blue-700': child.gender === 'M' && !isPrinting,
+                          'bg-pink-100 text-pink-700': child.gender === 'F' && !isPrinting,
+                          'text-blue-700': child.gender === 'M' && isPrinting,
+                          'text-pink-700': child.gender === 'F' && isPrinting
                         }">
-                        <span class="w-2 h-2 rounded-full" [ngClass]="{
+                        <span *ngIf="!isPrinting" class="w-2 h-2 rounded-full" [ngClass]="{
                             'bg-blue-500': child.gender === 'M',
                             'bg-pink-500': child.gender === 'F'
                           }"></span>
@@ -262,13 +266,15 @@
                   <!-- Horario -->
                   <td class="px-6 py-4">
                     <span
-                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                      class="inline-flex items-center text-xs font-medium text-indigo-700"
+                      [ngClass]="{'px-3 py-1 rounded-full bg-indigo-100': !isPrinting}">
                       {{ child.schedule?.description }}
                     </span>
                   </td>
 
                   <td class="px-6 py-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-yellow-700">
+                    <span class="inline-flex items-center text-xs font-medium text-yellow-700"
+                          [ngClass]="{'px-3 py-1 rounded-full': !isPrinting}">
                       {{ child.ciclo || 'No asignado' }}
                     </span>
                   </td>
