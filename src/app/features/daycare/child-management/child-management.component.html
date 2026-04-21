@@ -1,175 +1,212 @@
 <ion-content>
-<div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <div class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900">Administrar Niños</h1>
-          <p class="mt-1 text-sm text-gray-500">Gestiona los niños registrados en la guardería</p>
-        </div>
-        <button 
-          (click)="exportToCSV()"
-          class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Exportar Listado
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <!-- Filtros -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold text-gray-900">Filtros</h2>
-        <button 
-          (click)="clearFilters()"
-          class="text-sm text-gray-500 hover:text-gray-700 underline">
-          Limpiar filtros
-        </button>
-      </div>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <!-- Nombre -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-          <input 
-            type="text" 
-            [(ngModel)]="filters.nombre"
-            (ngModelChange)="applyFilters()"
-            placeholder="Buscar por nombre..."
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-        </div>
-
-        <!-- Fecha de Nacimiento -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
-          <input 
-            type="date" 
-            [(ngModel)]="filters.fechaNacimiento"
-            (ngModelChange)="applyFilters()"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-        </div>
-
-        <!-- Género -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Género</label>
-          <select 
-            [(ngModel)]="filters.genero"
-            (ngModelChange)="applyFilters()"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-            <option value="">Todos</option>
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-          </select>
-        </div>
-
-        <!-- Horario -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Horario</label>
-          <select 
-            [(ngModel)]="filters.schedule_id"
-            (ngModelChange)="applyFilters()"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-            <option value="">Todos</option>
-            <option *ngFor="let schedule of schedules" [value]="schedule.id">{{ schedule.description }}</option>
-          </select>
-        </div>
-
-        <!-- Ciclo -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Ciclo</label>
-          <select 
-            [(ngModel)]="filters.ciclo"
-            (ngModelChange)="applyFilters()"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-            <option value="">Todos</option>
-            <option *ngFor="let ciclo of ciclos" [value]="ciclo">{{ ciclo }}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Indicadores -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <!-- Total de Niños -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p class="text-sm text-gray-500">Total de Niños</p>
-            <p class="text-2xl font-bold text-gray-900">{{ totalChildren }}</p>
+            <h1 class="text-2xl font-bold text-gray-900">Administrar Niños</h1>
+            <p class="mt-1 text-sm text-gray-500">Gestiona los niños registrados en la guardería</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="exportToCSV()"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Exportar CSV
+            </button>
+            <button (click)="exportToPDF()"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Exportar PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Filtros -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Filtros</h2>
+          <button (click)="clearFilters()" class="text-sm text-gray-500 hover:text-gray-700 underline">
+            Limpiar filtros
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <!-- Nombre -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+            <input type="text" [(ngModel)]="filters.nombre" (ngModelChange)="applyFilters()"
+              placeholder="Buscar por nombre..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+          </div>
+
+          <!-- Fecha de Nacimiento -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
+            <input type="date" [(ngModel)]="filters.fechaNacimiento" (ngModelChange)="applyFilters()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+          </div>
+
+          <!-- Género -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Género</label>
+            <select [(ngModel)]="filters.genero" (ngModelChange)="applyFilters()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+              <option value="">Todos</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+
+          <!-- Horario -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Horario</label>
+            <select [(ngModel)]="filters.schedule_id" (ngModelChange)="applyFilters()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+              <option value="">Todos</option>
+              <option *ngFor="let schedule of schedules" [value]="schedule.id">{{ schedule.description }}</option>
+            </select>
+          </div>
+
+          <!-- Ciclo -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Ciclo</label>
+            <select [(ngModel)]="filters.ciclo" (ngModelChange)="applyFilters()"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+              <option value="">Todos</option>
+              <option *ngFor="let ciclo of ciclos" [value]="ciclo">{{ ciclo }}</option>
+            </select>
           </div>
         </div>
       </div>
 
-      <!-- Por Horario -->
-      <ng-container *ngFor="let item of childrenBySchedule">
+      <!-- Indicadores -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Total de Niños -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center bg-indigo-100">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
             <div>
-              <p class="text-sm text-gray-500">{{ item.schedule }}</p>
-              <p class="text-2xl font-bold text-gray-900">{{ item.count }}</p>
+              <p class="text-sm text-gray-500">Total de Niños</p>
+              <p class="text-2xl font-bold text-gray-900">{{ totalChildren }}</p>
             </div>
           </div>
         </div>
-      </ng-container>
-    </div>
 
-    <!-- Tabla -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead class="bg-slate-900 border-b border-gray-200">
-            <tr>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Nombre</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Fecha Nacimiento</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Edad</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Género</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Horario</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Ciclo</th>
-              <th class="px-6 py-4 text-right text-xs font-semibold text-white  tracking-wider">Acciones</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <!-- Loading State -->
-            <tr *ngIf="loading">
-              <td colspan="7" class="px-6 py-12 text-center">
-                <div class="flex flex-col items-center gap-3">
-                  <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                  <span class="text-gray-500">Cargando...</span>
-                </div>
-              </td>
-            </tr>
+        <!-- Por Horario -->
+        <ng-container *ngFor="let item of childrenBySchedule">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full flex items-center justify-center bg-indigo-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">{{ item.schedule }}</p>
+                <p class="text-2xl font-bold text-gray-900">{{ item.count }}</p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
 
-            <!-- Empty State -->
-            <tr *ngIf="!loading && filteredChildren.length === 0">
-              <td colspan="7" class="px-6 py-12 text-center">
-                <div class="flex flex-col items-center gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                  </svg>
-                  <span class="text-gray-500">No se encontraron niños</span>
-                </div>
-              </td>
-            </tr>
+      <!-- Header para PDF (Oculto normalmente) y Tabla -->
+      <div id="pdf-report-container" class="bg-white" [ngClass]="{'p-8': isPrinting}">
 
-            <!-- Data Rows -->
-            <tr *ngFor="let child of filteredChildren" class="hover:bg-gray-50 transition-colors">
-              <!-- Foto -->
-              <!-- <td class="px-6 py-4">
+        <div *ngIf="isPrinting" class="mb-8 border-b border-gray-200 pb-6 flex justify-between items-start">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
+              <!-- Puedes cambiar esto por una etiqueta img con el logo real si lo tienes -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path
+                  d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Guardería</h1>
+              <h2 class="text-xl font-semibold text-gray-700 mt-1">Reporte de Niños</h2>
+              <p class="text-sm text-gray-500 mt-1">Listado general de niños inscritos y sus datos básicos.</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-sm text-gray-600 mb-1"><strong>Fecha de generación:</strong> {{ currentDate |
+              date:'dd/MM/yyyy HH:mm' }}</p>
+            <p class="text-sm text-gray-600 mb-1"><strong>Usuario:</strong> {{ currentUser?.full_name || 'Generado por
+              sistema' }}</p>
+            <p class="text-sm text-gray-600"><strong>Total de niños:</strong> {{ totalChildren }}</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+          [ngClass]="{'border-0 shadow-none': isPrinting}">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-slate-900 border-b border-gray-200">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Nombre</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Fecha Nacimiento</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Edad</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Género</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Horario</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-white  tracking-wider">Ciclo</th>
+                  <th *ngIf="!isPrinting" class="px-6 py-4 text-right text-xs font-semibold text-white  tracking-wider">
+                    Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <!-- Loading State -->
+                <tr *ngIf="loading">
+                  <td colspan="7" class="px-6 py-12 text-center">
+                    <div class="flex flex-col items-center gap-3">
+                      <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin">
+                      </div>
+                      <span class="text-gray-500">Cargando...</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Empty State -->
+                <tr *ngIf="!loading && filteredChildren.length === 0">
+                  <td colspan="7" class="px-6 py-12 text-center">
+                    <div class="flex flex-col items-center gap-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                      </svg>
+                      <span class="text-gray-500">No se encontraron niños</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Data Rows -->
+                <tr *ngFor="let child of filteredChildren" class="hover:bg-gray-50 transition-colors">
+                  <!-- Foto -->
+                  <!-- <td class="px-6 py-4">
                 <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
                   <img 
                     *ngIf="child.avatar_url" 
@@ -184,68 +221,73 @@
                 </div>
               </td> -->
 
-              <!-- Nombre -->
-              <td class="px-6 py-4">
-                <p style="font-size: 0.7rem;" class=" text-gray-900"> 
-                  <ion-icon *ngIf="!child.isValidCiclo" name="warning" color="danger"></ion-icon>  {{ child.full_name }}</p>
-              </td>
+                  <!-- Nombre -->
+                  <td class="px-6 py-4">
+                    <p style="font-size: 0.7rem;" class=" text-gray-900">
+                      <ion-icon *ngIf="!child.isValidCiclo" name="warning" color="danger"></ion-icon> {{ child.full_name
+                      }}
+                    </p>
+                  </td>
 
-              <!-- Fecha Nacimiento -->
-              <td class="px-6 py-4 text-gray-600">
-                <p style="font-size: 0.7rem;" class=" text-gray-900">  {{ child.birth_date | date:'dd/MM/yyyy' }}</p>
-              </td>
+                  <!-- Fecha Nacimiento -->
+                  <td class="px-6 py-4 text-gray-600">
+                    <p style="font-size: 0.7rem;" class=" text-gray-900"> {{ child.birth_date | date:'dd/MM/yyyy' }}</p>
+                  </td>
 
-              <!-- Edad -->
-              <td class="px-6 py-4">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                  {{ calculateAge(child.birth_date) }} años
-                </span>
-              </td>
+                  <!-- Edad -->
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      {{ calculateAge(child.birth_date) }} años
+                    </span>
+                  </td>
 
-              <!-- Género -->
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
+                  <!-- Género -->
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
                         [ngClass]="{
                           'bg-blue-100 text-blue-700': child.gender === 'M',
                           'bg-pink-100 text-pink-700': child.gender === 'F'
                         }">
-                    <span class="w-2 h-2 rounded-full"
-                          [ngClass]="{
+                        <span class="w-2 h-2 rounded-full" [ngClass]="{
                             'bg-blue-500': child.gender === 'M',
                             'bg-pink-500': child.gender === 'F'
                           }"></span>
-                    {{ child.gender === 'M' ? 'Masculino' : 'Femenino' }}
-                  </span>
-                </div>
-              </td>
+                        {{ child.gender === 'M' ? 'Masculino' : 'Femenino' }}
+                      </span>
+                    </div>
+                  </td>
 
-              <!-- Horario -->
-              <td class="px-6 py-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
-                  {{ child.schedule?.description }}
-                </span>
-              </td>
+                  <!-- Horario -->
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                      {{ child.schedule?.description }}
+                    </span>
+                  </td>
 
-              <td class="px-6 py-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-yellow-700">
-                  {{ child.ciclo || 'No asignado' }}
-                </span>
-              </td>
+                  <td class="px-6 py-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-yellow-700">
+                      {{ child.ciclo || 'No asignado' }}
+                    </span>
+                  </td>
 
-              <!-- Acciones -->
-              <td class="px-6 py-4">
-                <div (click)="openActions($event, child)" class="flex items-center justify-end gap-2">
-                  <ion-icon  name="ellipsis-vertical"></ion-icon>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <!-- Acciones -->
+                  <td *ngIf="!isPrinting" class="px-6 py-4">
+                    <div (click)="openActions($event, child)" class="flex items-center justify-end gap-2">
+                      <ion-icon name="ellipsis-vertical"></ion-icon>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
 </ion-content>
