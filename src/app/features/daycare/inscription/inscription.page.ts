@@ -129,6 +129,7 @@ export class InscriptionPage implements OnInit {
   firstGuardianExistsData!: any;
   secondGuardianExists!: boolean;
   secondGuardianExistsData!: any;
+  isAuthorizedPersonOptional: boolean = false;
 
   constructor(private fb: FormBuilder) {
   }
@@ -196,7 +197,7 @@ export class InscriptionPage implements OnInit {
         relationship: ['', Validators.required]
       }),
       authorizations: this.fb.group({
-        post_pictures_social_network: [true]
+        post_pictures_social_network: [false]
       }),
       signature: this.fb.group({
         signature_text: ['', Validators.required],
@@ -254,7 +255,22 @@ export class InscriptionPage implements OnInit {
     });
   }
 
-
+  toggleAuthorizedPersonOptional(event: any) {
+    this.isAuthorizedPersonOptional = event.target.checked;
+    const authGroup = this.inscriptionForm.get('authorizedPerson');
+    if (this.isAuthorizedPersonOptional) {
+      authGroup?.get('full_name')?.clearValidators();
+      authGroup?.get('phone_number')?.clearValidators();
+      authGroup?.get('relationship')?.clearValidators();
+    } else {
+      authGroup?.get('full_name')?.setValidators([Validators.required, Validators.minLength(3)]);
+      authGroup?.get('phone_number')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{10}$/)]);
+      authGroup?.get('relationship')?.setValidators([Validators.required]);
+    }
+    authGroup?.get('full_name')?.updateValueAndValidity();
+    authGroup?.get('phone_number')?.updateValueAndValidity();
+    authGroup?.get('relationship')?.updateValueAndValidity();
+  }
 
   calculateAge(birthDate: string): string {
     const today = new Date();
@@ -426,6 +442,13 @@ export class InscriptionPage implements OnInit {
           delete dataToSupabase.secondGuardian;
         }
 
+        if (this.isAuthorizedPersonOptional) {
+          dataToSupabase.authorizedPerson = {
+            full_name: 'NO APLICA',
+            phone_number: 'NO APLICA',
+            relationship: 'NO APLICA'
+          };
+        }
 
         if (this.firstGuardianExists || this.secondGuardianExists) {
           dataToSupabase.legalParentsPayload = [];

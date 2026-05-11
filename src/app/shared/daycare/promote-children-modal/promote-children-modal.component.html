@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar class="ion-no-border" style="--background: #0f172a;">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline" style="color: #fff;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center" style="color: #fff;">Promover Niños</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-gray-50">
+  <div class="p-4 sm:p-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+      <div class="p-4 bg-yellow-50 border-b border-yellow-100 flex items-start gap-3">
+        <ion-icon name="warning" class="text-yellow-600 text-xl mt-0.5"></ion-icon>
+        <div>
+          <h3 class="font-medium text-yellow-800">Niños con ciclo desactualizado</h3>
+          <p class="text-sm text-yellow-600 mt-1">Los siguientes niños tienen una edad que ya no corresponde a su ciclo actual. Por favor confirme el ciclo correcto.</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nombre</th>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Edad</th>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Ciclo Actual</th>
+              <th class="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nuevo Ciclo</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let child of childrenList">
+              <td class="px-4 sm:px-6 py-4 text-sm font-medium text-gray-900">{{ child.full_name }}</td>
+              <td class="px-4 sm:px-6 py-4 text-sm text-gray-500">
+                <span class="inline-flex items-center text-xs font-medium text-gray-800 px-2.5 py-0.5 rounded-full bg-gray-100">
+                  {{ calculateAge(child.birth_date) }}
+                </span>
+                <div class="text-xs text-gray-400 mt-1">{{ child.birth_date | date:'dd/MM/yyyy' }}</div>
+              </td>
+              <td class="px-4 sm:px-6 py-4 text-sm text-gray-500">{{ child.ciclo || 'No asignado' }}</td>
+              <td class="px-4 sm:px-6 py-4">
+                <select [(ngModel)]="child.newCiclo" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                  <option value="">Seleccionar ciclo</option>
+                  <option *ngFor="let c of ciclos" [value]="c">{{ c }}</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="mt-6 mb-2">
+      <app-cycles-legend></app-cycles-legend>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-6">
+      <button (click)="close()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+        Cancelar
+      </button>
+      <button (click)="promoteChildren()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50" [disabled]="childrenList.length === 0">
+        Guardar y Promover
+      </button>
+    </div>
+  </div>
+</ion-content>

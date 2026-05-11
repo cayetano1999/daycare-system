@@ -103,6 +103,7 @@ export class InscriptionEditPage implements OnInit {
 
   showPrintSection: boolean = false;
   loading: boolean = true;
+  printing: boolean = false;
 
   registrationId: string = '';
   childId: string = '';
@@ -111,6 +112,7 @@ export class InscriptionEditPage implements OnInit {
   authorizedPersonId: string = '';
   medicalInfoId: string = '';
   termsConditionId: string = '';
+  isAuthorizedPersonOptional: boolean = false;
 
   constructor(private fb: FormBuilder) {
   
@@ -278,7 +280,8 @@ export class InscriptionEditPage implements OnInit {
           address: child.address,
           schedule_id: child.schedule?.id,
           ciclo: child.ciclo || '',
-          avatar_url: child.avatar_url || ''
+          avatar_url: child.avatar_url || '',
+          monthly_quotes: child.monthly_quotes || 0
         },
         signature: {
           signature_date: registration.created_at?.split('T')[0] || '',
@@ -359,6 +362,10 @@ export class InscriptionEditPage implements OnInit {
 
       if (authorizedPerson) {
         this.authorizedPersonId = authorizedPerson.id;
+        
+        const isOptional = authorizedPerson.full_name === 'NO APLICA';
+        this.isAuthorizedPersonOptional = isOptional;
+
         this.inscriptionForm.patchValue({
           authorizedPerson: {
             full_name: authorizedPerson.full_name,
@@ -366,6 +373,16 @@ export class InscriptionEditPage implements OnInit {
             relationship: authorizedPerson.children_relationship
           }
         });
+
+        if (isOptional) {
+          const authGroup = this.inscriptionForm.get('authorizedPerson');
+          authGroup?.get('full_name')?.clearValidators();
+          authGroup?.get('phone_number')?.clearValidators();
+          authGroup?.get('relationship')?.clearValidators();
+          authGroup?.get('full_name')?.updateValueAndValidity();
+          authGroup?.get('phone_number')?.updateValueAndValidity();
+          authGroup?.get('relationship')?.updateValueAndValidity();
+        }
       }
 
       const { data: terms } = await supabase
@@ -432,6 +449,14 @@ export class InscriptionEditPage implements OnInit {
           this.secondGuardianId = '';
         }
 
+        if (this.isAuthorizedPersonOptional) {
+          formData.authorizedPerson = {
+            full_name: 'NO APLICA',
+            phone_number: 'NO APLICA',
+            relationship: 'NO APLICA'
+          };
+        }
+
       await supabase
         .from('children')
         .update({
@@ -441,7 +466,8 @@ export class InscriptionEditPage implements OnInit {
           address: formData.childData.address,
           schedule_id: formData.childData.schedule_id,
           ciclo: formData.childData.ciclo,
-          avatar_url: formData.childData.avatar_url
+          avatar_url: formData.childData.avatar_url,
+          monthly_quotes: formData.childData.monthly_quotes
         })
         .eq('id', this.childId);
 
@@ -649,6 +675,24 @@ export class InscriptionEditPage implements OnInit {
     input.click();
   }
 
+  toggleAuthorizedPersonOptional(event: any) {
+    this.isAuthorizedPersonOptional = event.target ? event.target.checked : event.detail.checked;
+    const authGroup = this.inscriptionForm.get('authorizedPerson');
+    if (this.isAuthorizedPersonOptional) {
+      authGroup?.get('full_name')?.clearValidators();
+      authGroup?.get('phone_number')?.clearValidators();
+      authGroup?.get('relationship')?.clearValidators();
+    } else {
+      authGroup?.get('full_name')?.setValidators([Validators.required, Validators.minLength(3)]);
+      authGroup?.get('phone_number')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{10}$/)]);
+      authGroup?.get('relationship')?.setValidators([Validators.required]);
+    }
+    authGroup?.get('full_name')?.updateValueAndValidity();
+    authGroup?.get('phone_number')?.updateValueAndValidity();
+    authGroup?.get('relationship')?.updateValueAndValidity();
+    this.inscriptionForm.markAsDirty();
+  }
+
   markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -744,11 +788,16 @@ export class InscriptionEditPage implements OnInit {
   }
 
   onPrint(){
-    const element = document.getElementById('inscription-edit-page');
-    if (!element) {
-      console.error('Elemento para imprimir no encontrado');
-      return;
-    }
-    onPrintFull(element, 'Edicion_Inscripcion');
+    this.printing = true;
+    setTimeout(() => {
+      const element = document.getElementById('inscription-edit-page');
+      if (!element) {
+        console.error('Elemento para imprimir no encontrado');
+        this.printing = false;
+        return;
+      }
+      onPrintFull(element, 'Edicion_Inscripcion');
+      this.printing = false;
+    }, 500);
   }
 }
