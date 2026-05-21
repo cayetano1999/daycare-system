@@ -588,7 +588,7 @@
        <ion-icon slot="start" name="print-outline"></ion-icon> Imprimir
       </ion-button>
 
-      <ion-button type="submit" class="px-8" color="success" [disabled]="!inscriptionForm.dirty">
+      <ion-button (click)="onSubmit()" class="px-8" color="success" [disabled]="!inscriptionForm.dirty">
         <ion-icon slot="start" name="save-outline"></ion-icon>
         Guardar Cambios
       </ion-button>

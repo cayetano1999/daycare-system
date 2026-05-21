@@ -1,5 +1,11 @@
 import { Component, inject, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 
 import { AlertControllerService } from 'src/app/core/services/ionic/alert-controller.service';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
@@ -15,50 +21,50 @@ export const CICLOS_CURSOS_DROPDOWN = [
     ciclo: 'Primer Ciclo',
     curso: 'Párvulo I - Lactantes',
     value: 'Primer Ciclo - Párvulo I (Lactantes)',
-    rango: '45 días a 5 meses'
+    rango: '45 días a 5 meses',
   },
   {
     label: 'Primer Ciclo - Párvulo I',
     ciclo: 'Primer Ciclo',
     curso: 'Párvulo I',
     value: 'Primer Ciclo - Párvulo I',
-    rango: '6 meses a 11 meses'
+    rango: '6 meses a 11 meses',
   },
   {
     label: 'Primer Ciclo - Párvulo II',
     ciclo: 'Primer Ciclo',
     curso: 'Párvulo II',
     value: 'Primer Ciclo - Párvulo II',
-    rango: '1 año a 1 año y 11 meses'
+    rango: '1 año a 1 año y 11 meses',
   },
   {
     label: 'Primer Ciclo - Párvulo III',
     ciclo: 'Primer Ciclo',
     curso: 'Párvulo III',
     value: 'Primer Ciclo - Párvulo III',
-    rango: '2 años a 2 años y 11 meses'
+    rango: '2 años a 2 años y 11 meses',
   },
   {
     label: 'Segundo Ciclo - Prekinder',
     ciclo: 'Segundo Ciclo',
     curso: 'Prekinder',
     value: 'Segundo Ciclo - Prekinder',
-    rango: '3 años a 3 años y 11 meses'
+    rango: '3 años a 3 años y 11 meses',
   },
   {
     label: 'Segundo Ciclo - Kinder',
     ciclo: 'Segundo Ciclo',
     curso: 'Kinder',
     value: 'Segundo Ciclo - Kinder',
-    rango: '4 años a 4 años y 11 meses'
+    rango: '4 años a 4 años y 11 meses',
   },
   {
     label: 'Segundo Ciclo - Preprimario',
     ciclo: 'Segundo Ciclo',
     curso: 'Preprimario',
     value: 'Segundo Ciclo - Preprimario',
-    rango: '5 años a 5 años y 11 meses'
-  }
+    rango: '5 años a 5 años y 11 meses',
+  },
 ];
 
 interface CicloResult {
@@ -98,7 +104,7 @@ export class InscriptionEditPage implements OnInit {
     'Tía',
     'Abuelo',
     'Abuela',
-    'Otro familiar'
+    'Otro familiar',
   ];
 
   showPrintSection: boolean = false;
@@ -114,15 +120,13 @@ export class InscriptionEditPage implements OnInit {
   termsConditionId: string = '';
   isAuthorizedPersonOptional: boolean = false;
 
-  constructor(private fb: FormBuilder) {
-  
-  }
+  constructor(private fb: FormBuilder) {}
 
   async ngOnInit() {
     this.initForm();
     await this.initSchedules();
 
-    this.route.params.subscribe(async params => {
+    this.route.params.subscribe(async (params) => {
       if (params['id']) {
         this.registrationId = params['id'];
         await this.loadInscriptionData(this.registrationId);
@@ -130,7 +134,7 @@ export class InscriptionEditPage implements OnInit {
         await this.alertService.openFestivaAlert(
           'warning',
           'Error',
-          'No se especificó una inscripción para editar'
+          'No se especificó una inscripción para editar',
         );
         this.goBack();
       }
@@ -146,7 +150,10 @@ export class InscriptionEditPage implements OnInit {
   }
 
   async initSchedules() {
-    const result = await this.supabaseService.getSupabase().from('schedules').select('*');
+    const result = await this.supabaseService
+      .getSupabase()
+      .from('schedules')
+      .select('*');
     if (result.data) {
       this.scheduleOptions = result.data;
     }
@@ -162,21 +169,27 @@ export class InscriptionEditPage implements OnInit {
         address: ['', [Validators.required, Validators.minLength(10)]],
         schedule_id: ['', Validators.required],
         ciclo: ['', Validators.required],
-        monthly_quotes: [0, [Validators.required, Validators.min(0)]]
+        monthly_quotes: [0, [Validators.required, Validators.min(0)]],
       }),
       firstGuardian: this.fb.group({
         full_name: ['', [Validators.required, Validators.minLength(3)]],
         identification_type: ['Cédula', Validators.required],
-        identification_number: ['', [Validators.required, this.validateIdentification.bind(this)]],
-        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['', Validators.required]
+        identification_number: [
+          '',
+          [Validators.required, this.validateIdentification.bind(this)],
+        ],
+        phone_number: [
+          '',
+          [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+        ],
+        workplace: ['', Validators.required],
       }),
       secondGuardian: this.fb.group({
         full_name: [''],
         identification_type: ['Cédula'],
         identification_number: ['', [this.validateIdentification.bind(this)]],
         phone_number: ['', [Validators.pattern(/^[0-9]{10}$/)]],
-        workplace: ['']
+        workplace: [''],
       }),
       medicalInfo: this.fb.group({
         has_medical_condition: [false],
@@ -184,60 +197,78 @@ export class InscriptionEditPage implements OnInit {
         takes_medication: [false],
         medication_details: [''],
         allergies: [''],
-        preferred_medical_center: ['', Validators.required]
+        preferred_medical_center: ['', Validators.required],
       }),
       authorizedPerson: this.fb.group({
         full_name: ['', [Validators.required, Validators.minLength(3)]],
-        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        relationship: ['', Validators.required]
+        phone_number: [
+          '',
+          [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+        ],
+        relationship: ['', Validators.required],
       }),
       authorizations: this.fb.group({
-        post_pictures_social_network: [true]
+        post_pictures_social_network: [true],
       }),
       signature: this.fb.group({
         signature_text: [''],
         signature_date: ['', Validators.required],
         start_date: ['', Validators.required],
-        status: ['ACTIVE', Validators.required]
-      })
+        status: ['ACTIVE', Validators.required],
+      }),
     });
 
-    this.inscriptionForm.get('medicalInfo.has_medical_condition')?.valueChanges.subscribe(value => {
-      const detailsControl = this.inscriptionForm.get('medicalInfo.medical_condition_details');
-      if (value) {
-        detailsControl?.setValidators([Validators.required]);
-      } else {
-        detailsControl?.clearValidators();
-      }
-      detailsControl?.updateValueAndValidity();
-    });
+    this.inscriptionForm
+      .get('medicalInfo.has_medical_condition')
+      ?.valueChanges.subscribe((value) => {
+        const detailsControl = this.inscriptionForm.get(
+          'medicalInfo.medical_condition_details',
+        );
+        if (value) {
+          detailsControl?.setValidators([Validators.required]);
+        } else {
+          detailsControl?.clearValidators();
+        }
+        detailsControl?.updateValueAndValidity();
+      });
 
-    this.inscriptionForm.get('medicalInfo.takes_medication')?.valueChanges.subscribe(value => {
-      const detailsControl = this.inscriptionForm.get('medicalInfo.medication_details');
-      if (value) {
-        detailsControl?.setValidators([Validators.required]);
-      } else {
-        detailsControl?.clearValidators();
-      }
-      detailsControl?.updateValueAndValidity();
-    });
+    this.inscriptionForm
+      .get('medicalInfo.takes_medication')
+      ?.valueChanges.subscribe((value) => {
+        const detailsControl = this.inscriptionForm.get(
+          'medicalInfo.medication_details',
+        );
+        if (value) {
+          detailsControl?.setValidators([Validators.required]);
+        } else {
+          detailsControl?.clearValidators();
+        }
+        detailsControl?.updateValueAndValidity();
+      });
 
-    this.inscriptionForm.get('childData.birth_date')?.valueChanges.subscribe(value => {
-      const fechaNacimiento = new Date(value);
-      if (isNaN(fechaNacimiento.getTime())) return;
-      this.cicloResult = this.obtenerCicloPorFecha(fechaNacimiento);
-      this.cicloResult.fecha = this.calculateAge(value);
-      this.inscriptionForm.get('childData.ciclo')?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
-    });
+    this.inscriptionForm
+      .get('childData.birth_date')
+      ?.valueChanges.subscribe((value) => {
+        const fechaNacimiento = new Date(value);
+        if (isNaN(fechaNacimiento.getTime())) return;
+        this.cicloResult = this.obtenerCicloPorFecha(fechaNacimiento);
+        this.cicloResult.fecha = this.calculateAge(value);
+        this.inscriptionForm
+          .get('childData.ciclo')
+          ?.setValue(this.cicloResult.ciclo + ' - ' + this.cicloResult.curso);
+      });
 
-     //insribirme al genero para cambiar la imagen del avatar
-    this.inscriptionForm.get('childData.gender')?.valueChanges.subscribe(value => { 
-      this.avatarPreview = value === 'M'
-        ? 'assets/img/masculino.png'
-        : value === 'F'
-        ? 'assets/img/femenino.png'
-        : this.avatarPreview;
-    });
+    //insribirme al genero para cambiar la imagen del avatar
+    this.inscriptionForm
+      .get('childData.gender')
+      ?.valueChanges.subscribe((value) => {
+        this.avatarPreview =
+          value === 'M'
+            ? 'assets/img/masculino.png'
+            : value === 'F'
+              ? 'assets/img/femenino.png'
+              : this.avatarPreview;
+      });
   }
 
   async loadInscriptionData(registrationId: string) {
@@ -246,21 +277,27 @@ export class InscriptionEditPage implements OnInit {
 
     try {
       const { data: registration, error: regError } = await supabase
-    .from('registration')
-  .select(`
+        .from('registration')
+        .select(
+          `
     *,
     children (
       *,
       schedule:schedules!id(*)
 
     )
-  `)
-  .eq('id', registrationId)
-  .single();
+  `,
+        )
+        .eq('id', registrationId)
+        .single();
 
-  const schedule = await supabase.from('schedules').select('*').eq('id', '087055be-55f1-4c89-8d29-0f1edfdb3785').single();
-  console.log('Schedule fetch result:', schedule);
-  console.log('Registration fetch result:', registration, regError);
+      const schedule = await supabase
+        .from('schedules')
+        .select('*')
+        .eq('id', '087055be-55f1-4c89-8d29-0f1edfdb3785')
+        .single();
+      console.log('Schedule fetch result:', schedule);
+      console.log('Registration fetch result:', registration, regError);
 
       if (regError || !registration) {
         throw new Error('No se encontró la inscripción');
@@ -270,7 +307,6 @@ export class InscriptionEditPage implements OnInit {
       this.childId = registration.children_id;
 
       const child = registration.children as any;
-      
 
       this.inscriptionForm.patchValue({
         childData: {
@@ -281,13 +317,13 @@ export class InscriptionEditPage implements OnInit {
           schedule_id: child.schedule?.id,
           ciclo: child.ciclo || '',
           avatar_url: child.avatar_url || '',
-          monthly_quotes: child.monthly_quotes || 0
+          monthly_quotes: child.monthly_quotes || 0,
         },
         signature: {
           signature_date: registration.created_at?.split('T')[0] || '',
           start_date: registration.start_date,
-          status: registration.status
-        }
+          status: registration.status,
+        },
       });
 
       if (child.avatar_url && child.avatar_url !== 'no_haya_url') {
@@ -296,10 +332,12 @@ export class InscriptionEditPage implements OnInit {
 
       const { data: guardians } = await supabase
         .from('children_legal_parents')
-        .select(`
+        .select(
+          `
           *,
           legal_parents (*)
-        `)
+        `,
+        )
         .eq('children_id', this.childId)
         .order('is_primary', { ascending: false });
 
@@ -313,8 +351,8 @@ export class InscriptionEditPage implements OnInit {
             identification_type: primaryGuardian.identification_type,
             identification_number: primaryGuardian.identification_number,
             phone_number: primaryGuardian.phone_number,
-            workplace: primaryGuardian.workplace
-          }
+            workplace: primaryGuardian.workplace,
+          },
         });
 
         if (guardians.length > 1) {
@@ -327,8 +365,8 @@ export class InscriptionEditPage implements OnInit {
               identification_type: secondaryGuardian.identification_type,
               identification_number: secondaryGuardian.identification_number,
               phone_number: secondaryGuardian.phone_number,
-              workplace: secondaryGuardian.workplace
-            }
+              workplace: secondaryGuardian.workplace,
+            },
           });
         }
       }
@@ -345,12 +383,13 @@ export class InscriptionEditPage implements OnInit {
         this.inscriptionForm.patchValue({
           medicalInfo: {
             has_medical_condition: medicalInfo.has_medical_condition,
-            medical_condition_details: medicalInfo.medical_condition_details || '',
+            medical_condition_details:
+              medicalInfo.medical_condition_details || '',
             takes_medication: medicalInfo.takes_medication,
             medication_details: medicalInfo.medication_details || '',
             allergies: medicalInfo.allergies || '',
-            preferred_medical_center: medicalInfo.preferred_medical_center
-          }
+            preferred_medical_center: medicalInfo.preferred_medical_center,
+          },
         });
       }
 
@@ -362,7 +401,7 @@ export class InscriptionEditPage implements OnInit {
 
       if (authorizedPerson) {
         this.authorizedPersonId = authorizedPerson.id;
-        
+
         const isOptional = authorizedPerson.full_name === 'NO APLICA';
         this.isAuthorizedPersonOptional = isOptional;
 
@@ -370,8 +409,8 @@ export class InscriptionEditPage implements OnInit {
           authorizedPerson: {
             full_name: authorizedPerson.full_name,
             phone_number: authorizedPerson.phone_number,
-            relationship: authorizedPerson.children_relationship
-          }
+            relationship: authorizedPerson.children_relationship,
+          },
         });
 
         if (isOptional) {
@@ -395,21 +434,23 @@ export class InscriptionEditPage implements OnInit {
         this.termsConditionId = terms.id;
         this.inscriptionForm.patchValue({
           authorizations: {
-            post_pictures_social_network: terms.post_pictures_social_network
-          }
+            post_pictures_social_network: terms.post_pictures_social_network,
+          },
         });
       }
 
       this.inscriptionForm.markAsPristine();
       this.loading = false;
-      console.log('Inscription data loaded successfully', this.inscriptionForm.value);
-
+      console.log(
+        'Inscription data loaded successfully',
+        this.inscriptionForm.value,
+      );
     } catch (error) {
       console.error('Error loading inscription data:', error);
       await this.alertService.openFestivaAlert(
         'danger',
         'Error',
-        'No se pudieron cargar los datos de la inscripción'
+        'No se pudieron cargar los datos de la inscripción',
       );
       this.loading = false;
       this.goBack();
@@ -417,21 +458,24 @@ export class InscriptionEditPage implements OnInit {
   }
 
   async onSubmit() {
-    if (!this.inscriptionForm.valid) {
-      this.markFormGroupTouched(this.inscriptionForm);
-      await this.alertService.openFestivaAlert(
-        'warning',
-        'Formulario inválido',
-        'Por favor, completa todos los campos requeridos correctamente.'
-      );
-      return;
-    }
+    console.log(this.inscriptionForm.value);
+    console.log(this.inscriptionForm);
+
+    // if (!this.inscriptionForm.valid) {
+    //   this.markFormGroupTouched(this.inscriptionForm);
+    //   await this.alertService.openFestivaAlert(
+    //     'warning',
+    //     'Formulario inválido',
+    //     'Por favor, completa todos los campos requeridos correctamente.',
+    //   );
+    //   return;
+    // }
 
     if (!this.inscriptionForm.dirty) {
       await this.alertService.openFestivaAlert(
         'warning',
         'Sin cambios',
-        'No se han realizado cambios en el formulario.'
+        'No se han realizado cambios en el formulario.',
       );
       return;
     }
@@ -441,21 +485,22 @@ export class InscriptionEditPage implements OnInit {
     try {
       const supabase = this.supabaseService.getSupabase();
       const formData = this.inscriptionForm.value;
-      formData.childData.avatar_url = this.avatarPreview || formData.childData.avatar_url;
+      formData.childData.avatar_url =
+        this.avatarPreview || formData.childData.avatar_url;
       debugger;
       //ELIMINAR EL OBJETO DE SECONDgUARDIAN SI NO TIENE NOMBRE
-        if (!formData?.secondGuardian?.full_name) {
-          delete formData?.secondGuardian;
-          this.secondGuardianId = '';
-        }
+      if (!formData?.secondGuardian?.full_name) {
+        delete formData?.secondGuardian;
+        this.secondGuardianId = '';
+      }
 
-        if (this.isAuthorizedPersonOptional) {
-          formData.authorizedPerson = {
-            full_name: 'NO APLICA',
-            phone_number: 'NO APLICA',
-            relationship: 'NO APLICA'
-          };
-        }
+      if (this.isAuthorizedPersonOptional) {
+        formData.authorizedPerson = {
+          full_name: 'NO APLICA',
+          phone_number: 'NO APLICA',
+          relationship: 'NO APLICA',
+        };
+      }
 
       await supabase
         .from('children')
@@ -467,7 +512,7 @@ export class InscriptionEditPage implements OnInit {
           schedule_id: formData.childData.schedule_id,
           ciclo: formData.childData.ciclo,
           avatar_url: formData.childData.avatar_url,
-          monthly_quotes: formData.childData.monthly_quotes
+          monthly_quotes: formData.childData.monthly_quotes,
         })
         .eq('id', this.childId);
 
@@ -479,7 +524,7 @@ export class InscriptionEditPage implements OnInit {
             identification_type: formData.firstGuardian.identification_type,
             identification_number: formData.firstGuardian.identification_number,
             phone_number: formData.firstGuardian.phone_number,
-            workplace: formData.firstGuardian.workplace
+            workplace: formData.firstGuardian.workplace,
           })
           .eq('id', this.firstGuardianId);
       }
@@ -490,9 +535,10 @@ export class InscriptionEditPage implements OnInit {
           .update({
             full_name: formData.secondGuardian.full_name,
             identification_type: formData.secondGuardian.identification_type,
-            identification_number: formData.secondGuardian.identification_number,
+            identification_number:
+              formData.secondGuardian.identification_number,
             phone_number: formData.secondGuardian.phone_number,
-            workplace: formData.secondGuardian.workplace
+            workplace: formData.secondGuardian.workplace,
           })
           .eq('id', this.secondGuardianId);
       }
@@ -502,11 +548,13 @@ export class InscriptionEditPage implements OnInit {
           .from('medical_info')
           .update({
             has_medical_condition: formData.medicalInfo.has_medical_condition,
-            medical_condition_details: formData.medicalInfo.medical_condition_details,
+            medical_condition_details:
+              formData.medicalInfo.medical_condition_details,
             takes_medication: formData.medicalInfo.takes_medication,
             medication_details: formData.medicalInfo.medication_details,
             allergies: formData.medicalInfo.allergies,
-            preferred_medical_center: formData.medicalInfo.preferred_medical_center
+            preferred_medical_center:
+              formData.medicalInfo.preferred_medical_center,
           })
           .eq('id', this.medicalInfoId);
       }
@@ -517,7 +565,7 @@ export class InscriptionEditPage implements OnInit {
           .update({
             full_name: formData.authorizedPerson.full_name,
             phone_number: formData.authorizedPerson.phone_number,
-            children_relationship: formData.authorizedPerson.relationship
+            children_relationship: formData.authorizedPerson.relationship,
           })
           .eq('id', this.authorizedPersonId);
       }
@@ -526,7 +574,8 @@ export class InscriptionEditPage implements OnInit {
         await supabase
           .from('terms_condition')
           .update({
-            post_pictures_social_network: formData.authorizations.post_pictures_social_network
+            post_pictures_social_network:
+              formData.authorizations.post_pictures_social_network,
           })
           .eq('id', this.termsConditionId);
       }
@@ -535,7 +584,7 @@ export class InscriptionEditPage implements OnInit {
         .from('registration')
         .update({
           start_date: formData.signature.start_date,
-          status: formData.signature.status
+          status: formData.signature.status,
         })
         .eq('id', this.registrationId);
 
@@ -543,19 +592,18 @@ export class InscriptionEditPage implements OnInit {
       await this.alertService.openFestivaAlert(
         'success',
         'Cambios guardados',
-        'Los cambios se han guardado correctamente.'
+        'Los cambios se han guardado correctamente.',
       );
 
       this.inscriptionForm.markAsPristine();
       this.router.navigate(['/daycare/inscription']);
-
     } catch (error) {
       console.error('Error updating inscription:', error);
       await this.alertService.dismiss();
       await this.alertService.openFestivaAlert(
         'danger',
         'Error',
-        'No se pudieron guardar los cambios. Inténtalo de nuevo.'
+        'No se pudieron guardar los cambios. Inténtalo de nuevo.',
       );
     }
   }
@@ -586,7 +634,8 @@ export class InscriptionEditPage implements OnInit {
     if (years > 0) parts.push(`${years} año${years > 1 ? 's' : ''}`);
     if (months > 0) parts.push(`${months} mes${months > 1 ? 'es' : ''}`);
     if (weeks > 0) parts.push(`${weeks} semana${weeks > 1 ? 's' : ''}`);
-    if (remainingDays > 0) parts.push(`${remainingDays} día${remainingDays > 1 ? 's' : ''}`);
+    if (remainingDays > 0)
+      parts.push(`${remainingDays} día${remainingDays > 1 ? 's' : ''}`);
 
     if (parts.length === 0) {
       parts.push('0 días');
@@ -666,7 +715,9 @@ export class InscriptionEditPage implements OnInit {
         const reader = new FileReader();
         reader.onload = (e: any) => {
           this.avatarPreview = e.target.result;
-          this.inscriptionForm.get('childData.avatar_url')?.setValue(e.target.result);
+          this.inscriptionForm
+            .get('childData.avatar_url')
+            ?.setValue(e.target.result);
           this.inscriptionForm.markAsDirty();
         };
         reader.readAsDataURL(file);
@@ -676,15 +727,24 @@ export class InscriptionEditPage implements OnInit {
   }
 
   toggleAuthorizedPersonOptional(event: any) {
-    this.isAuthorizedPersonOptional = event.target ? event.target.checked : event.detail.checked;
+    this.isAuthorizedPersonOptional = event.target
+      ? event.target.checked
+      : event.detail.checked;
     const authGroup = this.inscriptionForm.get('authorizedPerson');
     if (this.isAuthorizedPersonOptional) {
       authGroup?.get('full_name')?.clearValidators();
       authGroup?.get('phone_number')?.clearValidators();
       authGroup?.get('relationship')?.clearValidators();
     } else {
-      authGroup?.get('full_name')?.setValidators([Validators.required, Validators.minLength(3)]);
-      authGroup?.get('phone_number')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{10}$/)]);
+      authGroup
+        ?.get('full_name')
+        ?.setValidators([Validators.required, Validators.minLength(3)]);
+      authGroup
+        ?.get('phone_number')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(/^[0-9]{10}$/),
+        ]);
       authGroup?.get('relationship')?.setValidators([Validators.required]);
     }
     authGroup?.get('full_name')?.updateValueAndValidity();
@@ -694,7 +754,7 @@ export class InscriptionEditPage implements OnInit {
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(key => {
+    Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       control?.markAsTouched();
 
@@ -779,7 +839,7 @@ export class InscriptionEditPage implements OnInit {
     return {
       ciclo,
       curso,
-      fecha: fechaNacimiento.toISOString().split('T')[0]
+      fecha: fechaNacimiento.toISOString().split('T')[0],
     };
   }
 
@@ -787,7 +847,7 @@ export class InscriptionEditPage implements OnInit {
     this.location.back();
   }
 
-  onPrint(){
+  onPrint() {
     this.printing = true;
     setTimeout(() => {
       const element = document.getElementById('inscription-edit-page');
