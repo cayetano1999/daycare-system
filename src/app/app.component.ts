@@ -58,6 +58,13 @@ export class AppComponent implements OnInit {
       url: 'daycare/child-management',
       description: 'Administra la información de los niños.',
     },
+    {
+      title: 'Cumpleaños de Hoy',
+      menu: true,
+      icon: 'gift-outline',
+      url: 'daycare/birthdays',
+      description: 'Muestra los niños que cumplen años en el día de hoy.',
+    },
     // {
     //     title: 'Gestión de Tandas',
     //     menu: true,

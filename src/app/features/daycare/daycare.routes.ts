@@ -17,6 +17,7 @@ import { DocumentsPage } from "./documents/documents.page";
 import { GuardiansPage } from "./guardians/guardians.page";
 import { GuardianEditPage } from "./guardian-edit/guardian-edit.page";
 import { CompanyInfoComponent } from "./company-info/company-info.component";
+import { BirthdaysComponent } from "./birthdays/birthdays.component";
 
 
 export const dayCareRoutes: Routes = [
@@ -46,6 +47,11 @@ export const dayCareRoutes: Routes = [
   {
     path: 'daycare/child-management',
     component: ChildManagementComponent,
+    canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
+  },
+  {
+    path: 'daycare/birthdays',
+    component: BirthdaysComponent,
     canActivate: [AppMaintenanceGuard, InternetConnectionGuard, ForceUpgradeGuard]
   },
 
