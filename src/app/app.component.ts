@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
       description: 'Administra la información de los niños.',
     },
     {
-      title: 'Cumpleaños de Hoy',
+      title: 'Cumpleaños',
       menu: true,
       icon: 'gift-outline',
       url: 'daycare/birthdays',

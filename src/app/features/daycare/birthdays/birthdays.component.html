@@ -7,15 +7,28 @@
           <div>
             <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
               <ion-icon name="gift" class="text-pink-500"></ion-icon>
-              Cumpleaños de Hoy
+              Cumpleaños de {{ getSelectedMonthName() }}
             </h1>
-            <p class="mt-1 text-sm text-gray-500">Listado de niños que celebran su cumpleaños el día de hoy.</p>
+            <p class="mt-1 text-sm text-gray-500">Listado de niños que celebran su cumpleaños en el mes de {{ getSelectedMonthName() }}.</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Selector de Meses -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-2 mb-6 overflow-x-auto scrollbar-thin">
+        <div class="flex space-x-1 min-w-max p-1 bg-gray-100/80 rounded-lg">
+          <button *ngFor="let m of months"
+            (click)="selectMonth(m.value)"
+            [class]="selectedMonth === m.value 
+              ? 'px-4 py-2 bg-pink-500 text-white font-semibold rounded-md shadow-sm transition-all duration-200 text-xs sm:text-sm' 
+              : 'px-4 py-2 text-gray-600 hover:text-pink-500 font-medium rounded-md hover:bg-white/50 transition-all duration-200 text-xs sm:text-sm'">
+            {{ m.name }}
+          </button>
+        </div>
+      </div>
+
       <!-- Filtros -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
@@ -72,7 +85,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                     </svg>
-                    <span class="text-gray-500" *ngIf="children.length === 0">Ningún niño cumple años hoy.</span>
+                    <span class="text-gray-500" *ngIf="children.length === 0">Ningún niño cumple años en {{ getSelectedMonthName() }}.</span>
                     <span class="text-gray-500" *ngIf="children.length > 0 && filteredChildren.length === 0">No hay cumpleañeros que coincidan con la búsqueda.</span>
                   </div>
                 </td>

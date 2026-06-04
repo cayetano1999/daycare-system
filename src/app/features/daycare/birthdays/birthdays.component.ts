@@ -32,10 +32,27 @@ export class BirthdaysComponent implements OnInit, OnDestroy {
 
   supabaseService = inject(SupabaseService);
 
+  allChildren: Child[] = [];
   children: Child[] = [];
   filteredChildren: Child[] = [];
   loading = true;
   searchTerm = '';
+
+  months = [
+    { name: 'Enero', value: 1 },
+    { name: 'Febrero', value: 2 },
+    { name: 'Marzo', value: 3 },
+    { name: 'Abril', value: 4 },
+    { name: 'Mayo', value: 5 },
+    { name: 'Junio', value: 6 },
+    { name: 'Julio', value: 7 },
+    { name: 'Agosto', value: 8 },
+    { name: 'Septiembre', value: 9 },
+    { name: 'Octubre', value: 10 },
+    { name: 'Noviembre', value: 11 },
+    { name: 'Diciembre', value: 12 }
+  ];
+  selectedMonth: number = new Date().getMonth() + 1;
 
   constructor() {
     this.supabase = this.supabaseService.getSupabase();
@@ -62,39 +79,59 @@ export class BirthdaysComponent implements OnInit, OnDestroy {
       if (error) throw error;
 
       if (data) {
-        const today = new Date();
-        const currentMonth = today.getMonth() + 1;
-        const currentDay = today.getDate();
-
-        this.children = data
-          .map(child => ({
-            id: child.id,
-            full_name: child.full_name,
-            avatar_url: child.avatar_url,
-            birth_date: child.birth_date,
-            gender: child.gender,
-            schedule_description: child.schedule_description,
-            ciclo: child.ciclo
-          }))
-          .filter(child => {
-            if (!child.birth_date) return false;
-            // Parse birth_date (assuming format YYYY-MM-DD or valid ISO)
-            const birthDateParts = child.birth_date.split('-');
-            if (birthDateParts.length >= 3) {
-              const bMonth = parseInt(birthDateParts[1], 10);
-              const bDay = parseInt(birthDateParts[2].split('T')[0], 10);
-              return bMonth === currentMonth && bDay === currentDay;
-            }
-            return false;
-          });
+        this.allChildren = data.map(child => ({
+          id: child.id,
+          full_name: child.full_name,
+          avatar_url: child.avatar_url,
+          birth_date: child.birth_date,
+          gender: child.gender,
+          schedule_description: child.schedule_description,
+          ciclo: child.ciclo
+        }));
+        
+        this.filterByMonth();
+      } else {
+        this.allChildren = [];
+        this.children = [];
+        this.applyFilters();
       }
-
-      this.applyFilters();
     } catch (error) {
       console.error('Error loading children:', error);
     } finally {
       this.loading = false;
     }
+  }
+
+  filterByMonth(): void {
+    this.children = this.allChildren
+      .filter(child => {
+        if (!child.birth_date) return false;
+        const birthDateParts = child.birth_date.split('-');
+        if (birthDateParts.length >= 2) {
+          const bMonth = parseInt(birthDateParts[1], 10);
+          return bMonth === this.selectedMonth;
+        }
+        return false;
+      });
+
+    // Ordenar por el día del mes
+    this.children.sort((a, b) => {
+      const dayA = parseInt(a.birth_date.split('-')[2].split('T')[0], 10);
+      const dayB = parseInt(b.birth_date.split('-')[2].split('T')[0], 10);
+      return dayA - dayB;
+    });
+
+    this.applyFilters();
+  }
+
+  selectMonth(monthValue: number): void {
+    this.selectedMonth = monthValue;
+    this.filterByMonth();
+  }
+
+  getSelectedMonthName(): string {
+    const month = this.months.find(m => m.value === this.selectedMonth);
+    return month ? month.name : '';
   }
 
   applyFilters(): void {

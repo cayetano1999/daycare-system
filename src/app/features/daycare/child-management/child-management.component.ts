@@ -5,7 +5,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Subject, takeUntil } from 'rxjs';
 import { ActionSheetController, IonContent, IonIcon } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { arrowUpCircleOutline, warning, closeOutline } from 'ionicons/icons';
+import { arrowUpCircleOutline, warning, closeOutline, cutOutline } from 'ionicons/icons';
 import { SupabaseService } from 'src/app/core/services/supabase.service';
 import { CICLOS_CURSOS_DROPDOWN } from '../inscription/inscription.page';
 import { calculateAgeToString, obtenerCicloPorFecha } from 'src/app/core/constants/constants';
@@ -14,6 +14,7 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { InscriptionDetailModalComponent } from 'src/app/shared/daycare/inscription-detail-modal/inscription-detail-modal.component';
 import { ModalController } from '@ionic/angular';
 import { PromoteChildrenModalComponent } from 'src/app/shared/daycare/promote-children-modal/promote-children-modal.component';
+import { PerformCutoffModalComponent } from 'src/app/shared/daycare/perform-cutoff-modal/perform-cutoff-modal.component';
 import { CyclesLegendComponent } from 'src/app/shared/daycare/cycles-legend/cycles-legend.component';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -89,7 +90,7 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.supabase = this.supabaseService.getSupabase();
-    addIcons({ arrowUpCircleOutline, warning, closeOutline });
+    addIcons({ arrowUpCircleOutline, warning, closeOutline, cutOutline });
   }
 
   ngOnInit(): void {
@@ -254,6 +255,26 @@ export class ChildManagementComponent implements OnInit, OnDestroy {
     const { data } = await modal.onDidDismiss();
     if (data?.success) {
       this.alertCtrl.openFestivaAlert('success', 'Éxito', 'Niños promovidos correctamente');
+      this.loadChildren();
+    }
+  }
+
+  async openCorteModal() {
+    if (this.children.length === 0) return;
+
+    const modal = await this.modalCtrl.create({
+      component: PerformCutoffModalComponent,
+      componentProps: {
+        children: this.children
+      },
+      cssClass: 'full-modal'
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data?.success) {
+      this.alertCtrl.openFestivaAlert('success', 'Éxito', 'Corte realizado correctamente');
       this.loadChildren();
     }
   }
