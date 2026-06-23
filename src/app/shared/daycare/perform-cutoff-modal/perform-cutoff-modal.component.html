@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header *ngIf="!isPrinting">
   <ion-toolbar class="ion-no-border" style="--background: #1e3a8a;">
     <ion-buttons slot="start">
       <ion-button (click)="close()">
@@ -10,15 +10,107 @@
 </ion-header>
 
 <ion-content class="bg-gray-50">
-  <div class="p-4 sm:p-6">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
-      <div class="p-4 bg-blue-50 border-b border-blue-100 flex items-start gap-3">
+  <!-- Container para el reporte PDF (se muestra únicamente al imprimir) -->
+  <div *ngIf="isPrinting" id="cutoff-pdf-container" class="bg-white p-8">
+     <div class="mb-8 border-b border-gray-200 pb-6 flex justify-between items-start">
+       <div>
+         <h1 class="text-3xl font-bold text-gray-900">Guardería</h1>
+         <h2 class="text-xl font-semibold text-gray-700 mt-1">Reporte de Corte de Ciclos</h2>
+         <p class="text-sm text-gray-500 mt-1">Listado de niños y sus nuevos ciclos asignados para el corte.</p>
+       </div>
+       <div class="text-right">
+         <p class="text-sm text-gray-600 mb-1"><strong>Fecha:</strong> {{ currentDate | date:'dd/MM/yyyy HH:mm' }}</p>
+         <p class="text-sm text-gray-600"><strong>Total de niños:</strong> {{ childrenList.length }}</p>
+       </div>
+     </div>
+
+     <div *ngFor="let group of childrenGroupedByNewCiclo" class="mb-6">
+       <h3 class="text-lg font-bold text-gray-800 bg-gray-100 p-2 rounded mb-3">Nuevo Ciclo: {{ group.cycle }}</h3>
+       <table class="w-full border-collapse border border-gray-200 text-sm">
+         <thead>
+           <tr class="bg-gray-50">
+             <th class="border border-gray-200 px-4 py-2 text-left font-semibold text-gray-600">Nombre</th>
+             <th class="border border-gray-200 px-4 py-2 text-left font-semibold text-gray-600">Edad</th>
+             <th class="border border-gray-200 px-4 py-2 text-left font-semibold text-gray-600">Ciclo Anterior</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr *ngFor="let child of group.list">
+             <td class="border border-gray-200 px-4 py-2 text-gray-900">{{ child.full_name }}</td>
+             <td class="border border-gray-200 px-4 py-2 text-gray-700">{{ calculateAge(child.birth_date) }}</td>
+             <td class="border border-gray-200 px-4 py-2 text-gray-500">{{ child.ciclo || 'No asignado' }}</td>
+           </tr>
+         </tbody>
+       </table>
+     </div>
+  </div>
+
+  <!-- Contenido Principal del Modal -->
+  <div *ngIf="!isPrinting" class="p-4 sm:p-6">
+    <!-- Disclaimers en Grid (6/12 cada uno) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- Disclaimer de Corte de Ciclo -->
+      <div class="bg-blue-50 rounded-xl p-5 border border-blue-100 flex items-start gap-3 h-full">
         <ion-icon name="warning" class="text-blue-700 text-xl mt-0.5"></ion-icon>
         <div>
-          <h3 class="font-semibold text-blue-900">Disclaimer de Corte de Ciclo</h3>
-          <p class="text-sm text-blue-700 mt-1">Al ejecutar esta acción, <strong>todos los niños activos</strong> avanzarán automáticamente al siguiente ciclo escolar configurado en la lista. Si lo desea, puede ajustar el nuevo ciclo de forma individual en la tabla inferior antes de confirmar.</p>
+          <h3 class="font-semibold text-blue-900 text-sm uppercase tracking-wider mb-2">Disclaimer de Corte de Ciclo</h3>
+          <p class="text-sm text-blue-700 leading-relaxed">
+            Al ejecutar esta acción, <strong>todos los niños activos</strong> avanzarán automáticamente al siguiente ciclo escolar configurado en la lista. Si lo desea, puede ajustar el nuevo ciclo de forma individual en la tabla inferior antes de confirmar.
+          </p>
         </div>
       </div>
+
+      <!-- Leyenda de Ciclos -->
+      <div>
+        <app-cycles-legend class="h-full block"></app-cycles-legend>
+      </div>
+    </div>
+
+    <!-- Filtro por nombre y Botón Exportar PDF -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+      <div class="flex flex-col md:flex-row items-stretch md:items-end justify-between gap-4">
+        <!-- Input de filtro -->
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Buscar niño por nombre</label>
+          <div class="relative">
+            <input 
+              type="text" 
+              [(ngModel)]="searchTerm" 
+              (ngModelChange)="applyFilter()"
+              placeholder="Buscar por nombre..." 
+              class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            >
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none" *ngIf="!searchTerm">
+              <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <button 
+              *ngIf="searchTerm" 
+              (click)="searchTerm = ''; applyFilter()" 
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              <ion-icon name="close-outline" class="text-lg"></ion-icon>
+            </button>
+          </div>
+        </div>
+        <!-- Botón de Exportar PDF -->
+        <div class="flex items-stretch md:items-center">
+          <button 
+            (click)="exportPDF()" 
+            class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Niños -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-slate-50 border-b border-gray-200">
@@ -30,7 +122,12 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
-            <tr *ngFor="let child of childrenList">
+            <tr *ngIf="filteredChildrenList.length === 0">
+              <td colspan="4" class="px-4 sm:px-6 py-8 text-center text-sm text-gray-500">
+                No se encontraron niños que coincidan con la búsqueda.
+              </td>
+            </tr>
+            <tr *ngFor="let child of filteredChildrenList">
               <td class="px-4 sm:px-6 py-4 text-sm font-medium text-gray-900">{{ child.full_name }}</td>
               <td class="px-4 sm:px-6 py-4 text-sm text-gray-500">
                 <span class="inline-flex items-center text-xs font-medium text-gray-800 px-2.5 py-0.5 rounded-full bg-gray-100">
@@ -50,18 +147,16 @@
         </table>
       </div>
     </div>
-    
-    <div class="mt-6 mb-2">
-      <app-cycles-legend></app-cycles-legend>
-    </div>
-
-    <div class="flex justify-end gap-3 mt-6">
-      <button (click)="close()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-        Cancelar
-      </button>
-      <button (click)="performCutoff()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50" [disabled]="childrenList.length === 0">
-        Confirmar y Realizar Corte
-      </button>
-    </div>
   </div>
 </ion-content>
+
+<ion-footer *ngIf="!isPrinting" class="ion-no-border">
+  <div class="bg-white border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
+    <button (click)="close()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+      Cancelar
+    </button>
+    <button (click)="performCutoff()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50" [disabled]="childrenList.length === 0">
+      Confirmar y Realizar Corte
+    </button>
+  </div>
+</ion-footer>

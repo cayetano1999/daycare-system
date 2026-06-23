@@ -9,6 +9,8 @@ import { AlertControllerService } from 'src/app/core/services/ionic/alert-contro
 import { CICLOS_CURSOS_DROPDOWN } from 'src/app/features/daycare/inscription/inscription.page';
 import { CyclesLegendComponent } from '../cycles-legend/cycles-legend.component';
 import { calculateAgeToString } from 'src/app/core/constants/constants';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface ChildToPromote {
   id: string;
@@ -34,6 +36,10 @@ export class PerformCutoffModalComponent implements OnInit {
 
   ciclos: string[] = CICLOS_CURSOS_DROPDOWN.map(c => c.value);
   childrenList: ChildToPromote[] = [];
+  filteredChildrenList: ChildToPromote[] = [];
+  searchTerm: string = '';
+  isPrinting = false;
+  currentDate = new Date();
 
   constructor() {
     addIcons({ warning, closeOutline });
@@ -48,6 +54,7 @@ export class PerformCutoffModalComponent implements OnInit {
         newCiclo: nextCiclo
       };
     });
+    this.applyFilter();
   }
 
   getNextCiclo(currentCiclo: string): string {
@@ -110,5 +117,107 @@ export class PerformCutoffModalComponent implements OnInit {
       await this.alertCtrl.dismiss();
       this.alertCtrl.openFestivaAlert('danger', 'Error', 'Ocurrió un error al realizar el corte de ciclos.');
     }
+  }
+
+  applyFilter() {
+    if (!this.searchTerm.trim()) {
+      this.filteredChildrenList = this.childrenList;
+    } else {
+      const term = this.searchTerm.toLowerCase().trim();
+      this.filteredChildrenList = this.childrenList.filter(c =>
+        c.full_name.toLowerCase().includes(term)
+      );
+    }
+  }
+
+  get childrenGroupedByNewCiclo() {
+    const groups: { [key: string]: ChildToPromote[] } = {};
+    // Use childrenList (or filteredChildrenList depending on preference; using childrenList to export all children processed in the cutoff grouped by their new cycle)
+    this.childrenList.forEach(child => {
+      const cycle = child.newCiclo || 'No asignado';
+      if (!groups[cycle]) {
+        groups[cycle] = [];
+      }
+      groups[cycle].push(child);
+    });
+    return Object.entries(groups).map(([cycle, list]) => ({
+      cycle,
+      list
+    }));
+  }
+
+  async exportPDF() {
+    this.isPrinting = true;
+    this.currentDate = new Date();
+
+    // Wait for Angular to update the DOM (showing the print layout)
+    setTimeout(async () => {
+      const element = document.getElementById('cutoff-pdf-container');
+      if (!element) {
+        this.isPrinting = false;
+        return;
+      }
+
+      try {
+        this.alertCtrl.openFestivaAlert('loading', 'Generando PDF...', 'Por favor espere');
+        
+        // Allow time for the loading alert to present
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jsPDF({
+          orientation: 'p',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const footerMargin = 20; // 20mm margin at the bottom
+        const topMargin = 15;    // 15mm top margin for subsequent pages
+        const usableHeightFirstPage = pageHeight - footerMargin;
+        const usableHeightNextPages = pageHeight - footerMargin - topMargin;
+
+        let position = 0;
+        let heightLeft = pdfHeight;
+
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        
+        // Hide the bottom part to create a footer margin
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(0, usableHeightFirstPage, pdfWidth, footerMargin, 'F');
+        heightLeft -= usableHeightFirstPage;
+
+        while (heightLeft > 0) {
+          position = topMargin - (pdfHeight - heightLeft);
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+
+          // Hide margins on subsequent pages
+          pdf.setFillColor(255, 255, 255);
+          pdf.rect(0, 0, pdfWidth, topMargin, 'F'); // Top margin
+          pdf.rect(0, pageHeight - footerMargin, pdfWidth, footerMargin, 'F'); // Footer margin
+
+          heightLeft -= usableHeightNextPages;
+        }
+
+        pdf.save(`corte_ciclos_${new Date().toISOString().split('T')[0]}.pdf`);
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        this.alertCtrl.openFestivaAlert('danger', 'Error', 'Ocurrió un error al generar el PDF.');
+      } finally {
+        this.alertCtrl.dismiss();
+        this.isPrinting = false;
+      }
+    }, 150);
   }
 }
